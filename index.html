@@ -50,10 +50,15 @@
     .choice-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;min-height:40px;color:#15385f;font-weight:900}
     .choice-btn.active{background:#26415f;border-color:#20364f;color:#fff}
     .dimension-box{border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:12px;margin-top:10px}
-    .dimension-row{display:grid;grid-template-columns:1fr 120px 1fr 1.4fr;gap:8px;align-items:end}
+    .dimension-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .dimension-list{display:flex;flex-direction:column;gap:10px}
+    .dimension-item{border:1px solid #d5e3f5;border-radius:10px;background:#fff;padding:10px}
+    .dimension-row{display:grid;grid-template-columns:1fr 1fr 112px 1fr 1.4fr auto;gap:8px;align-items:end}
     .tol-options{display:flex;gap:6px;flex-wrap:wrap}
     .tol-options .btn{min-width:44px;text-align:center;font-weight:900}
-    @media(max-width:900px){.dimension-row{grid-template-columns:1fr}}
+    .dimension-remove{align-self:end;min-width:48px}
+    .paste-hint{margin-top:8px;border:1px dashed #9fb6d2;background:#f8fbff;border-radius:10px;padding:10px;color:#47617f;font-size:14px;font-weight:700}
+    @media(max-width:900px){.dimension-row{grid-template-columns:1fr}.dimension-remove{width:100%}}
     .visual-title{display:block;margin:0 0 6px;color:#123a6f;font-weight:900;font-size:15px;letter-spacing:.04em}.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.quick-action{border:1px solid #cbd9ec;border-radius:10px;padding:8px;background:#fff;text-align:center;color:#143a68;font-weight:800}.quick-action span{display:block;font-size:22px;margin-bottom:2px}
     @media(max-width:900px){.process-strip{grid-template-columns:repeat(4,minmax(150px,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px}.process-step{scroll-snap-align:start;font-size:17px;min-height:52px}.process-no{width:32px;height:32px;font-size:18px}.hero{flex-direction:column;align-items:flex-start}.toolbar{justify-content:flex-start}.row{grid-template-columns:1fr}.topbar{position:relative}}
     @media(max-width:560px){body{font-size:17px}.title h1{font-size:24px}.process-step{font-size:15px;gap:8px;letter-spacing:0}.wrap{padding:10px}.card{border-radius:12px}.toolbar button,.toolbar label,.btn{min-height:44px}.custom-line{flex-direction:column}.kv{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr 1fr 1fr}}
@@ -129,18 +134,16 @@
       <div class="col-title"><h2>現況調查</h2><p>異常相關資訊和處理紀錄。</p></div>
       <div class="card">
         <h3>現場資訊快記區</h3>
-        <p class="sub">放入蒐集到的資訊，系統會擷取內容至案件欄位。</p>
-        <textarea id="quickNote" placeholder="可放現場蒐集到的資訊、平台上的訊息、異常描述、站別、料號、數量、目前處置、待協助事項……"></textarea>
-        <div class="small-actions"><button class="btn primary" id="extractBtn">從快記擷取資訊</button><button class="btn" id="loadQuickTemplate">匯入空白範本</button><button class="btn danger" id="clearQuickNote">清空</button></div>
+        <p class="sub">放入收集到的資訊，系統會擷取內容至案件欄位。</p>
+        <textarea id="quickNote" placeholder="可放現場收集到的資訊、平台上的訊息、異常描述、站別、料號、不良數量、目前處置、待協助事項……"></textarea>
+        <div class="small-actions"><button class="btn primary" id="extractBtn">從快記擷取資訊</button><button class="btn" id="loadQuickTemplate">匯入空白範本</button><button class="btn" id="showDimensionBox">新增尺寸量測</button><button class="btn danger" id="clearQuickNote">清空</button></div>
         <div id="dimensionBox" class="dimension-box hidden">
-          <div class="visual-title">尺寸量測紀錄</div>
-          <div class="dimension-row">
-            <div class="field"><label>規格</label><input id="dimensionSpec" data-field="dimensionSpec" placeholder="例如 6.8"></div>
-            <div class="field"><label>公差符號</label><div class="tol-options"><button type="button" class="btn" data-tol-sign="+">+</button><button type="button" class="btn" data-tol-sign="-">-</button><button type="button" class="btn" data-tol-sign="±">±</button></div></div>
-            <div class="field"><label>公差</label><input id="dimensionTolerance" data-field="dimensionTolerance" placeholder="例如 0.3"></div>
-            <div class="field"><label>實際值</label><input id="dimensionActual" data-field="dimensionActual" placeholder="例如 6.82、6.81"></div>
+          <div class="dimension-head">
+            <div class="visual-title">尺寸量測紀錄</div>
+            <button type="button" class="btn primary" id="addDimensionRow">＋ 新增一筆尺寸</button>
           </div>
-          <p class="tiny" style="margin:8px 0 0">填寫後會自動更新到案件整理的異常調查，例如：尺寸6.8±0.3，實際值為6.81、6.82。</p>
+          <div id="dimensionList" class="dimension-list"></div>
+          <p class="tiny" style="margin:8px 0 0">可新增多筆尺寸；填寫後會自動更新到案件整理的異常調查，例如：孔徑：規格6.8±0.3，實際值為6.82、6.81。</p>
         </div>
       </div>
 
@@ -161,7 +164,8 @@
         <p class="sub">上傳圖片。</p>
         <div class="upload">
           <input id="photoInput" type="file" accept="image/*" multiple>
-          <div class="tiny">建議記錄異常特徵、異常品與良品對照、治具/機台狀況、物料標籤與麥頭。</div>
+          <div class="tiny">建議記錄異常特徵、異常品與良品對照、治具/機台狀況、物料標籤與麥頭。圖片會自動壓縮成輕量預覽，避免手機暫存爆掉。原始照片仍請保留在手機相簿。</div>
+          <div class="paste-hint">電腦使用時可先截圖並複製，回到此頁直接按 Ctrl + V 貼上截圖，會自動加入圖片清單。手機照片只存壓縮預覽與備註。</div>
         </div>
         <div class="preview" id="preview"></div>
       </div>
@@ -222,7 +226,7 @@
 
       <div class="card">
         <h3>風險燈號項目</h3>
-        <p class="sub">依功能、流出/庫存與原因明確性分組。</p>
+        <p class="sub">依功能、安全、物料/成品庫存與原因明確性分組。</p>
         <div class="mini-grid" id="subRiskCards"></div>
       </div>
 
@@ -251,24 +255,26 @@
 
 <script>
 (function(){
-  const SCHEMA_VERSION=22;
-  const STORAGE_KEY='abnormal_case_assistant_v22';
-  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
-  const timelineEvents=['產線通知','異常接收','到現場','確認異常狀況','物料隔離','異常狀況拍照','物料拍照','麥頭拍照','已暫停生產','邊做邊檢','持續發生','已確認影響範圍','初步判定完成','通知相關單位','等待回覆'];
+  const SCHEMA_VERSION=28;
+  const STORAGE_KEY='abnormal_case_assistant_v28';
+  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_v27','abnormal_case_assistant_v26','abnormal_case_assistant_v25','abnormal_case_assistant_v24','abnormal_case_assistant_v22','abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
+  const timelineEvents=['產線通知','異常接收','到現場','確認異常狀況','物料隔離','尺寸量測','異常狀況拍照','物料拍照','麥頭拍照','已暫停生產','邊做邊檢','持續發生','已確認影響範圍','初步判定完成','通知相關單位','等待回覆'];
   const statusGroups=[
-    {title:'案件階段',items:['未開始','現況調查','已有對策','結案']},
+    {title:'案件階段',items:['未開始','現況調查','結案']},
+    {title:'對策狀態（必選，二選一）',items:['已有對策','沒有對策']},
     {title:'現場處置',items:['物料隔離','暫停生產','邊做邊檢']},
-    {title:'升級 / 風險條件',items:['沒有對策','需開停線會議','可能流出','涉及出貨','客訴']}
+    {title:'升級 / 風險條件',items:['需開停線會議','可能流出','涉及出貨','客訴']}
   ];
-  const stageStatuses=['未開始','現況調查','已有對策','結案'];
+  const stageStatuses=['未開始','現況調查','結案'];
+  const countermeasureStatuses=['已有對策','沒有對策'];
   const factorGroups=[
-    {title:'常用確認項目',open:true,items:[['onsite','已至現場','green'],['rateConfirmed','不良率已確認','green'],['isolated','異常品已隔離','green'],['noIsolationNeeded','無隔離需求','green'],['scopeConfirmed','影響範圍已確認','green'],['causeKnown','原因已明確','green'],['dimensionMeasured','尺寸量測完成','green'],['abnormalReproduced','異常已再現','green'],['tempAction','已有暫時對策','green'],['noCountermeasure','沒有對策','red']]},
+    {title:'常用確認項目',open:true,items:[['onsite','已至現場','green'],['rateConfirmed','不良率已確認','green'],['isolated','異常品已隔離','green'],['noIsolationNeeded','無隔離需求','green'],['scopeConfirmed','影響範圍已確認','green'],['causeKnown','原因已明確','green'],['dimensionMeasured','尺寸量測完成','green'],['abnormalReproduced','異常已再現','green'],['tempAction','已有暫時對策','green']]},
     {title:'功能 / 安全',open:false,items:[['safety','功能/安全疑慮','red'],['functionalFailure','功能失效','red'],['customerReject','客戶拒收','red'],['recall','招回','red']]},
-    {title:'流出 / 庫存 / 出貨',open:false,items:[['atStationDetectable','當站能發現異常','green'],['inventory','零件庫存待確認','yellow'],['warehousePending','成倉需確認','yellow'],['orderChanged','已換單生產','yellow']]},
+    {title:'物料 / 成品庫存',open:false,items:[['atStationDetectable','當站能發現異常','green'],['inventory','零件庫存待確認','yellow'],['warehousePending','成品庫存待確認','yellow'],['orderChanged','已換單生產','yellow']]},
     {title:'異常型態 / 再發',open:false,items:[['mixedMaterial','混料/錯料','yellow'],['appearanceIssue','外觀異常','yellow'],['dimensionIssue','尺寸異常','yellow'],['continuous','持續發生','yellow'],['customerComplaint','客訴','yellow'],['repeat8d','8D/PSP後再發','red'],['delayImpact','出貨延遲/排程重大變更','yellow']]}
   ];
-  const fields=['date','line','abnormalType','partNo','lot','supplier','prodQty','ngQty','ngRate','description','shippingImpact','investigation','currentAction','helpNeeded','dimensionSpec','dimensionToleranceSymbol','dimensionTolerance','dimensionActual'];
-  function freshState(){return {schemaVersion:SCHEMA_VERSION,quickNote:'',timeline:[],photos:[],fields:{},statuses:['未開始'],factors:{},missingDone:{},activeTab:'Email 摘要',activeSection:0}}
+  const fields=['date','line','abnormalType','partNo','lot','supplier','prodQty','ngQty','ngRate','description','shippingImpact','investigation','currentAction','helpNeeded'];
+  function freshState(){return {schemaVersion:SCHEMA_VERSION,quickNote:'',timeline:[],photos:[],dimensions:[],fields:{},statuses:['未開始'],factors:{},missingDone:{},activeTab:'Email 摘要',activeSection:0}}
   let state=freshState();
 
   function $(id){return document.getElementById(id)}
@@ -285,10 +291,11 @@
     const f=state.fields||{};
     const hasField=fields.some(k=>k!=='ngRate' && String(f[k]||'').trim());
     const hasTimeline=(state.timeline||[]).length>0;
+    const hasDimensions=hasDimensionRecord();
     const hasPhotos=(state.photos||[]).length>0;
     const hasQuick=String(state.quickNote||'').trim().length>0;
     const statusStarted=(state.statuses||[]).some(s=>s!=='未開始' && s!=='結案');
-    return hasQuick||hasField||hasTimeline||hasPhotos||statusStarted;
+    return hasQuick||hasField||hasTimeline||hasDimensions||hasPhotos||statusStarted;
   }
   function resetToNewInvestigation(){
     state=freshState();
@@ -299,7 +306,7 @@
   function init(){renderStaticButtons();load();bind();syncToDom();recalcAll()}
   function renderStaticButtons(){
     $('timelineBtns').innerHTML=timelineEvents.map(e=>`<button class="btn" data-timeline="${e}">${e}</button>`).join('');
-    $('statusBtns').innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${g.title}</div><div class="btns">${g.items.map(s=>`<button class="btn status ${['結案','已有對策','邊做邊檢'].includes(s)?'green':''} ${['暫停生產','沒有對策','需開停線會議','可能流出','涉及出貨','客訴'].includes(s)?'red':''}" data-status="${s}">${s}</button>`).join('')}</div></div>`).join('');
+    $('statusBtns').innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${g.title}</div><div class="btns">${g.items.map(s=>`<button class="btn status ${['結案','已有對策','邊做邊檢'].includes(s)?'green':''} ${['暫停生產','沒有對策','需開停線會議','可能流出','涉及出貨','客訴'].includes(s)?'red':''} ${countermeasureStatuses.includes(s)?'countermeasure':''}" data-status="${s}">${s}</button>`).join('')}</div>${g.title.includes('對策狀態')?'<div class="tiny" style="margin-top:6px">此欄必選；未選時總燈號維持黃燈。已有對策 / 沒有對策只會保留一個。</div>':''}</div>`).join('');
     $('factorPills').innerHTML=factorGroups.map(g=>`<details ${g.open?'open':''}><summary>${g.title}</summary><div class="pillbar" style="margin-top:10px">${g.items.map(([k,t,c])=>`<label class="pill ${c}" data-pill="${k}"><input type="checkbox" data-factor="${k}">${t}</label>`).join('')}</div></details>`).join('');
     const tabNames=['Email 摘要','待辦 / 驗證','案件紀錄'];
     $('tabs').innerHTML=tabNames.map(t=>`<button class="tab" data-tab="${t}">${t}</button>`).join('');
@@ -308,8 +315,10 @@
     $('quickNote').addEventListener('input',()=>{state.quickNote=$('quickNote').value; save(); recalcAll();});
     $('extractBtn').addEventListener('click',()=>{extractFromText(state.quickNote,true); syncToDom(); recalcAll();});
     $('loadQuickTemplate').addEventListener('click',loadQuickTemplate);
+    $('showDimensionBox').addEventListener('click',()=>addDimensionRow(true));
+    $('addDimensionRow').addEventListener('click',()=>addDimensionRow(true));
     $('clearQuickNote').addEventListener('click',clearQuickNote);
-    fields.forEach(f=>{const el=$(f); if(el) el.addEventListener('input',()=>{state.fields[f]=el.value; if(f==='prodQty'||f==='ngQty') calcRate(); if(['dimensionSpec','dimensionTolerance','dimensionActual'].includes(f)) updateDimensionInvestigation(); save(); recalcAll();});});
+    fields.forEach(f=>{const el=$(f); if(el) el.addEventListener('input',()=>{state.fields[f]=el.value; if(f==='prodQty'||f==='ngQty') calcRate(); save(); recalcAll();});});
     document.addEventListener('click',e=>{
       const t=e.target;
       const step=t.closest('[data-section-index]');
@@ -317,7 +326,8 @@
       if(t.dataset.timeline){addTimeline(t.dataset.timeline)}
       if(t.dataset.status){toggleStatus(t.dataset.status)}
       if(t.dataset.shippingImpact){state.fields.shippingImpact=t.dataset.shippingImpact; save(); syncToDom(); recalcAll()}
-      if(t.dataset.tolSign){state.fields.dimensionToleranceSymbol=t.dataset.tolSign; state.factors.dimensionMeasured=true; updateDimensionInvestigation(); save(); syncToDom(); recalcAll()}
+      if(t.dataset.dimensionSign){const i=Number(t.dataset.dimensionSign); ensureDimension(i); state.dimensions[i].sign=t.dataset.sign; updateDimensionInvestigation(); save(); renderDimensionBox(); recalcAll()}
+      if(t.dataset.removeDimension){removeDimensionRow(Number(t.dataset.removeDimension))}
       if(t.dataset.tab){state.activeTab=t.dataset.tab; save(); recalcAll()}
       if(t.dataset.removePhoto){state.photos.splice(Number(t.dataset.removePhoto),1); save(); renderPhotos(); recalcAll()}
       if(t.dataset.removeTimeline){state.timeline.splice(Number(t.dataset.removeTimeline),1); save(); renderTimeline(); recalcAll()}
@@ -325,6 +335,7 @@
     document.addEventListener('input',e=>{
       const t=e.target;
       if(t.dataset.photoCaption){const i=Number(t.dataset.photoCaption); if(state.photos[i]) state.photos[i].caption=t.value; save(); recalcAll()}
+      if(t.dataset.dimField){const i=Number(t.dataset.dimIndex); ensureDimension(i); state.dimensions[i][t.dataset.dimField]=t.value; updateDimensionInvestigation(); save(); recalcAll()}
     });
     document.addEventListener('change',e=>{
       const t=e.target;
@@ -335,6 +346,7 @@
     $('exportTimeline').addEventListener('click',()=>copyText(formatTimeline(),'已複製處理紀錄'));
     $('clearTimeline').addEventListener('click',()=>{if(confirm('確定清空處理紀錄？')){state.timeline=[];save();renderTimeline();recalcAll()}});
     $('photoInput').addEventListener('change',handlePhotos);
+    document.addEventListener('paste',handlePasteImage);
     $('exportJson').addEventListener('click',exportJson);
     $('importJson').addEventListener('change',importJson);
     $('clearCase').addEventListener('click',()=>{if(confirm('確定要清空？')){[STORAGE_KEY,...LEGACY_STORAGE_KEYS].forEach(k=>localStorage.removeItem(k));resetToNewInvestigation();syncToDom();recalcAll()}});
@@ -349,7 +361,6 @@
     state.activeSection=index;
     updateProcessActive(index);
     save(false);
-    window.scrollTo({top:0,behavior:'smooth'});
   }
   function updateProcessActive(activeIndex=state.activeSection||0){
     const sections=pageSections();
@@ -362,7 +373,6 @@
       const on=Number(btn.dataset.sectionIndex)===activeIndex;
       btn.classList.toggle('active',on);
       btn.setAttribute('aria-current',on?'step':'false');
-      if(on) btn.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'})
     })
   }
 
@@ -390,9 +400,11 @@
     state.timeline.push({time:nowStamp(),text});
     if(text.includes('物料隔離')) addStatus('物料隔離');
     if(text.includes('到現場')) state.factors.onsite=true;
+    if(text.includes('尺寸量測')) addDimensionRow(false);
     if(text.includes('暫停生產')) {addStatus('暫停生產'); removeStatus('邊做邊檢')}
     if(text.includes('邊做邊檢')||text.includes('恢復生產')) {addStatus('邊做邊檢'); removeStatus('暫停生產')}
     if(text.includes('已確認影響範圍')) state.factors.scopeConfirmed=true;
+    if(text.includes('尺寸量測')) state.factors.dimensionMeasured=true;
     if(text.includes('隔離')) state.factors.isolated=true;
     if(text.includes('持續發生')) state.factors.continuous=true;
     save();syncToDom();recalcAll();
@@ -402,9 +414,11 @@
   function toggleStatus(s){
     if(hasStatus(s)) removeStatus(s); else addStatus(s);
     if(stageStatuses.includes(s) && hasStatus(s)) stageStatuses.filter(x=>x!==s).forEach(removeStatus);
+    if(countermeasureStatuses.includes(s) && hasStatus(s)) countermeasureStatuses.filter(x=>x!==s).forEach(removeStatus);
     if(s==='暫停生產' && hasStatus('暫停生產')) removeStatus('邊做邊檢');
     if(s==='邊做邊檢' && hasStatus('邊做邊檢')) removeStatus('暫停生產');
     if(s==='沒有對策') state.factors.noCountermeasure=hasStatus('沒有對策');
+    if(s==='已有對策' && hasStatus('已有對策')) state.factors.noCountermeasure=false;
     if(s==='物料隔離'){
       if(hasStatus('物料隔離')){state.factors.isolated=true;state.factors.noIsolationNeeded=false}
       else state.factors.isolated=false;
@@ -418,7 +432,7 @@
   function addStatus(s){if(!hasStatus(s)) state.statuses.push(s)}
   function removeStatus(s){state.statuses=state.statuses.filter(x=>x!==s)}
   function applyFactorRules(k){
-    if(k==='noCountermeasure'){state.factors[k]?addStatus('沒有對策'):removeStatus('沒有對策')}
+    if(k==='noCountermeasure'){state.factors[k]?(addStatus('沒有對策'),removeStatus('已有對策')):removeStatus('沒有對策')}
     if(k==='isolated'){state.factors[k]?addStatus('物料隔離'):removeStatus('物料隔離'); if(state.factors[k]) state.factors.noIsolationNeeded=false}
     if(k==='noIsolationNeeded' && state.factors[k]){state.factors.isolated=false; removeStatus('物料隔離')}
     if(k==='possibleOutflow'){state.factors[k]?addStatus('可能流出'):removeStatus('可能流出')}
@@ -426,37 +440,103 @@
     if(k==='customerComplaint'){state.factors[k]?addStatus('客訴'):removeStatus('客訴')}
     normalizeExclusiveFlags();
   }
-  function handlePhotos(e){
+  const PHOTO_MAX_SIDE=900;
+  const PHOTO_JPEG_QUALITY=0.58;
+  const PHOTO_MAX_DATA_URL_CHARS=420000;
+  function dataUrlBytes(dataUrl){return Math.round((String(dataUrl||'').length*3)/4)}
+  function sizeText(bytes){if(!bytes&&bytes!==0)return ''; if(bytes<1024)return bytes+' B'; if(bytes<1024*1024)return (bytes/1024).toFixed(1)+' KB'; return (bytes/1024/1024).toFixed(1)+' MB'}
+  function normalizePhotoSrc(src){return String(src||'').length>PHOTO_MAX_DATA_URL_CHARS?'':String(src||'')}
+  function compactPhotosForStorage(photos){return (photos||[]).map(p=>Object.assign({},p,{src:normalizePhotoSrc(p.src),storedMode:p.src&&String(p.src).length>PHOTO_MAX_DATA_URL_CHARS?'metadataOnly':(p.storedMode||'compressedPreview')}))}
+  async function compressImageFile(file){
+    const dataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result||'');r.onerror=reject;r.readAsDataURL(file)});
+    const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=dataUrl});
+    const scale=Math.min(1,PHOTO_MAX_SIDE/Math.max(img.width||1,img.height||1));
+    const w=Math.max(1,Math.round((img.width||1)*scale));
+    const h=Math.max(1,Math.round((img.height||1)*scale));
+    const canvas=document.createElement('canvas');
+    canvas.width=w; canvas.height=h;
+    const ctx=canvas.getContext('2d');
+    ctx.drawImage(img,0,0,w,h);
+    let out=canvas.toDataURL('image/jpeg',PHOTO_JPEG_QUALITY);
+    if(String(out).length>PHOTO_MAX_DATA_URL_CHARS){
+      const s2=Math.sqrt(PHOTO_MAX_DATA_URL_CHARS/String(out).length)*0.9;
+      const w2=Math.max(1,Math.round(w*s2));
+      const h2=Math.max(1,Math.round(h*s2));
+      const c2=document.createElement('canvas');
+      c2.width=w2; c2.height=h2;
+      c2.getContext('2d').drawImage(img,0,0,w2,h2);
+      out=c2.toDataURL('image/jpeg',0.5);
+    }
+    if(String(out).length>PHOTO_MAX_DATA_URL_CHARS) out='';
+    return {src:out,width:w,height:h,storedBytes:dataUrlBytes(out),originalBytes:file.size||0};
+  }
+  async function addPhotoFile(file,nameOverride){
+    if(!file || !file.type || !file.type.startsWith('image/')) return;
+    const item={name:'照片',src:'',added:nowStamp(),partNo:state.fields.partNo||'',line:state.fields.line||'',caption:'',storedMode:'processing',originalSize:sizeText(file.size||0),storedSize:''};
+    state.photos.push(item);
+    renderPhotos();
+    try{
+      const compressed=await compressImageFile(file);
+      item.src=compressed.src;
+      item.storedMode=item.src?'compressedPreview':'metadataOnly';
+      item.storedSize=sizeText(compressed.storedBytes);
+      item.originalSize=sizeText(compressed.originalBytes);
+      if(!item.src) item.caption=item.caption||'圖片過大，僅保留照片紀錄，原圖請由手機相簿另行附上';
+    }catch(err){
+      item.src='';
+      item.storedMode='metadataOnly';
+      item.storedSize='未儲存';
+      item.caption=item.caption||'此圖片無法壓縮預覽，原圖請由手機相簿另行附上';
+    }
+    save(false);renderPhotos();recalcAll();
+  }
+  async function handlePhotos(e){
     const files=[...e.target.files];
-    files.forEach(file=>{
-      if(!file.type.startsWith('image/')) return;
-      const item={name:file.name,src:'',added:nowStamp(),partNo:state.fields.partNo||'',line:state.fields.line||'',caption:''};
-      state.photos.push(item);
-      const reader=new FileReader();
-      reader.onload=()=>{item.src=reader.result||'';save(false);renderPhotos();recalcAll();};
-      reader.readAsDataURL(file);
-    });
+    for(const file of files){await addPhotoFile(file)}
     save();renderPhotos();recalcAll();e.target.value='';
   }
+  async function handlePasteImage(e){
+    const items=[...(e.clipboardData&&e.clipboardData.items?e.clipboardData.items:[])];
+    const imageItems=items.filter(item=>item.type&&item.type.startsWith('image/'));
+    if(!imageItems.length) return;
+    e.preventDefault();
+    let idx=0;
+    for(const item of imageItems){const file=item.getAsFile(); if(file){idx++; await addPhotoFile(file)}}
+    save();renderPhotos();recalcAll();
+  }
+  function fileNameStamp(){const d=new Date();return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`}
   function renderPhotos(){
-    $('preview').innerHTML=(state.photos||[]).map((p,i)=>`<div class="photo">${p.src?`<img src="${p.src}" alt="${escapeHtml(p.name)}" style="width:100%;height:90px;object-fit:cover;border-radius:9px;border:1px solid #d7e6f7">`:`<div class="photo-icon">📎</div>`}<div class="name">${escapeHtml(p.name)}</div><div class="photo-meta">${escapeHtml(p.line||'未填線別/站別')}｜${escapeHtml(p.partNo||'未填料號')}</div><input data-photo-caption="${i}" placeholder="照片備註 / 分類" value="${escapeHtml(p.caption||'')}"><button data-remove-photo="${i}">移除</button></div>`).join('');
+    $('preview').innerHTML=(state.photos||[]).map((p,i)=>{
+      const mode=p.storedMode==='processing'?'處理中':(p.src?'已存壓縮預覽':'僅保留照片紀錄');
+      const sizeInfo=[p.originalSize?`原圖 ${p.originalSize}`:'',p.storedSize?`預覽 ${p.storedSize}`:''].filter(Boolean).join(' → ');
+      return `<div class="photo">${p.src?`<img src="${p.src}" alt="照片預覽" style="width:100%;height:90px;object-fit:cover;border-radius:9px;border:1px solid #d7e6f7">`:`<div class="photo-icon">📎</div>`}<div class="name">照片 ${i+1}</div><div class="photo-meta">${escapeHtml(p.line||'未填線別/站別')}｜${escapeHtml(p.partNo||'未填料號')}</div><div class="photo-meta">${escapeHtml(mode)}${sizeInfo?'｜'+escapeHtml(sizeInfo):''}</div><input data-photo-caption="${i}" placeholder="照片備註 / 分類" value="${escapeHtml(p.caption||'')}"><button data-remove-photo="${i}">移除</button></div>`
+    }).join('');
   }
   function normalizeState(){
     const oldSchema=Number(state.schemaVersion)||0;
     state.schemaVersion=SCHEMA_VERSION;
     if(!state.fields) state.fields={};
-    if(!state.statuses||!state.statuses.length) state.statuses=['未開始'];
+    if(!Array.isArray(state.dimensions)) state.dimensions=[];
+    if(!state.dimensions.length && (state.fields.dimensionSpec||state.fields.dimensionTolerance||state.fields.dimensionActual)){
+      state.dimensions=[{item:'',spec:state.fields.dimensionSpec||'',sign:state.fields.dimensionToleranceSymbol||'±',tolerance:state.fields.dimensionTolerance||'',actual:state.fields.dimensionActual||''}];
+    }
+    state.dimensions=state.dimensions.map(d=>({item:d.item||'',spec:d.spec||'',sign:(d.sign||d.symbol||'±').replace('+-','±').replace('+/-','±').replace('－','-'),tolerance:d.tolerance||d.tol||'',actual:d.actual||''}));
     if(!state.factors) state.factors={};
+    if(hasDimensionRecord()) state.factors.dimensionMeasured=true;
+    if(!state.statuses||!state.statuses.length) state.statuses=['未開始'];
     if(!state.missingDone) state.missingDone={};
     state.statuses=state.statuses.map(s=>{if(s==='尚未判定'||s==='待判定'||s==='調查中') return '現況調查'; if(s==='已判定') return '已有對策'; if(s==='恢復生產') return '邊做邊檢'; return s;});
+    if(hasStatus('已有對策') && hasStatus('沒有對策')){
+      if(state.factors.noCountermeasure) removeStatus('已有對策');
+      else removeStatus('沒有對策');
+    }
     const allowedStatuses=new Set(statusGroups.flatMap(g=>g.items));
     state.statuses=state.statuses.filter(s=>allowedStatuses.has(s));
     if(!state.statuses.length) addStatus('未開始');
     normalizeExclusiveFlags();
-    state.photos=(state.photos||[]).map(p=>({name:p.name||'未命名圖片',src:p.src||'',added:p.added||'',partNo:p.partNo||'',line:p.line||'',caption:p.caption||''}));
+    state.photos=(state.photos||[]).map(p=>({name:'照片',src:normalizePhotoSrc(p.src),added:p.added||'',partNo:p.partNo||'',line:p.line||'',caption:p.caption||'',storedMode:p.storedMode||((p.src&&String(p.src).length<=PHOTO_MAX_DATA_URL_CHARS)?'compressedPreview':'metadataOnly'),originalSize:p.originalSize||'',storedSize:p.storedSize||(p.src?sizeText(dataUrlBytes(normalizePhotoSrc(p.src))):'')}));
     if(!['Email 摘要','待辦 / 驗證','案件紀錄'].includes(state.activeTab)) state.activeTab='Email 摘要';
     state.activeSection=Math.max(0,Math.min(3,Number(state.activeSection)||0));
-    if(state.fields.dimensionToleranceSymbol==='+-'||state.fields.dimensionToleranceSymbol==='+/-') state.fields.dimensionToleranceSymbol='±';
     if(oldSchema<14){
       state.fields.currentAction=cleanActionOnly(state.fields.currentAction||'');
       state.fields.helpNeeded='';
@@ -467,7 +547,9 @@
     if(state.factors.noIsolationNeeded){state.factors.isolated=false;removeStatus('物料隔離')}
     if(state.factors.isolated){state.factors.noIsolationNeeded=false}
     if(hasStatus('物料隔離')){state.factors.isolated=true;state.factors.noIsolationNeeded=false}
-    if(state.factors.noCountermeasure) addStatus('沒有對策');
+    if(state.factors.noCountermeasure){addStatus('沒有對策'); removeStatus('已有對策');}
+    if(hasStatus('已有對策')) state.factors.noCountermeasure=false;
+    if(hasStatus('已有對策') && hasStatus('沒有對策')) removeStatus('沒有對策');
   }
 
   function isExampleLine(line){return /^例如[:：]/.test(String(line||'').trim())}
@@ -595,7 +677,7 @@ function keywordFactors(t){
       ['continuous',/(持續發生|一直發生|連續發生)/,/(未持續|無持續|沒有持續|未連續)/],
       
       ['inventory',/(零件庫存待確認|庫存|WIP)/i,/(未影響庫存|不涉及庫存|無庫存|沒有庫存)/],
-      ['warehousePending',/(成倉需確認|成品倉|成倉|FG)/i,/(成倉不需確認|不涉及成倉|無成倉)/],
+      ['warehousePending',/(成品庫存待確認|成倉需確認|成品倉|成倉|FG)/i,/(成品庫存不需確認|成倉不需確認|不涉及成倉|無成倉)/],
       ['orderChanged',/(已換單生產|換單生產|換工單)/,null],
       ['shipment',/(涉及出貨|已出貨|出貨批次|shipment)/i,noShipment],
       ['possibleOutflow',/(可能流出|流出風險|疑似流出)/,noOutflow],
@@ -606,41 +688,88 @@ function keywordFactors(t){
       ['dimensionMeasured',/(尺寸量測|量測值|規格上下限|孔徑.*\d|尺寸無異常|尺寸.*無異常|實測|量測)/,/(未量測|尚未量測|無量測值|沒有量測值)/]
     ];
     map.forEach(([k,re,negativeRe])=>{if(hasPositiveSignal(re,text,negativeRe)) state.factors[k]=true});
-    if(/沒有對策|無對策|尚無對策/.test(text)){ state.factors.noCountermeasure=true; addStatus('沒有對策'); }
     if(/無隔離需求|不需隔離|免隔離/.test(text)){state.factors.noIsolationNeeded=true;removeStatus('物料隔離')} else if(/隔離/.test(text)){state.factors.isolated=true;addStatus('物料隔離')}
     if(/邊做邊檢|恢復生產/.test(text)) addStatus('邊做邊檢');
     normalizeExclusiveFlags();
   }
+  function ensureDimension(i){
+    if(!Array.isArray(state.dimensions)) state.dimensions=[];
+    while(state.dimensions.length<=i) state.dimensions.push({item:'',spec:'',sign:'±',tolerance:'',actual:''});
+    if(!state.dimensions[i].sign) state.dimensions[i].sign='±';
+    return state.dimensions[i];
+  }
+  function addDimensionRow(renderNow){
+    if(!Array.isArray(state.dimensions)) state.dimensions=[];
+    state.dimensions.push({item:'',spec:'',sign:'±',tolerance:'',actual:''});
+    state.factors.dimensionIssue=true;
+    save(false);
+    if(renderNow){renderDimensionBox(); recalcAll();}
+  }
+  function removeDimensionRow(i){
+    if(!Array.isArray(state.dimensions)) state.dimensions=[];
+    state.dimensions.splice(i,1);
+    updateDimensionInvestigation();
+    state.factors.dimensionMeasured=hasDimensionRecord();
+    save(); renderDimensionBox(); recalcAll();
+  }
+  function dimensionHasContent(d){return !!(d && [d.item,d.spec,d.tolerance,d.actual].some(v=>String(v||'').trim()))}
+  function hasDimensionRecord(){return Array.isArray(state.dimensions) && state.dimensions.some(d=>dimensionHasContent(d) && String(d.actual||'').trim())}
   function renderDimensionBox(){
     const box=$('dimensionBox');
     if(!box) return;
-    box.classList.toggle('hidden',!(hasFactor('dimensionMeasured')||hasFactor('dimensionIssue')));
-    document.querySelectorAll('[data-tol-sign]').forEach(b=>b.classList.toggle('active',(state.fields.dimensionToleranceSymbol||'±')===b.dataset.tolSign));
+    if(!Array.isArray(state.dimensions)) state.dimensions=[];
+    const shouldShow=state.dimensions.length>0 || hasFactor('dimensionMeasured') || hasFactor('dimensionIssue');
+    box.classList.toggle('hidden',!shouldShow);
+    renderDimensions();
   }
-  function buildDimensionLine(){
-    const spec=String(state.fields.dimensionSpec||'').trim();
-    const sign=String(state.fields.dimensionToleranceSymbol||'±').trim();
-    const tol=String(state.fields.dimensionTolerance||'').trim();
-    const actual=String(state.fields.dimensionActual||'').trim();
-    if(!spec && !tol && !actual) return '';
-    const specText=spec?`尺寸${spec}${tol?`${sign}${tol}`:''}`:'';
-    const actualText=actual?`實際值為${actual}`:'';
-    return [specText,actualText].filter(Boolean).join('，');
+  function renderDimensions(){
+    const list=$('dimensionList');
+    if(!list) return;
+    if(!state.dimensions.length){list.innerHTML='<div class="tiny">尚未新增尺寸量測；按「新增一筆尺寸」開始填寫。</div>';return;}
+    list.innerHTML=state.dimensions.map((d,i)=>{
+      const sign=d.sign||'±';
+      const signBtns=['+','-','±'].map(s=>`<button type="button" class="btn ${sign===s?'active':''}" data-dimension-sign="${i}" data-sign="${s}">${s}</button>`).join('');
+      return `<div class="dimension-item"><div class="dimension-row">
+        <div class="field"><label>項目 / 位置</label><input data-dim-index="${i}" data-dim-field="item" value="${escapeHtml(d.item||'')}" placeholder="例如 外徑、孔徑"></div>
+        <div class="field"><label>規格</label><input data-dim-index="${i}" data-dim-field="spec" value="${escapeHtml(d.spec||'')}" placeholder="例如 6.8"></div>
+        <div class="field"><label>公差符號</label><div class="tol-options">${signBtns}</div></div>
+        <div class="field"><label>公差</label><input data-dim-index="${i}" data-dim-field="tolerance" value="${escapeHtml(d.tolerance||'')}" placeholder="例如 0.3"></div>
+        <div class="field"><label>實際值</label><input data-dim-index="${i}" data-dim-field="actual" value="${escapeHtml(d.actual||'')}" placeholder="例如 6.82、6.81"></div>
+        <button type="button" class="btn danger dimension-remove" data-remove-dimension="${i}">刪除</button>
+      </div></div>`;
+    }).join('');
+  }
+  function buildDimensionLines(){
+    if(!Array.isArray(state.dimensions)) return [];
+    return state.dimensions.filter(d=>dimensionHasContent(d)).map((d,i)=>{
+      const item=String(d.item||'').trim();
+      const spec=String(d.spec||'').trim();
+      const sign=String(d.sign||'±').trim();
+      const tol=String(d.tolerance||'').trim();
+      const actual=String(d.actual||'').trim();
+      const name=item || `尺寸${i+1}`;
+      const specText=spec?`規格${spec}${tol?`${sign}${tol}`:''}`:'';
+      const actualText=actual?`實際值為${actual}`:'';
+      return `${name}：${[specText,actualText].filter(Boolean).join('，')}`;
+    });
+  }
+  function removeDimensionBlock(inv){
+    let out=String(inv||'').replace(/\n?【尺寸量測紀錄】[\s\S]*?【尺寸量測紀錄結束】\n?/g,'\n').trim();
+    const oldLine=String(state.fields.dimensionInvestigationLine||'').trim();
+    if(oldLine) out=out.split(/\n/).filter(line=>line.trim()!==oldLine).join('\n').trim();
+    return out;
   }
   function updateDimensionInvestigation(){
-    const newLine=buildDimensionLine();
-    const oldLine=String(state.fields.dimensionInvestigationLine||'').trim();
-    let inv=String(state.fields.investigation||'').trim();
-    if(oldLine){
-      inv=inv.split(/\n/).filter(line=>line.trim()!==oldLine).join('\n').trim();
-    }
-    if(newLine){
-      inv=[inv,newLine].filter(Boolean).join('\n');
-      state.fields.dimensionInvestigationLine=newLine;
-      state.factors.dimensionMeasured=true;
+    const lines=buildDimensionLines();
+    let inv=removeDimensionBlock(state.fields.investigation);
+    if(lines.length){
+      const block=['【尺寸量測紀錄】',...lines.map((line,i)=>`${i+1}. ${line}`),'【尺寸量測紀錄結束】'].join('\n');
+      inv=[inv,block].filter(Boolean).join('\n');
+      state.fields.dimensionInvestigationLine=block;
     }else{
       state.fields.dimensionInvestigationLine='';
     }
+    state.factors.dimensionMeasured=hasDimensionRecord() || (!!state.factors.dimensionMeasured && (!state.dimensions || !state.dimensions.length));
     state.fields.investigation=inv;
     if($('investigation')) $('investigation').value=inv;
   }
@@ -671,13 +800,12 @@ function keywordFactors(t){
     if(!f.prodQty) m.push('抽樣數'); if(!f.ngQty) m.push('不良數'); if(num(f.prodQty)>0 && num(f.ngQty)>num(f.prodQty)) m.push('不良數不可大於抽樣數');
     if(rateMismatch()) m.push('貼上不良率與抽樣數/不良數計算不一致');
     if(!f.currentAction) m.push('目前處置'); if(!f.investigation) m.push('異常調查'); if(!f.shippingImpact) m.push('是否影響出貨'); if(!f.helpNeeded) m.push('待協助事項');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !hasFactor('dimensionMeasured')) m.push('尺寸量測');
+    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) m.push('尺寸量測');
     if(hasStatus('未開始')) m.push('請選擇目前案件狀態');
-    const needsScopeConfirm=hasStatus('結案')||hasFactor('inventory')||hasFactor('shipment')||hasFactor('possibleOutflow')||hasFactor('outToCustomer')||hasFactor('enteredNextStation')||hasFactor('warehousePending')||hasFactor('orderChanged')||hasStatus('涉及出貨')||hasStatus('可能流出');
+    if(hasAnyCaseContent() && !hasStatus('結案') && !hasStatus('已有對策') && !hasStatus('沒有對策')) m.push('對策狀態（已有對策 / 沒有對策）');
+    const needsScopeConfirm=hasStatus('結案')||hasFactor('shipment')||hasFactor('possibleOutflow')||hasFactor('outToCustomer')||hasFactor('enteredNextStation')||hasStatus('涉及出貨')||hasStatus('可能流出');
     if(needsScopeConfirm && !hasFactor('scopeConfirmed')) m.push('影響範圍是否已確認');
     if(!hasStatus('未開始') && !(hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離'))) m.push('疑似品是否已隔離或無隔離需求');
-    if(hasFactor('enteredNextStation')||hasFactor('warehousePending')||hasFactor('orderChanged')) m.push('下一站 / 在製品影響範圍');
-    if(hasFactor('inventory')) m.push('庫存批次、數量與隔離紀錄');
     if(hasFactor('shipment')||hasStatus('涉及出貨')) m.push('出貨批次、數量與追回/通知狀態');
     if(hasFactor('possibleOutflow')||hasFactor('outToCustomer')||hasStatus('可能流出')) m.push('流出範圍與客戶端狀態');
     if((hasFactor('continuous')||hasFactor('repeat8d')||hasFactor('repeat8d')||hasStatus('結案')) && !hasFactor('causeKnown')) m.push('是否有初步原因');
@@ -690,14 +818,14 @@ function keywordFactors(t){
     const f=state.fields;
     const missing=[];
     const contained=hasFactor('isolated')||hasStatus('物料隔離')||hasFactor('noIsolationNeeded');
-    const rangePending=hasFactor('inventory')||hasFactor('warehousePending')||hasFactor('orderChanged')||hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
+    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
     if(!hasFactor('onsite')) missing.push('已至現場');
     if(!hasFactor('rateConfirmed')) missing.push('不良率已確認');
     if(!f.description && !f.abnormalType) missing.push('異常描述 / 異常類型');
     if(!f.shippingImpact) missing.push('是否影響出貨');
     if(!contained) missing.push('異常品已隔離 / 無隔離需求');
     if(rateMismatch()) missing.push('不良率資料一致性');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !hasFactor('dimensionMeasured')) missing.push('尺寸量測');
+    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) missing.push('尺寸量測');
     if(rangePending && !(hasFactor('scopeConfirmed')||hasFactor('atStationDetectable'))) missing.push('影響範圍 / 流出範圍');
     return [...new Set(missing)];
   }
@@ -710,9 +838,10 @@ function keywordFactors(t){
     const contained=isolated||hasFactor('noIsolationNeeded');
     const onsite=hasFactor('onsite');
     const noCounter=hasFactor('noCountermeasure')||hasStatus('沒有對策');
+    const countermeasureSelected=hasStatus('已有對策')||hasStatus('沒有對策');
     const shippingYes=state.fields.shippingImpact==='是'||hasFactor('shipment')||hasStatus('涉及出貨');
     const possibleFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const rangePending=hasFactor('inventory')||hasFactor('warehousePending')||hasFactor('orderChanged');
+    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
     const rangeControlled=hasFactor('scopeConfirmed')||hasFactor('atStationDetectable');
 
     const activeCase=hasAnyCaseContent();
@@ -721,6 +850,9 @@ function keywordFactors(t){
     }
     if(hasStatus('未開始') && activeCase){
       reasons.yellow.push('已有案件資訊，但案件階段仍為未開始');
+    }
+    if(activeCase && !hasStatus('結案') && !countermeasureSelected){
+      reasons.yellow.push('尚未選擇對策狀態：已有對策 / 沒有對策');
     }
 
     // 紅燈：到現場後才啟動重大風險判定；異常現象本身不直接等於失控。
@@ -738,11 +870,15 @@ function keywordFactors(t){
     }
 
     if(reasons.red.length){
-      return {light:'red',reasons,missing,controlMissing,mainText:'不可放行',suggestion:'先停止放行，確認隔離、流出與出貨範圍，並通知主管與相關單位介入。',sub:subRisks()};
+      return {light:'red',reasons,missing,controlMissing,mainText:'不可放行',suggestion:'先停止放行，確認隔離、流出與出貨範圍，並通知主管與相關單位介入；物料/成品庫存視需要補充盤點。',sub:subRisks()};
     }
 
     if(hasStatus('結案')){
       return {light:'gray',reasons,missing,controlMissing,mainText:'已結束',suggestion:'案件已結案；若後續又發現再發，請重新開案判定。',sub:subRisks()};
+    }
+
+    if(activeCase && !hasStatus('結案') && !countermeasureSelected){
+      return {light:'yellow',reasons,missing,controlMissing,mainText:'待選擇對策狀態',suggestion:'請先在案件狀態選擇「已有對策」或「沒有對策」；未選時不判定為綠燈。',sub:subRisks()};
     }
 
     if(hasStatus('已有對策')){
@@ -750,7 +886,7 @@ function keywordFactors(t){
         reasons.yellow.push('已有對策但掌控條件未完成：'+controlMissing.join('、'));
         return {light:'yellow',reasons,missing,controlMissing,mainText:'資料不足 / 待確認',suggestion:'案件已標示已有對策，但仍有掌控條件未完成；請補齊後再視為綠燈。',sub:subRisks()};
       }
-      reasons.greenBlock.push('案件階段已有對策');
+      reasons.greenBlock.push('已選擇「已有對策」');
       return {light:'green',reasons,missing,controlMissing,mainText:'已在掌控中',suggestion:'案件已有對策；請保留判定依據，並追蹤後續改善、供應商或相關單位回覆。',sub:subRisks()};
     }
 
@@ -758,7 +894,6 @@ function keywordFactors(t){
     if(hasStatus('現況調查')) reasons.yellow.push('案件仍在現況調查階段');
     if(qtyInvalid) reasons.yellow.push('不良數大於抽樣數，需先確認數量');
     if(controlMissing.length) reasons.yellow.push('掌控條件未完成：'+controlMissing.join('、'));
-    if(rangePending) reasons.yellow.push('庫存 / 成倉 / 換單生產狀態待確認');
     if(shippingYes && !rangeControlled) reasons.yellow.push('已標示影響出貨，需確認出貨與流出範圍');
     if(hasFactor('mixedMaterial') && !rangeControlled) reasons.yellow.push('混料 / 錯料需確認影響範圍');
     if(hasFactor('customerComplaint')||hasStatus('客訴')) reasons.yellow.push('客訴案件需補完整判定與處置紀錄');
@@ -777,7 +912,7 @@ function keywordFactors(t){
     if(state.fields.shippingImpact) reasons.greenBlock.push('出貨影響已確認：'+state.fields.shippingImpact);
     if(hasFactor('atStationDetectable')) reasons.greenBlock.push('當站能發現異常');
     if(hasFactor('tempAction')) reasons.greenBlock.push('已有暫時對策');
-    if(hasFactor('dimensionMeasured')) reasons.greenBlock.push('尺寸量測已完成');
+    if(hasFactor('dimensionMeasured')||hasDimensionRecord()) reasons.greenBlock.push('尺寸量測已完成');
     return {light:'green',reasons,missing,controlMissing,mainText:'已在掌控中',suggestion:'目前異常已被圍堵且主要影響範圍已清楚；可整理紀錄並追蹤後續改善或供應商回覆。',sub:subRisks()};
   }
   function subRisks(){
@@ -785,9 +920,11 @@ function keywordFactors(t){
     const isolated=hasFactor('isolated')||hasStatus('物料隔離');
     const contained=isolated||hasFactor('noIsolationNeeded');
     const noCounter=hasFactor('noCountermeasure')||hasStatus('沒有對策');
+    const countermeasureSelected=hasStatus('已有對策')||hasStatus('沒有對策');
     const shippingYes=state.fields.shippingImpact==='是'||hasFactor('shipment')||hasStatus('涉及出貨');
     const possibleFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const rangePending=hasFactor('inventory')||hasFactor('warehousePending')||hasFactor('orderChanged');
+    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
+    const stockPending=hasFactor('inventory')||hasFactor('warehousePending')||hasFactor('orderChanged');
     const rangeControlled=hasFactor('scopeConfirmed')||hasFactor('atStationDetectable');
 
     let functional;
@@ -796,7 +933,7 @@ function keywordFactors(t){
     }else if(hasFactor('customerComplaint')||hasStatus('客訴')){
       functional=['yellow','客訴案件需補判定依據，尚不能直接視為已掌控。','補客訴內容、功能確認、外觀/尺寸判定與客戶端狀態。'];
     }else if(hasFactor('appearanceIssue')||hasFactor('dimensionIssue')||hasFactor('mixedMaterial')){
-      const dimOk=!hasFactor('dimensionIssue')||hasFactor('dimensionMeasured');
+      const dimOk=!hasFactor('dimensionIssue')||(hasFactor('dimensionMeasured')||hasDimensionRecord());
       if(dimOk&&contained&&state.fields.shippingImpact){
         functional=['green','外觀 / 尺寸 / 混料類異常已有基本判定與圍堵條件。','保留良品/異常品對照、試裝或量測紀錄。'];
       }else{
@@ -810,22 +947,26 @@ function keywordFactors(t){
 
     let outflow;
     if(possibleFlow){
-      outflow=['red','已標示可能或已流出。','先確認疑似品隔離、庫存、成倉、出貨與客戶端狀態。'];
-    }else if(rangePending||shippingYes||!contained){
-      outflow=['yellow','仍有庫存、成倉、換單、生產流向、出貨或隔離狀態待確認。','確認當站是否能發現、異常品是否隔離、是否影響出貨。'];
+      outflow=['red','已標示可能或已流出。','先確認疑似品隔離、出貨與客戶端狀態；物料/成品庫存作為補充盤點。'];
+    }else if(shippingYes){
+      outflow=['yellow','已標示影響出貨，需確認出貨與客戶端狀態。','確認出貨批次、數量、追回或通知狀態。'];
+    }else if(stockPending){
+      outflow=['gray','已標示物料/成品庫存需確認，僅作為補充提醒，不拉高總燈號。','需要時再補庫存、成品倉或換單生產狀態。'];
     }else if(rangeControlled&&contained){
       outflow=['green','已具備隔離與範圍控制條件。','保留隔離紀錄、照片與判定依據。'];
     }else{
       outflow=activeCase
-        ? ['yellow','尚未確認流出 / 庫存 / 出貨相關狀態。','確認當站是否能發現、異常品是否隔離、庫存/成倉/出貨是否受影響。']
-        : ['gray','案件尚未開始，尚未進入流出 / 庫存 / 出貨判定。','開始現況調查後再勾選當站能發現、庫存、成倉或換單生產。'];
+        ? ['gray','未標示物料/成品庫存待確認，暫不納入風險判斷。','若案件需要追庫存或成品倉，再勾選本區項目即可。']
+        : ['gray','案件尚未開始，尚未進入物料/成品庫存確認。','開始現況調查後，必要時再勾選庫存或成品倉狀態。'];
     }
 
     let control;
     if(noCounter&&hasFactor('continuous')){
       control=['red','沒有對策且持續發生，代表目前未受控。','先建立暫時對策與圍堵方式，再追蹤改善驗證。'];
+    }else if(activeCase && !countermeasureSelected){
+      control=['yellow','尚未選擇對策狀態，因此不能判定為已掌控。','請在案件狀態選擇「已有對策」或「沒有對策」。'];
     }else if(hasStatus('已有對策')){
-      control=['green','案件階段已有對策，視為掌控 / 對策狀態已確認。','保留判定依據，追蹤後續改善或相關單位回覆。'];
+      control=['green','已選擇「已有對策」，對策狀態已確認。','保留判定依據，追蹤後續改善或相關單位回覆。'];
     }else if(noCounter||hasFactor('continuous')||hasFactor('delayImpact')||hasStatus('暫停生產')){
       control=['yellow','仍有對策、持續發生、停產或排程影響需追蹤。','補暫時對策、責任單位、完成日與驗證方式。'];
     }else if(hasFactor('tempAction')&&contained){
@@ -835,7 +976,7 @@ function keywordFactors(t){
         ? ['yellow','尚未確認對策與追蹤狀態。','確認是否已有暫時對策、是否仍持續發生、是否需要責任單位與完成期限。']
         : ['gray','案件尚未開始，尚未進入對策與追蹤判定。','開始現況調查後再確認暫時對策或追蹤狀態。'];
     }
-    return [{title:'功能 / 安全狀態',arr:functional},{title:'流出 / 庫存 / 出貨狀態',arr:outflow},{title:'掌控 / 對策狀態',arr:control}];
+    return [{title:'功能 / 安全狀態',arr:functional},{title:'物料 / 成品庫存狀態',arr:outflow},{title:'掌控 / 對策狀態',arr:control}];
   }
   function riskLabel(light){return {red:'紅燈',yellow:'黃燈',green:'綠燈',gray:'灰燈'}[light]||'灰燈'}
   function riskEvidence(r){
@@ -858,7 +999,7 @@ function keywordFactors(t){
   function renderCompletion(r){
     const f=state.fields;
     const checks=[
-      ['日期',!!f.date],['發生地點',!!f.line],['異常類型',!!f.abnormalType],['料號',!!f.partNo],['異常描述',!!f.description],['抽樣數',!!f.prodQty],['不良數',!!f.ngQty],['目前處置',!!f.currentAction],['是否影響出貨',!!f.shippingImpact],['異常調查',!!f.investigation],['待協助事項',!!f.helpNeeded],['案件階段',!hasStatus('未開始')],['隔離/無隔離需求',hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離')]
+      ['日期',!!f.date],['發生地點',!!f.line],['異常類型',!!f.abnormalType],['料號',!!f.partNo],['異常描述',!!f.description],['抽樣數',!!f.prodQty],['不良數',!!f.ngQty],['目前處置',!!f.currentAction],['是否影響出貨',!!f.shippingImpact],['異常調查',!!f.investigation],['待協助事項',!!f.helpNeeded],['案件階段',!hasStatus('未開始')],['對策狀態',hasStatus('已有對策')||hasStatus('沒有對策')],['隔離/無隔離需求',hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離')]
     ];
     const all=checks;
     const done=all.filter(x=>x[1]).length; const pctVal=all.length?Math.round(done/all.length*100):0;
@@ -866,13 +1007,13 @@ function keywordFactors(t){
     $('completionTags').innerHTML=checks.map(([name,ok])=>`<span class="tag ${ok?'ok':'miss'}">${ok?'✓':'待'} ${escapeHtml(name)}</span>`).join('');
   }
   function dataSummary(r){const f=state.fields;return `發生日期：${f.date||'未填'}\n發生地點(線別/站別)：${f.line||'未填'}\n異常類型：${f.abnormalType||'未填'}\n料號：${f.partNo||'未填'}\n工單 / 批號：${f.lot||'未填'}\n供應商：${f.supplier||'未填'}\n異常現象：${f.description||'未填'}\n抽樣數：${f.prodQty||'未填'}\n不良數：${f.ngQty||'未填'}\n不良率：${f.ngRate||'未填'}\n是否影響出貨：${f.shippingImpact||'未填'}\n異常調查：${f.investigation||'未填'}\n目前處置：${f.currentAction||'未填'}\n待協助事項：${f.helpNeeded||'未填'}\n目前案件狀態：${state.statuses.join('、')||'未開始'}\n目前燈號：${riskLabel(r.light)}`}
-  function completedActions(){const a=[];if(hasStatus('物料隔離')||hasFactor('isolated')) a.push('疑似品已有隔離紀錄');if(hasFactor('noIsolationNeeded')) a.push('已確認無隔離需求');if(hasStatus('暫停生產')) a.push('已暫停生產');if(hasStatus('邊做邊檢')) a.push('邊做邊檢');if(hasFactor('scopeConfirmed')) a.push('已確認影響範圍');if(hasFactor('tempAction')) a.push('已有暫時對策');if(state.photos.length) a.push(`已有照片檔名 ${state.photos.length} 筆`);if(state.timeline.length) a.push('已有處理紀錄');return a.length?a.join('、'):'尚未明確記錄已完成處置'}
+  function completedActions(){const a=[];if(hasStatus('物料隔離')||hasFactor('isolated')) a.push('疑似品已有隔離紀錄');if(hasFactor('noIsolationNeeded')) a.push('已確認無隔離需求');if(hasStatus('暫停生產')) a.push('已暫停生產');if(hasStatus('邊做邊檢')) a.push('邊做邊檢');if(hasFactor('scopeConfirmed')) a.push('已確認影響範圍');if(hasFactor('tempAction')) a.push('已有暫時對策');if(state.photos.length) a.push(`已有照片 ${state.photos.length} 筆`);if(state.timeline.length) a.push('已有處理紀錄');return a.length?a.join('、'):'尚未明確記錄已完成處置'}
   function nextSteps(r){
-    const s=[]; if(!(hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離'))) s.push('先確認異常品與可疑品是否已隔離、標示，避免誤用或流入下一站');
+    const s=[]; if(!hasStatus('已有對策') && !hasStatus('沒有對策')) s.push('先選擇對策狀態：已有對策或沒有對策，未選時維持黃燈'); if(!(hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離'))) s.push('先確認異常品與可疑品是否已隔離、標示，避免誤用或流入下一站');
     if(!state.fields.prodQty||!state.fields.ngQty) s.push('補上抽樣數、不良數，計算不良率');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((state.fields.abnormalType||'')+' '+(state.fields.description||''))) && !hasFactor('dimensionMeasured')) s.push('補尺寸量測紀錄：量測值、規格上下限、量具與良品/異常品對照');
+    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((state.fields.abnormalType||'')+' '+(state.fields.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) s.push('補尺寸量測紀錄：量測值、規格上下限、量具與良品/異常品對照');
     if(!hasFactor('causeKnown')) s.push('確認原因是否明確：人、機、料、法、量測、環境是否有變更或異常');
-    if(!hasFactor('scopeConfirmed')) s.push('確認影響範圍：同批、同工單、同線別、下一站、庫存、出貨');
+    if(!hasFactor('scopeConfirmed')) s.push('確認影響範圍：同批、同工單、同線別、下一站、出貨；若需要再補物料/成品庫存');
     if(hasStatus('邊做邊檢')) s.push('追蹤邊做邊檢期間的不良率與是否持續發生');
     if(hasFactor('functionalFailure')||hasFactor('mixedMaterial')||hasFactor('possibleOutflow')||hasStatus('可能流出')||r.light==='red') s.push('若涉及功能/流出風險，必要時開停線會議');
     if(hasFactor('continuous')||hasFactor('repeat8d')) s.push('若持續發生，需追蹤對策與改善後驗證結果');
@@ -886,17 +1027,23 @@ function keywordFactors(t){
     const hasFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer')||hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('inventory')||hasFactor('enteredNextStation')||hasFactor('warehousePending')||hasFactor('orderChanged')||String(f.shippingImpact||'').trim();
     const hasFunctional=hasFactor('safety')||hasFactor('functionalFailure')||hasFactor('customerComplaint')||hasStatus('客訴')||/功能|安全|卡住|無法|失效|客訴|拒收/i.test(text);
     const flows=[];
-    if(hasFlow) flows.push({title:'流出 / 出貨分流',items:['確認同批、同工單、同線別、下一站、庫存與出貨批次是否受影響','盤點 WIP / 庫存 / 已出貨數量，標示隔離狀態與責任窗口','若已出貨或可能到客戶端，確認是否需通知客戶、追回、暫停出貨或開會升級']});
+    if(hasFlow) flows.push({title:'流出 / 出貨分流',items:['確認同批、同工單、同線別、下一站與出貨批次是否受影響；必要時再盤點物料/成品庫存','盤點 WIP / 已出貨數量，標示隔離狀態與責任窗口；物料/成品庫存改為補充確認','若已出貨或可能到客戶端，確認是否需通知客戶、追回、暫停出貨或開會升級']});
     if(hasMix) flows.push({title:'混料 / 錯料分流',items:['比對應用料號、實際料號、替代料、包裝標籤、工單與投料紀錄','確認錯料來源：領料、備料、線邊、上料、換線、重工或人員拿取錯誤','用良品 / 異常品照片與料號標籤建立判別方式，必要時擴大到同批同站別']});
     if(hasDim) flows.push({title:'尺寸 / 量測分流',items:['補量測值、規格上下限、量具編號、量測人員與量測日期','做良品 / 異常品對照，確認是單件、批量、量測方法或治具造成','若尚未完成，請在確認項目勾選「完成尺寸量測」前先補佐證']});
     if(hasFunctional) flows.push({title:'功能 / 安全分流',items:['確認是否影響功能、安全、客戶使用或組裝相容性','補功能測試、試裝結果、失效模式與客戶風險評估','若涉及安全、功能失效、客訴或拒收，建議主管 / SQE / 工程單位介入']});
     if(!hasFactor('causeKnown')||hasStatus('沒有對策')||hasFactor('continuous')||hasFactor('repeat8d')) flows.push({title:'原因 / 對策分流',items:['從人、機、料、法、量測、環境確認變更點與異常點','先定義暫時對策與圍堵方式，再追蹤永久對策、責任單位、完成日與驗證方式','若持續或重複發生，需確認改善後驗證結果與是否再發']});
-    if(!flows.length) flows.push({title:'一般異常調查',items:['先完成基本資訊、抽樣數 / 不良數與疑似品隔離狀態；如有照片或截圖再補佐證','再依現場結果勾選功能、流出、尺寸、原因與對策相關項目']});
+    if(!flows.length) flows.push({title:'一般異常調查',items:['先完成基本資訊、抽樣數 / 不良數與疑似品隔離狀態；如有照片或截圖再補佐證','再依現場結果勾選功能、尺寸、原因與對策相關項目；物料/成品庫存為補充資訊']});
     return flows;
   }
   function compactJoin(parts){return parts.map(x=>String(x||'').trim()).filter(Boolean).join(' ')}
-  function emailSubject(){const f=state.fields;return compactJoin([f.partNo,f.description])}
-  function photoText(){return state.photos.length?state.photos.map((p,i)=>`${i+1}. ${p.name}${p.caption?` - ${p.caption}`:''}`).join('\n'):''}
+  function singleLine(v){return String(v||'').replace(/\s+/g,' ').trim()}
+  function trimSubjectPart(v,max=56){const s=singleLine(v);return s.length>max?s.slice(0,max)+'…':s}
+  function emailSubject(){
+    const f=state.fields;
+    return compactJoin([trimSubjectPart(f.partNo,32),trimSubjectPart(f.description||f.abnormalType,64)])||'異常通知';
+  }
+  function photoLabel(p,i){const c=String(p&&p.caption||'').trim();return c||`照片 ${i+1}`}
+  function photoText(){return state.photos.length?state.photos.map((p,i)=>`${i+1}. ${photoLabel(p,i)}`).join('\n'):''}
   function stripListNo(line){return String(line||'').replace(/^\s*\d+[.、)）]\s*/,'').trim()}
   function isProcessInvestigationLine(line){
     const clean=stripListNo(line).replace(/[。.;；\s]+$/,'').trim();
@@ -926,27 +1073,57 @@ function keywordFactors(t){
     }
     return hadNumber?stripListNo(source[0]):source[0];
   }
-  function plainEmail(r){
+  function emailCleanValue(value){return String(value||'').trim()}
+  function emailRowsData(){
     const f=state.fields;
-    return `主旨：${emailSubject()}
-Hi all,
-
-發生時間：${f.date||''}
-發生地點(線別/站別)：${f.line||''}
-異常描述：${f.description||''}
-料號：${f.partNo||''}
-抽樣數：${f.prodQty||''}
-不良數：${f.ngQty||''}
-不良率：${f.ngRate||''}
-是否影響出貨：${f.shippingImpact||''}
-異常調查：${publicInvestigationText()?`\n${publicInvestigationText()}`:''}
-
-照片：
-${photoText()}`;
+    const rows=[
+      ['發生時間',f.date],
+      ['發生地點',f.line],
+      ['異常描述',f.description],
+      ['料號',f.partNo],
+      ['抽樣數',f.prodQty],
+      ['不良數',f.ngQty],
+      ['不良率',f.ngRate],
+      ['供應商',f.supplier],
+      ['異常調查',publicInvestigationText()],
+      ['是否影響出貨',f.shippingImpact],
+      ['處理對策',f.currentAction]
+    ];
+    return rows.map(([label,value])=>[label,emailCleanValue(value)]).filter(([,value])=>value);
   }
+  function plainEmail(r){
+    const rows=emailRowsData();
+    const lines=[`主旨：${emailSubject()}`,'','Hi all,',''];
+    if(rows.length){
+      rows.forEach(([label,value])=>lines.push(`${label}\t${value}`));
+    }
+    const photos=photoText();
+    if(photos){lines.push('','照片：',photos)}
+    return lines.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+  }
+  function cleanRecordQuickNote(text){
+    const raw=String(text||'').replace(/[\u200B-\u200D\uFEFF]/g,'');
+    const srcLines=raw.split(/\r?\n/).map(s=>s.trim());
+    const out=[];
+    let inSignature=false;
+    const isIconLine=line=>/^[\uE000-\uF8FF\uF000-\uF8FF]+$/u.test(line);
+    const isOutlookPerson=line=>/^[A-Za-z .'-]+\s*\([^)]+\)\s*[A-Za-z .'-]+;?$/.test(line);
+    const isMailNoise=line=>/^(摘要此電子郵件|Hi\b.*|Dear\b.*|Best\s+Regards,?|寄件者|From|已傳送|Sent|收件者|To|副本|Cc|主旨|Subject)$/i.test(line);
+    for(const line of srcLines){
+      if(/^Best\s+Regards,?/i.test(line)){inSignature=true;continue;}
+      if(inSignature) continue;
+      if(!line){
+        if(out.length && out[out.length-1] !== '') out.push('');
+        continue;
+      }
+      if(isIconLine(line)||isMailNoise(line)||isOutlookPerson(line)) continue;
+      out.push(line);
+    }
+    return out.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+  }
+
   function renderOutputs(r){
-    const f=state.fields; const light=riskLabel(r.light); const quickExtra=(state.quickNote||'').trim();
-    const notice=`目前於【${f.line||'線別/站別未填'}】發現【${f.partNo||'料號未填'}】發生【${f.abnormalType||f.description||'異常現象未填'}】。\n抽樣數【${f.prodQty||'未填'}】，不良數【${f.ngQty||'未填'}】，不良率【${f.ngRate||'未填'}】。\n目前案件狀態為【${state.statuses.join('、')||'未開始'}】，系統判定為【${light}】。\n目前已完成處置：【${completedActions()}】。\n待確認事項：【${missingItems().slice(0,8).join('、')||'目前無明顯待補項目'}】。${quickExtra?`\n\n【現場補充資訊 / 原始快記】\n${quickExtra}`:''}\n\n請相關單位協助確認並回覆後續處置。\n建議回覆期限：____ / ____ 前。`;
+    const f=state.fields; const light=riskLabel(r.light); const quickExtra=cleanRecordQuickNote(state.quickNote);
     const todo=`【待辦 / 驗證】
 ${nextSteps(r).map((x,i)=>`${i+1}. ${x}`).join('\n')}
 
@@ -971,32 +1148,27 @@ ${photoText()||'無'}`;
     if(state.activeTab==='Email 摘要') $('outputBox').innerHTML=renderEmailPreview(r); else $('outputBox').innerText=outputs[state.activeTab]||plainEmail(r);
     document.querySelectorAll('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===state.activeTab));
   }
-  function cellHtml(v,fallback=''){return escapeHtml(displayValue(v,fallback)).replace(/\n/g,'<br>')}
-  function emailRow(label,value,fallback=''){return `<tr><td class="label">${escapeHtml(label)}</td><td class="value">${cellHtml(value,fallback)}</td></tr>`}
-  function emailPhotosHtml(){if(!state.photos.length) return '<div></div>';return `<div class="email-photo-list" style="padding-left:0">${state.photos.map(p=>`<div style="margin:8px 0 12px">${p.src?`<img src="${p.src}" alt="${escapeHtml(p.name)}" style="max-width:260px;max-height:180px;border:1px solid #cbd5e1;border-radius:8px;display:block;margin-bottom:4px">`:''}<div>${escapeHtml(p.name)}${p.caption?` - ${escapeHtml(p.caption)}`:''}</div></div>`).join('')}</div>`}
+  function cellHtml(v){return escapeHtml(String(v||'').trim()).replace(/\n/g,'<br>')}
+  function emailRow(label,value){return `<tr><td class="label">${escapeHtml(label)}</td><td class="value">${cellHtml(value)}</td></tr>`}
+  function emailPhotosHtml(){
+    if(!state.photos.length) return '';
+    return `<div class="email-photo-list" style="padding-left:0">${state.photos.map((p,i)=>`<div style="margin:8px 0 12px">${p.src?`<img src="${p.src}" alt="照片預覽" style="max-width:260px;max-height:180px;border:1px solid #cbd5e1;border-radius:8px;display:block;margin-bottom:4px">`:''}<div>${escapeHtml(photoLabel(p,i))}</div></div>`).join('')}</div>`;
+  }
   function renderEmailPreview(r){
-    const f=state.fields;
+    const rows=emailRowsData();
+    const tableHtml=rows.length?`<table class="email-table"><tbody>${rows.map(([label,value])=>emailRow(label,value)).join('')}</tbody></table>`:`<div class="tiny">目前尚無可輸出的欄位；填入案件資料後，Email 會只顯示有內容的項目。</div>`;
+    const photoHtml=emailPhotosHtml();
     return `<div class="email-preview">
       <div class="mail-subject">主旨：${escapeHtml(emailSubject())}</div>
       <div class="mail-hi">Hi all,</div>
-      <table class="email-table"><tbody>
-        ${emailRow('發生時間',f.date)}
-        ${emailRow('發生地點(線別/站別)',f.line)}
-        ${emailRow('異常描述',f.description)}
-        ${emailRow('料號',f.partNo)}
-        ${emailRow('抽樣數',f.prodQty)}
-        ${emailRow('不良數',f.ngQty)}
-        ${emailRow('不良率',f.ngRate)}
-        ${emailRow('是否影響出貨',f.shippingImpact)}
-        ${emailRow('異常調查',publicInvestigationText())}
-      </tbody></table>
-      <div class="email-section"><div class="email-section-title">照片</div>${emailPhotosHtml()}</div>
+      ${tableHtml}
+      ${photoHtml?`<div class="email-section"><div class="email-section-title">照片</div>${photoHtml}</div>`:''}
     </div>`;
   }
   function pptText(r){
     const f=state.fields; const complete=$('completionPercent')?$('completionPercent').innerText:'未計算';
     const light=riskLabel(r.light);
-    const photoList=state.photos.length?state.photos.map((p,i)=>`${i+1}. ${p.name}${p.caption?` - ${p.caption}`:''}`).join('\n'):'無';
+    const photoList=state.photos.length?state.photos.map((p,i)=>`${i+1}. ${photoLabel(p,i)}`).join('\n'):'無';
     return `【PPT 文字 / 設計理念】
 
 頁面標題：異常處理輔助平台
@@ -1011,7 +1183,7 @@ ${photoText()||'無'}`;
 三、功能架構
 1. 現況調查：快記區、處理紀錄、圖片。
 2. 案件整理：日期、發生地點、異常類型、料號、抽樣數、不良數、出貨影響、異常調查、目前處置、待協助事項。
-3. 風險判定與建議：依功能 / 安全、流出 / 庫存 / 出貨、掌控 / 對策狀態產生燈號與下一步建議。
+3. 風險判定與建議：依功能 / 安全、物料 / 成品庫存、掌控 / 對策狀態產生燈號與下一步建議。
 4. 輸出中心：產出正式 Email、待辦驗證、案件紀錄。
 
 四、目前案件摘要
@@ -1032,10 +1204,37 @@ ${nextSteps(r).map((x,i)=>`${i+1}. ${x}`).join('\n')}
 七、照片
 ${photoList}`;
   }
-  function save(showErr){try{state.schemaVersion=SCHEMA_VERSION;localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){if(showErr!==false) alert('localStorage 空間不足，請匯出 JSON 或清空舊案件。')}}
-  function load(){try{let raw=localStorage.getItem(STORAGE_KEY),migrated=false;if(!raw){for(const key of LEGACY_STORAGE_KEYS){raw=localStorage.getItem(key);if(raw){migrated=true;break}}}if(raw) state=Object.assign(freshState(),JSON.parse(raw));normalizeState();if(migrated) save(false)}catch(e){state=freshState();normalizeState()}}
-  function exportJson(){normalizeState();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-  function importJson(e){const file=e.target.files[0];if(!file) return;const reader=new FileReader();reader.onload=()=>{try{state=Object.assign(freshState(),JSON.parse(reader.result));normalizeState();save();syncToDom();recalcAll();alert('匯入完成')}catch(err){alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
+  function safeStorageState(){const s=JSON.parse(JSON.stringify(state));s.schemaVersion=SCHEMA_VERSION;s.photos=compactPhotosForStorage(s.photos);return s}
+  function save(showErr){
+    try{
+      state.schemaVersion=SCHEMA_VERSION;
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(safeStorageState()));
+    }catch(e){
+      try{
+        state.photos=(state.photos||[]).map(p=>Object.assign({},p,{src:'',storedMode:'metadataOnly',storedSize:'未儲存'}));
+        localStorage.setItem(STORAGE_KEY,JSON.stringify(safeStorageState()));
+        renderPhotos();
+        if(showErr!==false) alert('手機暫存空間不足，已改成只保留照片紀錄，不存圖片預覽。其他欄位仍可繼續填寫。');
+      }catch(e2){
+        if(showErr!==false) alert('手機暫存空間不足，請先匯出或清空舊案件；本版不會再存原始大圖。');
+      }
+    }
+  }
+  function load(){
+    try{
+      let raw=localStorage.getItem(STORAGE_KEY),migrated=false,fromKey='';
+      if(!raw){for(const key of LEGACY_STORAGE_KEYS){raw=localStorage.getItem(key);if(raw){migrated=true;fromKey=key;break}}}
+      if(raw) state=Object.assign(freshState(),JSON.parse(raw));
+      normalizeState();
+      if(migrated){
+        state.photos=compactPhotosForStorage(state.photos);
+        try{localStorage.removeItem(fromKey)}catch(e){}
+        save(false);
+      }
+    }catch(e){state=freshState();normalizeState()}
+  }
+  function exportJson(){normalizeState();const exportState=safeStorageState();exportState.quickNote=cleanRecordQuickNote(exportState.quickNote);const blob=new Blob([JSON.stringify(exportState,null,2)],{type:'application/json'});const a=document.createElement('a');const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+  function importJson(e){const file=e.target.files[0];if(!file) return;const reader=new FileReader();reader.onload=()=>{try{state=Object.assign(freshState(),JSON.parse(reader.result));state.quickNote=cleanRecordQuickNote(state.quickNote);normalizeState();state.photos=compactPhotosForStorage(state.photos);save();syncToDom();recalcAll();alert('匯入完成')}catch(err){alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
   async function copyText(text,msg){try{await navigator.clipboard.writeText(text||'');alert(msg||'已複製')}catch(e){const ta=document.createElement('textarea');ta.value=text||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert(msg||'已複製')}}
   function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
   init();
