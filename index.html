@@ -6,7 +6,7 @@
   <title>異常處理輔助平台</title>
   <style>
     :root{
-      --bg:#f6f9fe; --card:#ffffff; --ink:#15233a; --muted:#64748b; --line:#c7d6ea;
+      --bg:#f6f9fe; --card:#fff; --ink:#15233a; --muted:#64748b; --line:#c7d6ea;
       --brand:#1e5bb8; --brand2:#184a94; --soft:#eef6ff; --deep:#123a6f;
       --red:#dc2626; --redbg:#fee2e2; --yellow:#d97706; --yellowbg:#fff4cf; --green:#16a34a; --greenbg:#dcfce7;
       --gray:#64748b; --graybg:#f1f5f9; --shadow:0 8px 22px rgba(18,58,111,.08); --radius:12px;
@@ -22,14 +22,11 @@
     .toolbar button,.toolbar label{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;color:#14325a;display:inline-flex;align-items:center;gap:6px}
     .toolbar button:hover,.toolbar label:hover,.btn:hover,.tab:hover{border-color:#91b7e8;background:var(--soft)}
     .wrap{max-width:1180px;margin:0 auto;padding:14px 18px 18px;display:block}
-    .process-nav{margin:0 0 14px}
-    .process-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch;min-width:0}
+    .process-nav{margin:0 0 14px}.process-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;align-items:stretch;min-width:0}
     .process-step{display:flex;align-items:center;justify-content:center;gap:12px;min-height:58px;background:#f8fbff;border:1px solid #b8c9df;border-radius:10px;color:#123a6f;font-weight:900;font-size:20px;letter-spacing:.04em;box-shadow:0 2px 10px rgba(18,58,111,.04);cursor:pointer}
-    .process-step:hover,.process-step.active{background:#eaf3ff;border-color:#1f63cc}
-    .process-step.active{box-shadow:0 0 0 3px rgba(31,99,204,.12),0 2px 10px rgba(18,58,111,.08)}
+    .process-step:hover,.process-step.active{background:#eaf3ff;border-color:#1f63cc}.process-step.active{box-shadow:0 0 0 3px rgba(31,99,204,.12),0 2px 10px rgba(18,58,111,.08)}
     .process-no{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:#1856a8;color:white;font-size:22px;font-weight:900;box-shadow:inset 0 -2px 0 rgba(0,0,0,.15)}
-    main.wrap > section{display:none}
-    main.wrap > section.active-section{display:block}
+    main.wrap>section{display:none}main.wrap>section.active-section{display:block}
     .col-title{display:block;margin:4px 4px 12px}.col-title h2{font-size:22px;margin:0}.col-title p{margin:2px 0 0;color:var(--muted)}
     .card{background:rgba(255,255,255,.96);border:1px solid #b8c9df;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;margin-bottom:10px}
     .card h3{margin:0 0 2px;font-size:18px;color:#143a68}.card .sub{color:#5d708b;margin:0 0 10px;font-size:14px}.tiny{font-size:13px;color:var(--muted)}
@@ -38,79 +35,26 @@
     .row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field{display:flex;flex-direction:column;gap:5px}.field label{font-weight:750;font-size:14px;color:#234463}.field input,.field textarea{border:1px solid var(--line);border-radius:9px;padding:9px;background:#fbfdff;width:100%}.field textarea{min-height:82px}.full{grid-column:1/-1}
     .btns{display:flex;flex-wrap:wrap;gap:8px}.btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 11px;cursor:pointer;min-height:38px;color:#15385f}.btn.primary{background:#1f63cc;color:#fff;border-color:#1f63cc}.btn.primary:hover{background:#184a94}.btn.danger{border-color:#fecaca;color:#991b1b;background:#fff5f5}.btn.active,.btn.status.active{background:#26415f;border-color:#20364f;color:#fff}.btn.status.red.active{background:#b91c1c}.btn.status.green.active{background:#15803d}.btn.status.warn.active{background:#b45309}
     details{border:1px solid var(--line);border-radius:10px;background:#f8fbff;padding:10px 12px;margin-top:8px}summary{cursor:pointer;font-weight:800;color:#143a68}.timeline-list{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}.timeline-list li{padding:8px 9px;border-left:4px solid var(--brand);background:#fff;border-radius:9px;display:flex;justify-content:space-between;gap:8px}.x{border:0;background:transparent;color:#94a3b8;cursor:pointer;font-size:18px}.custom-line{display:flex;gap:8px;margin-top:10px}.custom-line input{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px}
-    .upload{border:1px dashed #9fb6d2;border-radius:10px;padding:14px;background:linear-gradient(135deg,#f8fbff,#edf5ff);text-align:center}.preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px;margin-top:12px}.photo{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}.photo-icon{height:64px;border-radius:9px;background:#eef6ff;border:1px solid #d7e6f7;display:flex;align-items:center;justify-content:center;font-size:28px;color:#1e5bb8}.photo .name{font-size:12px;color:#334155;word-break:break-all;margin-top:5px;font-weight:700}.photo input{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:8px;padding:5px;font-size:12px}.photo button{width:100%;margin-top:5px;border:0;background:#f1f5f9;border-radius:8px;padding:4px;cursor:pointer}.photo-meta{font-size:12px;color:#64748b;margin-top:3px}
+    .upload{border:1px dashed #9fb6d2;border-radius:10px;padding:14px;background:linear-gradient(135deg,#f8fbff,#edf5ff);text-align:center}.preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:9px;margin-top:12px}.photo{border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}.photo-thumb{height:84px;border-radius:9px;background:#eef6ff;border:1px solid #d7e6f7;display:flex;align-items:center;justify-content:center;overflow:hidden;color:#1e5bb8}.photo-thumb img{width:100%;height:100%;object-fit:cover;display:block}.photo input{width:100%;margin-top:5px;border:1px solid var(--line);border-radius:8px;padding:5px;font-size:12px}.photo button{width:100%;margin-top:5px;border:0;background:#f1f5f9;border-radius:8px;padding:4px;cursor:pointer}.photo-meta{font-size:12px;color:#64748b;margin-top:3px}
     .pillbar{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid var(--line);background:#fff;border-radius:10px;padding:7px 9px;cursor:pointer;user-select:none;color:#15385f}.pill input{display:none}.pill.on{background:#e0edff;border-color:#93c5fd;color:#1d4ed8;font-weight:800}.pill.red.on{background:var(--redbg);border-color:#fca5a5;color:#991b1b}.pill.yellow.on{background:var(--yellowbg);border-color:#fcd34d;color:#92400e}.pill.green.on{background:var(--greenbg);border-color:#86efac;color:#166534}
     .risk-main{border-radius:10px;padding:16px;color:#111827;border:1px solid var(--line)}.risk-main.red{background:var(--redbg);border-color:#fca5a5}.risk-main.yellow{background:var(--yellowbg);border-color:#fcd34d}.risk-main.green{background:var(--greenbg);border-color:#86efac}.risk-main.gray{background:#f1f5f9;border-color:#cbd5e1}.risk-flex{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.light{font-size:34px;font-weight:900}.risk-note{margin-top:8px;font-weight:800}.kv{display:grid;grid-template-columns:96px 1fr;gap:6px 10px;font-size:14px}.kv div:nth-child(odd){color:var(--muted)}
     .mini-grid{display:grid;grid-template-columns:1fr;gap:8px}.mini-card{border:1px solid var(--line);border-radius:10px;background:#fff;padding:12px}.mini-card .head{display:flex;justify-content:space-between;gap:8px;font-weight:900}.dot{display:inline-flex;align-items:center;justify-content:center;min-width:50px;border-radius:999px;color:#fff;padding:3px 9px;font-weight:900}.dot.red{background:var(--red)}.dot.yellow{background:var(--yellow)}.dot.green{background:var(--green)}.dot.gray{background:#64748b}
-    .missing{display:flex;flex-direction:column;gap:7px;margin:0;padding:0;list-style:none}.missing li{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:8px 10px}.missing label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}.missing input{margin-top:3px}.missing li.warn{background:var(--yellowbg);border-color:#fcd34d;color:#78350f}.missing li.done{background:#eefdf3;border-color:#86efac;color:#166534;text-decoration:line-through}.outbox{white-space:pre-wrap;border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:12px;min-height:130px}.email-preview{white-space:normal;color:#111827}.email-preview .mail-subject{margin:0 0 12px;font-weight:800}.email-preview .mail-hi{margin:0 0 10px}.email-table{border-collapse:collapse;width:100%;max-width:820px;background:#fff;border:1px solid #111}.email-table td{border:1px solid #111;padding:6px 8px;vertical-align:top;line-height:1.45}.email-table .label{width:140px;text-align:center;font-weight:900;background:#f8fafc}.email-table .value{min-height:28px}.email-section{max-width:820px;margin-top:12px}.email-section-title{font-weight:900;margin:8px 0 4px}.email-photo-list{margin:0;padding-left:20px}.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;color:#15385f}.tab.active{background:#1f63cc;border-color:#1f63cc;color:#fff}.copy-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:8px}.status-line{padding:10px 12px;background:#f6f9ff;border:1px solid var(--line);border-radius:9px;margin-bottom:10px;font-weight:900;color:#143a68}.status-group{border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:10px;margin-top:8px}.status-group-title{font-size:13px;font-weight:900;color:#5d708b;margin-bottom:8px}.small-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}
-    .evidence-list{margin:0;padding-left:18px}.evidence-list li{margin:4px 0}.evidence-tag{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;margin-right:6px;font-size:12px;font-weight:900;color:#fff}.evidence-tag.red{background:var(--red)}.evidence-tag.yellow{background:var(--yellow)}.evidence-tag.gray{background:var(--gray)}.evidence-tag.score{background:#2563eb}
+    .missing{display:flex;flex-direction:column;gap:7px;margin:0;padding:0;list-style:none}.missing li{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:8px 10px}.missing label{display:flex;gap:8px;align-items:flex-start;cursor:pointer}.missing input{margin-top:3px}.missing li.warn{background:var(--yellowbg);border-color:#fcd34d;color:#78350f}.missing li.done{background:#eefdf3;border-color:#86efac;color:#166534;text-decoration:line-through}.outbox{white-space:pre-wrap;border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:12px;min-height:130px;overflow-x:auto}
+    .email-preview{white-space:normal;color:#111827}.email-preview .mail-subject{margin:0 0 12px;font-weight:800}.email-preview .mail-hi{margin:0 0 10px}.email-table{border-collapse:collapse;width:100%;max-width:820px;background:#fff;border:1px solid #111}.email-table td{border:1px solid #111;padding:6px 8px;vertical-align:top;line-height:1.45}.email-table .label{width:140px;text-align:center;font-weight:900;background:#f8fafc}.email-table .value{min-height:28px}.email-section{max-width:820px;margin-top:12px}.email-section-title{font-weight:900;margin:8px 0 4px}.email-photo-list{margin:0;padding-left:20px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 12px;cursor:pointer;color:#15385f}.tab.active{background:#1f63cc;border-color:#1f63cc;color:#fff}.copy-row{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:8px}.status-line{padding:10px 12px;background:#f6f9ff;border:1px solid var(--line);border-radius:9px;margin-bottom:10px;font-weight:900;color:#143a68}.status-group{border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:10px;margin-top:8px}.status-group-title{font-size:13px;font-weight:900;color:#5d708b;margin-bottom:8px}.small-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.hidden{display:none!important}
     .completion-card{background:linear-gradient(135deg,#ffffff,#f1f7ff)}.progress-head{display:flex;justify-content:space-between;align-items:flex-end;gap:8px}.progress-num{font-size:34px;font-weight:900;color:#123a6f}.progress-bar{height:14px;border-radius:999px;background:#dbeafe;overflow:hidden;border:1px solid #bfdbfe;margin:8px 0}.progress-fill{height:100%;width:0;background:linear-gradient(90deg,#1e5bb8,#38bdf8);transition:width .25s}.progress-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tag{border:1px solid #cbd9ec;background:#fff;border-radius:999px;padding:4px 8px;font-size:12px;color:#475569}.tag.ok{background:#dcfce7;border-color:#86efac;color:#166534}.tag.miss{background:#fff4cf;border-color:#fcd34d;color:#92400e}
-
-    .choice-group{display:flex;flex-wrap:wrap;gap:8px}
-    .choice-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;min-height:40px;color:#15385f;font-weight:900}
-    .choice-btn.active{background:#26415f;border-color:#20364f;color:#fff}
-    .dimension-box{border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:12px;margin-top:10px}
-    .dimension-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-    .dimension-list{display:flex;flex-direction:column;gap:10px}
-    .dimension-item{border:1px solid #d5e3f5;border-radius:10px;background:#fff;padding:10px}
-    .dimension-row{display:grid;grid-template-columns:1fr 1fr 112px 1fr 1.4fr auto;gap:8px;align-items:end}
-    .tol-options{display:flex;gap:6px;flex-wrap:wrap}
-    .tol-options .btn{min-width:44px;text-align:center;font-weight:900}
-    .dimension-remove{align-self:end;min-width:48px}
-    .paste-hint{margin-top:8px;border:1px dashed #9fb6d2;background:#f8fbff;border-radius:10px;padding:10px;color:#47617f;font-size:14px;font-weight:700}
-    @media(max-width:900px){.dimension-row{grid-template-columns:1fr}.dimension-remove{width:100%}}
-    .visual-title{display:block;margin:0 0 6px;color:#123a6f;font-weight:900;font-size:15px;letter-spacing:.04em}.quick-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.quick-action{border:1px solid #cbd9ec;border-radius:10px;padding:8px;background:#fff;text-align:center;color:#143a68;font-weight:800}.quick-action span{display:block;font-size:22px;margin-bottom:2px}
-    @media(max-width:900px){.process-strip{grid-template-columns:repeat(4,minmax(150px,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px}.process-step{scroll-snap-align:start;font-size:17px;min-height:52px}.process-no{width:32px;height:32px;font-size:18px}.hero{flex-direction:column;align-items:flex-start}.toolbar{justify-content:flex-start}.row{grid-template-columns:1fr}.topbar{position:relative}}
-    @media(max-width:560px){body{font-size:17px}.title h1{font-size:24px}.process-step{font-size:15px;gap:8px;letter-spacing:0}.wrap{padding:10px}.card{border-radius:12px}.toolbar button,.toolbar label,.btn{min-height:44px}.custom-line{flex-direction:column}.kv{grid-template-columns:1fr}.quick-actions{grid-template-columns:1fr 1fr 1fr}}
-    @media(max-width:720px){
-      html,body{width:100%;max-width:100%;overflow-x:hidden}
-      body{font-size:16px;line-height:1.48}
-      img,video,canvas,svg{max-width:100%;height:auto}
-      .topbar{padding:10px 10px 12px}
-      .hero{gap:10px;margin-bottom:10px}
-      .title h1{font-size:22px;line-height:1.2;letter-spacing:.03em}
-      .title p{font-size:14px;line-height:1.35}
-      .toolbar{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:8px}
-      .toolbar button,.toolbar label{width:100%;min-width:0;justify-content:center;text-align:center;padding:9px 8px;line-height:1.25;white-space:normal}
-      .wrap{width:100%;max-width:100%;padding:10px}
-      .process-nav{margin-bottom:10px}
-      .process-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;scroll-snap-type:none}
-      .process-step{min-width:0;min-height:48px;padding:7px 6px;gap:7px;font-size:14px;line-height:1.2;letter-spacing:0;scroll-snap-align:none}
-      .process-no{width:28px;height:28px;min-width:28px;font-size:16px}
-      .col-title{margin:2px 2px 10px}
-      .col-title h2{font-size:20px;line-height:1.25}
-      .card{padding:10px;margin-bottom:9px;border-radius:10px}
-      .card h3{font-size:17px;line-height:1.25}
-      .row,.dimension-row{grid-template-columns:1fr}
-      .btns,.small-actions,.choice-group,.pillbar,.tabs,.copy-row{gap:7px}
-      .btn,.choice-btn,.pill,.tab{min-width:0;white-space:normal;line-height:1.25;overflow-wrap:anywhere}
-      .choice-btn{flex:1 1 calc(50% - 7px)}
-      .quick-actions{grid-template-columns:1fr}
-      .risk-main{padding:12px}
-      .risk-flex,.progress-head,.timeline-list li,.mini-card .head{flex-direction:column;align-items:stretch}
-      .light{font-size:28px;line-height:1.15}
-      .progress-num{font-size:28px}
-      .kv{grid-template-columns:1fr;gap:3px}
-      .outbox{max-width:100%;overflow-x:auto;overflow-wrap:anywhere;word-break:break-word}
-      .email-preview,.email-section{max-width:100%;overflow-wrap:anywhere;word-break:break-word}
-      .email-table,.email-table tbody,.email-table tr,.email-table td{display:block;width:100%;max-width:100%}
-      .email-table{border:1px solid #111}
-      .email-table tr+tr{border-top:1px solid #111}
-      .email-table td{border:0}
-      .email-table .label{width:100%;text-align:left;border-bottom:1px solid #111}
-      .email-table .value{min-height:0}
-      .email-photo-list{padding-left:16px}
-    }
-    @media print{.topbar,.process-strip,.btns,.toolbar,.tabs,.copy-row,.upload,.small-actions,.x{display:none!important}body{background:#fff}.wrap{display:block;padding:0}.col-title{display:block}.card{box-shadow:none;break-inside:avoid;border-color:#aaa}.outbox{border:1px solid #aaa}.risk-main{border:2px solid #555}}
+    .choice-group{display:flex;flex-wrap:wrap;gap:8px}.choice-btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 14px;cursor:pointer;min-height:40px;color:#15385f;font-weight:900}.choice-btn.active{background:#26415f;border-color:#20364f;color:#fff}.factor-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px}.factor-item{border:1px solid #d5e3f5;border-radius:10px;background:#fff;padding:9px}.factor-question{font-weight:850;color:#18385e;margin-bottom:7px}.factor-actions{display:flex;flex-wrap:wrap;gap:7px}.factor-choice{border:1px solid var(--line);background:#fff;border-radius:9px;padding:6px 10px;cursor:pointer;color:#15385f;font-weight:850;min-height:34px}.factor-choice.active{background:#26415f;border-color:#20364f;color:#fff}.factor-choice.good.active{background:#15803d;border-color:#15803d}.factor-choice.bad.active{background:#b91c1c;border-color:#b91c1c}.factor-choice.unknown.active{background:#64748b;border-color:#64748b}.factor-status-note{font-size:12px;color:#64748b;margin-top:5px}
+    .dimension-box,.npdr-box{border:1px solid var(--line);border-radius:10px;background:#fbfdff;padding:12px;margin-top:10px}.dimension-head,.npdr-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}.dimension-list{display:flex;flex-direction:column;gap:10px}.dimension-item{border:1px solid #d5e3f5;border-radius:10px;background:#fff;padding:10px}.dimension-row{display:grid;grid-template-columns:1fr 1fr 112px 1fr 1.4fr auto;gap:8px;align-items:end}.dimension-remove{align-self:end;min-width:48px}.paste-hint{margin-top:8px;border:1px dashed #9fb6d2;background:#f8fbff;border-radius:10px;padding:10px;color:#47617f;font-size:14px;font-weight:700}.visual-title{display:block;margin:0 0 6px;color:#123a6f;font-weight:900;font-size:15px;letter-spacing:.04em}
+    .npdr-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.npdr-preview{margin-top:10px}.preview-table{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}.preview-row{display:grid;grid-template-columns:160px 1fr;gap:0;border-bottom:1px solid #e2e8f0}.preview-row:last-child{border-bottom:0}.preview-row b{background:#f8fafc;padding:8px 10px;border-right:1px solid #e2e8f0}.preview-row span{padding:8px 10px;white-space:pre-wrap;word-break:break-word}.mode-badge{display:inline-flex;align-items:center;border-radius:999px;background:#e0edff;border:1px solid #93c5fd;color:#1d4ed8;font-weight:900;padding:4px 9px;font-size:13px;margin-left:8px}
+    @media(max-width:900px){.dimension-row{grid-template-columns:1fr}.dimension-remove{width:100%}.process-strip{grid-template-columns:repeat(4,minmax(150px,1fr));overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:2px}.process-step{scroll-snap-align:start;font-size:17px;min-height:52px}.process-no{width:32px;height:32px;font-size:18px}.hero{flex-direction:column;align-items:flex-start}.toolbar{justify-content:flex-start}.row{grid-template-columns:1fr}.topbar{position:relative}}
+    @media(max-width:720px){html,body{width:100%;max-width:100%;overflow-x:hidden}body{font-size:16px;line-height:1.48}img,video,canvas,svg{max-width:100%;height:auto}.topbar{padding:10px 10px 12px}.hero{gap:10px;margin-bottom:10px}.title h1{font-size:22px;line-height:1.2;letter-spacing:.03em}.title p{font-size:14px;line-height:1.35}.toolbar{display:grid;grid-template-columns:1fr 1fr;width:100%;gap:8px}.toolbar button,.toolbar label{width:100%;min-width:0;justify-content:center;text-align:center;padding:9px 8px;line-height:1.25;white-space:normal}.wrap{width:100%;max-width:100%;padding:10px}.process-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;overflow:visible;scroll-snap-type:none}.process-step{min-width:0;min-height:48px;padding:7px 6px;gap:7px;font-size:14px;line-height:1.2;letter-spacing:0;scroll-snap-align:none}.process-no{width:28px;height:28px;min-width:28px;font-size:16px}.col-title{margin:2px 2px 10px}.col-title h2{font-size:20px;line-height:1.25}.card{padding:10px;margin-bottom:9px;border-radius:10px}.card h3{font-size:17px;line-height:1.25}.row,.dimension-row,.preview-row{grid-template-columns:1fr}.preview-row b{border-right:0;border-bottom:1px solid #e2e8f0}.btns,.small-actions,.choice-group,.pillbar,.tabs,.copy-row{gap:7px}.btn,.choice-btn,.pill,.tab{min-width:0;white-space:normal;line-height:1.25;overflow-wrap:anywhere}.choice-btn{flex:1 1 calc(50% - 7px)}.risk-flex,.progress-head,.timeline-list li,.mini-card .head{flex-direction:column;align-items:stretch}.light{font-size:28px;line-height:1.15}.progress-num{font-size:28px}.kv{grid-template-columns:1fr;gap:3px}.outbox{max-width:100%;overflow-wrap:anywhere;word-break:break-word}.email-preview,.email-section{max-width:100%;overflow-wrap:anywhere;word-break:break-word}.email-table,.email-table tbody,.email-table tr,.email-table td{display:block;width:100%;max-width:100%}.email-table{border:1px solid #111}.email-table tr+tr{border-top:1px solid #111}.email-table td{border:0}.email-table .label{width:100%;text-align:left;border-bottom:1px solid #111}.email-table .value{min-height:0}.email-photo-list{padding-left:16px}}
+    @media print{.topbar,.process-strip,.btns,.toolbar,.tabs,.copy-row,.upload,.small-actions,.x,.npdr-box{display:none!important}body{background:#fff}.wrap{display:block;padding:0}.col-title{display:block}.card{box-shadow:none;break-inside:avoid;border-color:#aaa}.outbox{border:1px solid #aaa}.risk-main{border:2px solid #555}}
   </style>
 </head>
 <body>
   <div class="topbar">
     <div class="hero">
-      <div class="title">
-        <h1>異常處理輔助平台</h1>
-        <p>整合現況調查、資料佐證、風險判斷與處置追蹤。</p>
-      </div>
+      <div class="title"><h1>異常處理輔助平台</h1><p>整合現況調查、資料佐證、案件輔助判斷與處置追蹤。</p></div>
       <div class="toolbar">
         <label for="importJson">匯入案件<input id="importJson" type="file" accept="application/json,.json" class="hidden"></label>
         <button id="exportJson">匯出案件</button>
@@ -138,10 +82,7 @@
         <textarea id="quickNote" placeholder="可放現場收集到的資訊、平台上的訊息、異常描述、站別、料號、不良數量、目前處置、待協助事項……"></textarea>
         <div class="small-actions"><button class="btn primary" id="extractBtn">從快記擷取資訊</button><button class="btn" id="loadQuickTemplate">匯入空白範本</button><button class="btn" id="showDimensionBox">新增尺寸量測</button><button class="btn danger" id="clearQuickNote">清空</button></div>
         <div id="dimensionBox" class="dimension-box hidden">
-          <div class="dimension-head">
-            <div class="visual-title">尺寸量測紀錄</div>
-            <button type="button" class="btn primary" id="addDimensionRow">＋ 新增一筆尺寸</button>
-          </div>
+          <div class="dimension-head"><div class="visual-title">尺寸量測紀錄</div><button type="button" class="btn primary" id="addDimensionRow">＋ 新增一筆尺寸</button></div>
           <div id="dimensionList" class="dimension-list"></div>
           <p class="tiny" style="margin:8px 0 0">可新增多筆尺寸；填寫後會自動更新到案件整理的異常調查，例如：孔徑：規格6.8±0.3，實際值為6.82、6.81。</p>
         </div>
@@ -181,8 +122,14 @@
       </div>
 
       <div class="card">
-        <h3>案件基本資訊</h3>
-        <p class="sub">欄位可自行修改；不良率由抽樣數與不良數自動計算。</p>
+        <div class="dimension-head"><h3>案件基本資訊 <span id="npdrModeBadge" class="mode-badge hidden">NPDR 匯入模式</span></h3><button class="btn primary" id="toggleNpdrImport">匯入 NPDR 資訊</button></div>
+        <p class="sub">欄位可自行修改；不良率由抽樣數與不良數自動計算。NPDR 匯入時，可直接貼上列印畫面全選複製的內容。</p>
+        <div id="npdrImportBox" class="npdr-box hidden">
+          <div class="npdr-head"><div><div class="visual-title">NPDR 原文匯入</div><div class="tiny">從 NPDR 列印畫面全選複製後貼上，系統會擷取欄位並建立案件摘要。</div></div></div>
+          <textarea id="npdrRawText" placeholder="請貼上 NPDR 列印畫面全選複製的原文，例如：&#10;Part No-料號 (Read only) *&#10;20.4118.865.000&#10;Problem description 異常描述 (Read only) *&#10;PISTON BAND 無法組裝至定位"></textarea>
+          <div class="npdr-toolbar"><button class="btn primary" id="parseNpdrBtn">解析 NPDR</button><button class="btn" id="applyNpdrBtn">套用到案件基本資訊</button><button class="btn danger" id="clearNpdrBtn">清空 NPDR 匯入</button></div>
+          <div id="npdrPreview" class="npdr-preview hidden"></div>
+        </div>
         <div class="row">
           <div class="field"><label>日期</label><input id="date" data-field="date" placeholder="例如 06/27"></div>
           <div class="field"><label>發生地點(線別/站別)</label><input id="line" data-field="line" placeholder="例如 RD LINE5"></div>
@@ -201,1042 +148,689 @@
         </div>
       </div>
 
-      <div class="card">
-        <h3>案件狀態</h3>
-        <div class="status-line">目前案件狀態：<span id="currentStatusText">未開始</span></div>
-        <div id="statusBtns"></div>
-      </div>
+      <div class="card"><h3>案件狀態</h3><div class="status-line">目前案件狀態：<span id="currentStatusText">未開始</span></div><div id="statusBtns"></div></div>
+      <div class="card"><h3>現況調查確認小卡</h3><p class="sub">用人、機、料、法、量測、環、影響範圍記錄現況調查；小卡只協助整理確認狀態，不會直接影響主燈號。</p><div id="factorPills"></div></div>
+    </section>
 
-      <div class="card">
-        <h3>風險確認小卡</h3>
-        <p class="sub">常用項目預設展開。</p>
-        <div id="factorPills"></div>
+    <section>
+      <div class="col-title"><h2>風險判定與建議</h2><p id="riskSectionSub">未開始維持灰燈；現況調查未選對策為黃燈；已有對策為綠燈；沒有對策或需開停線會議為紅燈。</p></div>
+      <div id="npdrSummaryArea" class="hidden">
+        <div class="card"><h3>NPDR 案件摘要</h3><div class="outbox" id="npdrSummaryBox"></div></div>
+      </div>
+      <div id="normalRiskArea">
+        <div class="card"><h3>案件處理狀態</h3><div id="riskMain" class="risk-main gray"><div class="risk-flex"><div><div id="riskLight" class="light">待判定</div><div id="riskText" class="risk-note">案件尚未開始</div></div></div><div class="kv" style="margin-top:10px"><div>目前狀態</div><div id="riskStatus">未開始</div><div>建議</div><div id="riskSuggestion">未開始時先維持灰燈；進入處理後再確認對策狀態與是否需要開停線會議。</div></div></div></div>
+        <div class="card"><div class="mini-grid" id="subRiskCards"></div></div>
+        <div class="card"><h3>待確認事項 / 下一步建議</h3><div class="outbox" id="reasonBox"></div></div>
+        <div class="card"><h3>調查分流</h3><div class="outbox" id="investigationFlowBox"></div></div>
       </div>
     </section>
 
     <section>
-      <div class="col-title"><h2>風險判定與建議</h2><p>依據案件整理，系統判定風險並提供下一步建議。</p></div>
-      <div class="card">
-        <h3>風險判斷</h3>
-        <div id="riskMain" class="risk-main gray">
-          <div class="risk-flex"><div><div id="riskLight" class="light">待判定</div><div id="riskText" class="risk-note">案件尚未開始</div></div></div>
-          <div class="kv" style="margin-top:10px"><div>目前狀態</div><div id="riskStatus">未開始</div><div>建議</div><div id="riskSuggestion">將案件階段切換為現況調查後再判定風險。</div></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>風險燈號項目</h3>
-        <p class="sub">依功能、安全、物料/成品庫存與原因明確性分組。</p>
-        <div class="mini-grid" id="subRiskCards"></div>
-      </div>
-
-
-      <div class="card">
-        <h3>下一步建議</h3>
-        <div class="outbox" id="reasonBox"></div>
-      </div>
-
-      <div class="card">
-        <h3>調查分流</h3>
-        <div class="outbox" id="investigationFlowBox"></div>
-      </div>
-    </section>
-
-    <section>
-      <div class="col-title"><h2>輸出</h2><p>產出可複製的正式 Email、待辦、案件紀錄。</p></div>
-      <div class="card">
-        <h3>輸出中心</h3>
-        <div class="tabs" id="tabs"></div>
-        <div class="outbox" id="outputBox"></div>
-        <div class="copy-row"><button class="btn" id="copyTab">複製內容</button></div>
-      </div>
+      <div class="col-title"><h2>輸出</h2><p id="outputSectionSub">產出可複製的正式 Email、待辦、案件紀錄。</p></div>
+      <div class="card"><h3>輸出中心</h3><div class="tabs" id="tabs"></div><div id="outputBox" class="outbox"></div><div class="copy-row"><button class="btn" id="copyTab">複製內容</button></div></div>
     </section>
   </main>
 
 <script>
 (function(){
-  const SCHEMA_VERSION=28;
-  const STORAGE_KEY='abnormal_case_assistant_v28';
-  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_v27','abnormal_case_assistant_v26','abnormal_case_assistant_v25','abnormal_case_assistant_v24','abnormal_case_assistant_v22','abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
+  const SCHEMA_VERSION=37;
+  const STORAGE_KEY='abnormal_case_assistant_v37';
+  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_v36','abnormal_case_assistant_v35','abnormal_case_assistant_v34','abnormal_case_assistant_v33','abnormal_case_assistant_v32','abnormal_case_assistant_v31','abnormal_case_assistant_v30','abnormal_case_assistant_v29','abnormal_case_assistant_v28','abnormal_case_assistant_v27','abnormal_case_assistant_v26','abnormal_case_assistant_v25','abnormal_case_assistant_v24','abnormal_case_assistant_v22','abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
   const timelineEvents=['產線通知','異常接收','到現場','確認異常狀況','物料隔離','尺寸量測','異常狀況拍照','物料拍照','麥頭拍照','已暫停生產','邊做邊檢','持續發生','已確認影響範圍','初步判定完成','通知相關單位','等待回覆'];
   const statusGroups=[
     {title:'案件階段',items:['未開始','現況調查','結案']},
     {title:'對策狀態（必選，二選一）',items:['已有對策','沒有對策']},
     {title:'現場處置',items:['物料隔離','暫停生產','邊做邊檢']},
-    {title:'升級 / 風險條件',items:['需開停線會議','可能流出','涉及出貨','客訴']}
+    {title:'開停線條件',items:['需開停線會議']}
   ];
   const stageStatuses=['未開始','現況調查','結案'];
   const countermeasureStatuses=['已有對策','沒有對策'];
+  const factorOptions={
+    yesNoUnknown:['有','無','未確認'],
+    conformUnknown:['符合','不符合','未確認'],
+    abnormalUnknown:['有異常','無異常','未確認'],
+    isNoUnknown:['是','否','未確認']
+  };
+  const investigationFactorKeys={
+    human:['humanCertification','humanSopFollow','humanMultiStation'],
+    machine:['machineEquipmentStatus','machineFixtureStatus','machineParameterStatus','machineOtherLineSameMaterial'],
+    material:['materialNgSample','materialNgIsolation','materialLabelMark','materialCurrentBatch','materialCavitySpecific','materialGoldenSample','materialAltSupplier','materialAltSupplierResult','materialDifferentMatingPartResult'],
+    method:['methodAssemblySequenceChanged','methodSopDifference'],
+    measurement:['measurePartDimension','measureDrawingDefined','measureGaugeWear','measureMethodDrawing'],
+    environment:['environmentTemperature','environmentHumidity','environmentEsd','environmentWipStorage'],
+    scope:['scopeContinuous','scopeWip','scopePartStock','scopeFinishedGoods']
+  };
   const factorGroups=[
-    {title:'常用確認項目',open:true,items:[['onsite','已至現場','green'],['rateConfirmed','不良率已確認','green'],['isolated','異常品已隔離','green'],['noIsolationNeeded','無隔離需求','green'],['scopeConfirmed','影響範圍已確認','green'],['causeKnown','原因已明確','green'],['dimensionMeasured','尺寸量測完成','green'],['abnormalReproduced','異常已再現','green'],['tempAction','已有暫時對策','green']]},
-    {title:'功能 / 安全',open:false,items:[['safety','功能/安全疑慮','red'],['functionalFailure','功能失效','red'],['customerReject','客戶拒收','red'],['recall','招回','red']]},
-    {title:'物料 / 成品庫存',open:false,items:[['atStationDetectable','當站能發現異常','green'],['inventory','零件庫存待確認','yellow'],['warehousePending','成品庫存待確認','yellow'],['orderChanged','已換單生產','yellow']]},
-    {title:'異常型態 / 再發',open:false,items:[['mixedMaterial','混料/錯料','yellow'],['appearanceIssue','外觀異常','yellow'],['dimensionIssue','尺寸異常','yellow'],['continuous','持續發生','yellow'],['customerComplaint','客訴','yellow'],['repeat8d','8D/PSP後再發','red'],['delayImpact','出貨延遲/排程重大變更','yellow']]}
+    {id:'human',title:'人｜認證 / 作業落實度 / 多站作業',open:true,items:[
+      {key:'humanCertification',label:'人員有無認證',options:factorOptions.yesNoUnknown},
+      {key:'humanSopFollow',label:'組裝人員是否遵循 SOP',options:factorOptions.conformUnknown},
+      {key:'humanMultiStation',label:'多站作業',options:factorOptions.isNoUnknown}
+    ]},
+    {id:'machine',title:'機｜設備 / 治具',open:true,items:[
+      {key:'machineEquipmentStatus',label:'設備狀態確認',options:factorOptions.abnormalUnknown},
+      {key:'machineFixtureStatus',label:'治具狀態確認',options:factorOptions.abnormalUnknown},
+      {key:'machineParameterStatus',label:'設備參數確認',options:factorOptions.abnormalUnknown},
+      {key:'machineOtherLineSameMaterial',label:'相同物料使用在其他線別生產結果確認',options:factorOptions.abnormalUnknown}
+    ]},
+    {id:'material',title:'料｜異常品 / 物料狀態 / 影響範圍',open:false,items:[
+      {key:'materialNgSample',label:'異常品',options:factorOptions.yesNoUnknown},
+      {key:'materialNgIsolation',label:'異常品隔離',options:factorOptions.yesNoUnknown},
+      {key:'materialLabelMark',label:'標籤 / 麥頭確認',options:factorOptions.yesNoUnknown},
+      {key:'materialCurrentBatch',label:'現有物料批次確認',options:factorOptions.yesNoUnknown},
+      {key:'materialCavitySpecific',label:'不良發生在特定穴號?',options:factorOptions.yesNoUnknown},
+      {key:'materialGoldenSample',label:'Golden Sample / 限樣比對',options:factorOptions.yesNoUnknown},
+      {key:'materialAltSupplier',label:'另一家供應商',options:factorOptions.yesNoUnknown},
+      {key:'materialAltSupplierResult',label:'使用另一家供應商物料生產結果確認',options:factorOptions.abnormalUnknown},
+      {key:'materialDifferentMatingPartResult',label:'相同物料使用在不同對手件，確認生產結果',options:factorOptions.abnormalUnknown}
+    ]},
+    {id:'method',title:'法｜組裝順序 / 組裝手法',open:false,items:[
+      {key:'methodAssemblySequenceChanged',label:'組裝順序有變更過?',options:factorOptions.yesNoUnknown},
+      {key:'methodSopDifference',label:'組裝手法與 SOP 定義是否有差異?',options:factorOptions.yesNoUnknown}
+    ]},
+    {id:'measurement',title:'量測｜判定標準 / 量測方式',open:false,items:[
+      {key:'measurePartDimension',label:'零件相關尺寸確認',options:factorOptions.yesNoUnknown},
+      {key:'measureDrawingDefined',label:'圖面有完整定義',options:factorOptions.yesNoUnknown},
+      {key:'measureGaugeWear',label:'量檢具 / 儀器是否磨耗?',options:factorOptions.yesNoUnknown},
+      {key:'measureMethodDrawing',label:'量測方式是否符合圖面要求',options:factorOptions.yesNoUnknown}
+    ]},
+    {id:'environment',title:'環｜現場條件改變',open:false,items:[
+      {key:'environmentTemperature',label:'工作環境溫度',options:factorOptions.abnormalUnknown},
+      {key:'environmentHumidity',label:'工作環境濕度',options:factorOptions.abnormalUnknown},
+      {key:'environmentEsd',label:'工作環境靜電防護',options:factorOptions.yesNoUnknown},
+      {key:'environmentWipStorage',label:'在製存放狀態',options:factorOptions.abnormalUnknown}
+    ]},
+    {id:'scope',title:'影響範圍',open:false,items:[
+      {key:'scopeContinuous',label:'持續發生',options:factorOptions.isNoUnknown},
+      {key:'scopeWip',label:'在製影響範圍確認',options:factorOptions.yesNoUnknown},
+      {key:'scopePartStock',label:'零件庫存影響範圍確認',options:factorOptions.yesNoUnknown},
+      {key:'scopeFinishedGoods',label:'成品庫存影響範圍確認',options:factorOptions.yesNoUnknown}
+    ]}
   ];
-  const fields=['date','line','abnormalType','partNo','lot','supplier','prodQty','ngQty','ngRate','description','shippingImpact','investigation','currentAction','helpNeeded'];
-  function freshState(){return {schemaVersion:SCHEMA_VERSION,quickNote:'',timeline:[],photos:[],dimensions:[],fields:{},statuses:['未開始'],factors:{},missingDone:{},activeTab:'Email 摘要',activeSection:0}}
+  function defaultFactors(){
+    const obj={};
+    factorGroups.forEach(g=>g.items.forEach(item=>{obj[item.key]='未確認'}));
+    return obj;
+  }
+  function normalizeFactors(){
+    const defaults=defaultFactors();
+    state.factors=Object.assign(defaults,state.factors||{});
+    factorGroups.forEach(g=>g.items.forEach(item=>{
+      const v=normalizeFactorValue(state.factors[item.key]);
+      state.factors[item.key]=item.options.includes(v)?v:'未確認';
+    }));
+  }
+  function snapshotFactorOpen(){
+    const box=document.getElementById('factorPills');
+    if(!box)return;
+    state.factorOpen=state.factorOpen||{};
+    box.querySelectorAll('details[data-factor-group]').forEach(d=>{state.factorOpen[d.dataset.factorGroup]=d.open});
+  }
+  function isFactorOpen(g){
+    state.factorOpen=state.factorOpen||{};
+    return Object.prototype.hasOwnProperty.call(state.factorOpen,g.id)?!!state.factorOpen[g.id]:!!g.open;
+  }
+  const $=id=>document.getElementById(id);
   let state=freshState();
+  let renderingFactors=false;
 
-  function $(id){return document.getElementById(id)}
-  function pad(n){return String(n).padStart(2,'0')}
-  function nowStamp(){const d=new Date();return `${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`}
-  function num(v){const m=String(v||'').replace(/,/g,'').match(/\d+(?:\.\d+)?/);return m?parseFloat(m[0]):0}
-  function pct(ng,prod){if(prod>0 && ng>prod) return '請確認數量'; return prod>0?((ng/prod)*100).toFixed(2)+'%':''}
-  function cleanLine(s){return String(s||'').replace(/^[：:\-\s]+/,'').trim()}
-  function hasStatus(s){return state.statuses.includes(s)}
-  function hasFactor(k){return !!state.factors[k]}
-  function allFactors(){return factorGroups.flatMap(g=>g.items)}
-  function displayValue(v,fallback='未填'){const s=String(v||'').trim();return s||fallback}
-  function hasAnyCaseContent(){
-    const f=state.fields||{};
-    const hasField=fields.some(k=>k!=='ngRate' && String(f[k]||'').trim());
-    const hasTimeline=(state.timeline||[]).length>0;
-    const hasDimensions=hasDimensionRecord();
-    const hasPhotos=(state.photos||[]).length>0;
-    const hasQuick=String(state.quickNote||'').trim().length>0;
-    const statusStarted=(state.statuses||[]).some(s=>s!=='未開始' && s!=='結案');
-    return hasQuick||hasField||hasTimeline||hasDimensions||hasPhotos||statusStarted;
-  }
-  function resetToNewInvestigation(){
-    state=freshState();
-    state.statuses=['現況調查'];
-    state.activeSection=0;
-  }
-
-  function init(){renderStaticButtons();load();bind();syncToDom();recalcAll()}
-  function renderStaticButtons(){
-    $('timelineBtns').innerHTML=timelineEvents.map(e=>`<button class="btn" data-timeline="${e}">${e}</button>`).join('');
-    $('statusBtns').innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${g.title}</div><div class="btns">${g.items.map(s=>`<button class="btn status ${['結案','已有對策','邊做邊檢'].includes(s)?'green':''} ${['暫停生產','沒有對策','需開停線會議','可能流出','涉及出貨','客訴'].includes(s)?'red':''} ${countermeasureStatuses.includes(s)?'countermeasure':''}" data-status="${s}">${s}</button>`).join('')}</div>${g.title.includes('對策狀態')?'<div class="tiny" style="margin-top:6px">此欄必選；未選時總燈號維持黃燈。已有對策 / 沒有對策只會保留一個。</div>':''}</div>`).join('');
-    $('factorPills').innerHTML=factorGroups.map(g=>`<details ${g.open?'open':''}><summary>${g.title}</summary><div class="pillbar" style="margin-top:10px">${g.items.map(([k,t,c])=>`<label class="pill ${c}" data-pill="${k}"><input type="checkbox" data-factor="${k}">${t}</label>`).join('')}</div></details>`).join('');
-    const tabNames=['Email 摘要','待辦 / 驗證','案件紀錄'];
-    $('tabs').innerHTML=tabNames.map(t=>`<button class="tab" data-tab="${t}">${t}</button>`).join('');
+  function freshState(){return {
+    schemaVersion:SCHEMA_VERSION,activeSection:0,quickNote:'',selectedOutput:'email',timeline:[],photos:[],dimensions:[],statuses:['未開始'],factors:defaultFactors(),factorOpen:{},outputs:{},missingDone:{},
+    fields:{date:'',line:'',abnormalType:'',partNo:'',lot:'',supplier:'',prodQty:'',ngQty:'',ngRate:'',description:'',shippingImpact:'',investigation:'',currentAction:'',helpNeeded:''},
+    npdr:{imported:false,importedAt:'',rawText:'',rawFields:{},previewData:null,partDescription:'',creatorDept:'',drawingZone:'',spec:'',actual:'',gauge:'',qaEngineer:'',qaJudgement:'',judgementCriteria:'',judgementReason:'',responsibleQa:'',rejudgement:'',rejudgementReason:'',sqaRemark:'',countermeasureDept:'',countermeasure:'',countermeasureRemark:'',countermeasureResult:'',stockHandling:'',issueType:'',inspectionRequest:'',scar8dRequired:'',scar8dTrigger:'',scarNo:'',verificationDate:'',sectionChiefReviewDate:'',sectionChiefRemark:'',defectSamplingRaw:'',abnormalQtyRaw:'',defectRateRaw:'',productionQtyRaw:'',projectName:'',partStatus:'',defectCode:'',cqfNo:''}
+  }}
+  function init(){
+    load();
+    bind();
+    renderStatic();
+    syncToDom();
+    recalcAll();
   }
   function bind(){
-    $('quickNote').addEventListener('input',()=>{state.quickNote=$('quickNote').value; save(); recalcAll();});
-    $('extractBtn').addEventListener('click',()=>{extractFromText(state.quickNote,true); syncToDom(); recalcAll();});
+    document.querySelectorAll('[data-section-index]').forEach(btn=>btn.addEventListener('click',()=>{state.activeSection=Number(btn.dataset.sectionIndex);save(false);renderSections()}));
+    document.querySelectorAll('[data-field]').forEach(el=>el.addEventListener('input',()=>{state.fields[el.dataset.field]=el.value;if(['prodQty','ngQty'].includes(el.dataset.field)) calcRate(); if(state.npdr.imported && el.dataset.field==='ngRate') state.npdr.defectRateRaw=el.value; save(false);recalcAll()}));
+    $('quickNote').addEventListener('input',()=>{state.quickNote=$('quickNote').value;save(false)});
+    $('extractBtn').addEventListener('click',extractQuickNote);
     $('loadQuickTemplate').addEventListener('click',loadQuickTemplate);
-    $('showDimensionBox').addEventListener('click',()=>addDimensionRow(true));
-    $('addDimensionRow').addEventListener('click',()=>addDimensionRow(true));
-    $('clearQuickNote').addEventListener('click',clearQuickNote);
-    fields.forEach(f=>{const el=$(f); if(el) el.addEventListener('input',()=>{state.fields[f]=el.value; if(f==='prodQty'||f==='ngQty') calcRate(); save(); recalcAll();});});
-    document.addEventListener('click',e=>{
-      const t=e.target;
-      const step=t.closest('[data-section-index]');
-      if(step){showSection(Number(step.dataset.sectionIndex))}
-      if(t.dataset.timeline){addTimeline(t.dataset.timeline)}
-      if(t.dataset.status){toggleStatus(t.dataset.status)}
-      if(t.dataset.shippingImpact){state.fields.shippingImpact=t.dataset.shippingImpact; save(); syncToDom(); recalcAll()}
-      if(t.dataset.dimensionSign){const i=Number(t.dataset.dimensionSign); ensureDimension(i); state.dimensions[i].sign=t.dataset.sign; updateDimensionInvestigation(); save(); renderDimensionBox(); recalcAll()}
-      if(t.dataset.removeDimension){removeDimensionRow(Number(t.dataset.removeDimension))}
-      if(t.dataset.tab){state.activeTab=t.dataset.tab; save(); recalcAll()}
-      if(t.dataset.removePhoto){state.photos.splice(Number(t.dataset.removePhoto),1); save(); renderPhotos(); recalcAll()}
-      if(t.dataset.removeTimeline){state.timeline.splice(Number(t.dataset.removeTimeline),1); save(); renderTimeline(); recalcAll()}
-    });
-    document.addEventListener('input',e=>{
-      const t=e.target;
-      if(t.dataset.photoCaption){const i=Number(t.dataset.photoCaption); if(state.photos[i]) state.photos[i].caption=t.value; save(); recalcAll()}
-      if(t.dataset.dimField){const i=Number(t.dataset.dimIndex); ensureDimension(i); state.dimensions[i][t.dataset.dimField]=t.value; updateDimensionInvestigation(); save(); recalcAll()}
-    });
-    document.addEventListener('change',e=>{
-      const t=e.target;
-      if(t.dataset.factor){state.factors[t.dataset.factor]=t.checked; applyFactorRules(t.dataset.factor); save(); syncToDom(); recalcAll()}
-    });
-    $('addCustomTimeline').addEventListener('click',()=>{const v=$('customTimeline').value.trim(); if(v){addTimeline(v); $('customTimeline').value=''}});
-    $('customTimeline').addEventListener('keydown',e=>{if(e.key==='Enter') $('addCustomTimeline').click()});
-    $('exportTimeline').addEventListener('click',()=>copyText(formatTimeline(),'已複製處理紀錄'));
+    $('showDimensionBox').addEventListener('click',()=>{addDimensionRow();$('dimensionBox').classList.remove('hidden')});
+    $('clearQuickNote').addEventListener('click',()=>{state.quickNote='';$('quickNote').value='';save();recalcAll()});
+    $('addDimensionRow').addEventListener('click',()=>addDimensionRow());
+    $('addCustomTimeline').addEventListener('click',addCustomTimeline);
+    $('customTimeline').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addCustomTimeline()}});
+    $('exportTimeline').addEventListener('click',()=>copyText(buildTimelineText(),'已複製處理紀錄'));
     $('clearTimeline').addEventListener('click',()=>{if(confirm('確定清空處理紀錄？')){state.timeline=[];save();renderTimeline();recalcAll()}});
-    $('photoInput').addEventListener('change',handlePhotos);
+    $('photoInput').addEventListener('change',e=>handlePhotoFiles(e.target.files));
     document.addEventListener('paste',handlePasteImage);
+    $('shippingImpactBtns').addEventListener('click',e=>{const b=e.target.closest('[data-shipping-impact]');if(!b)return;state.fields.shippingImpact=b.dataset.shippingImpact;save();syncToDom();recalcAll()});
     $('exportJson').addEventListener('click',exportJson);
     $('importJson').addEventListener('change',importJson);
-    $('clearCase').addEventListener('click',()=>{if(confirm('確定要清空？')){[STORAGE_KEY,...LEGACY_STORAGE_KEYS].forEach(k=>localStorage.removeItem(k));resetToNewInvestigation();syncToDom();recalcAll()}});
-    $('copyTab').addEventListener('click',()=>{const r=assessRisk();const text=state.activeTab==='Email 摘要'?plainEmail(r):$('outputBox').innerText;copyText(text,'已複製此分頁純文字')});
-    updateProcessActive();
+    $('clearCase').addEventListener('click',()=>{if(confirm('確定清空目前案件？')){state=freshState();save();syncToDom();recalcAll()}});
+    $('copyTab').addEventListener('click',()=>copyText(getCurrentOutputPlainText(),'已複製內容'));
+    $('toggleNpdrImport').addEventListener('click',()=>$('npdrImportBox').classList.toggle('hidden'));
+    $('parseNpdrBtn').addEventListener('click',parseNpdrFromTextArea);
+    $('applyNpdrBtn').addEventListener('click',applyNpdrToCase);
+    $('clearNpdrBtn').addEventListener('click',clearNpdrImport);
   }
-
-  function pageSections(){return [...document.querySelectorAll('main.wrap > section')]}
-  function showSection(i){
-    const sections=pageSections();
-    const index=Math.max(0,Math.min(sections.length-1,Number(i)||0));
-    state.activeSection=index;
-    updateProcessActive(index);
-    save(false);
+  function renderStatic(){
+    $('timelineBtns').innerHTML=timelineEvents.map(t=>`<button class="btn" type="button" data-timeline="${esc(t)}">${esc(t)}</button>`).join('');
+    $('timelineBtns').addEventListener('click',e=>{const b=e.target.closest('[data-timeline]');if(b)addTimeline(b.dataset.timeline)});
+    renderStatusBtns();
+    renderFactorPills();
   }
-  function updateProcessActive(activeIndex=state.activeSection||0){
-    const sections=pageSections();
-    sections.forEach((section,i)=>{
-      const on=i===activeIndex;
-      section.classList.toggle('active-section',on);
-      section.hidden=!on;
-    });
-    document.querySelectorAll('[data-section-index]').forEach(btn=>{
-      const on=Number(btn.dataset.sectionIndex)===activeIndex;
-      btn.classList.toggle('active',on);
-      btn.setAttribute('aria-current',on?'step':'false');
-    })
-  }
-
-  function loadQuickTemplate(){
-    const template=`【異常現場資訊範本】
-發生日期：
-發生地點(線別/站別)：
-料號：
-採購單/工單：
-供應商：
-抽樣數：
-不良數：
-異常描述：
-是否影響出貨：
-異常調查：
-目前處置：
-待協助事項：
-`;
-    if(state.quickNote && state.quickNote.trim()){if(!confirm('匯入範本會覆蓋目前快記內容，確定要繼續？')) return}
-    state.quickNote=template;$('quickNote').value=template;save();syncToDom();recalcAll();
-  }
-  function clearQuickNote(){if(!state.quickNote||!state.quickNote.trim()) return;if(confirm('確定清空現場資訊快記區？只會清空快記文字，不會清空案件欄位、圖片或處理紀錄。')){state.quickNote='';$('quickNote').value='';save();recalcAll()}}
-
-  function addTimeline(text){
-    state.timeline.push({time:nowStamp(),text});
-    if(text.includes('物料隔離')) addStatus('物料隔離');
-    if(text.includes('到現場')) state.factors.onsite=true;
-    if(text.includes('尺寸量測')) addDimensionRow(false);
-    if(text.includes('暫停生產')) {addStatus('暫停生產'); removeStatus('邊做邊檢')}
-    if(text.includes('邊做邊檢')||text.includes('恢復生產')) {addStatus('邊做邊檢'); removeStatus('暫停生產')}
-    if(text.includes('已確認影響範圍')) state.factors.scopeConfirmed=true;
-    if(text.includes('尺寸量測')) state.factors.dimensionMeasured=true;
-    if(text.includes('隔離')) state.factors.isolated=true;
-    if(text.includes('持續發生')) state.factors.continuous=true;
-    save();syncToDom();recalcAll();
-  }
-  function formatTimeline(){return state.timeline.map(x=>`${x.time}　${x.text}`).join('\n')||'尚無處理紀錄。'}
-  function renderTimeline(){$('timelineList').innerHTML=state.timeline.map((x,i)=>`<li><span>${x.time}　${escapeHtml(x.text)}</span><button class="x" title="刪除" data-remove-timeline="${i}">×</button></li>`).join('')}
-  function toggleStatus(s){
-    if(hasStatus(s)) removeStatus(s); else addStatus(s);
-    if(stageStatuses.includes(s) && hasStatus(s)) stageStatuses.filter(x=>x!==s).forEach(removeStatus);
-    if(countermeasureStatuses.includes(s) && hasStatus(s)) countermeasureStatuses.filter(x=>x!==s).forEach(removeStatus);
-    if(s==='暫停生產' && hasStatus('暫停生產')) removeStatus('邊做邊檢');
-    if(s==='邊做邊檢' && hasStatus('邊做邊檢')) removeStatus('暫停生產');
-    if(s==='沒有對策') state.factors.noCountermeasure=hasStatus('沒有對策');
-    if(s==='已有對策' && hasStatus('已有對策')) state.factors.noCountermeasure=false;
-    if(s==='物料隔離'){
-      if(hasStatus('物料隔離')){state.factors.isolated=true;state.factors.noIsolationNeeded=false}
-      else state.factors.isolated=false;
-    }
-    if(s==='可能流出') state.factors.possibleOutflow=hasStatus('可能流出');
-    if(s==='涉及出貨') state.factors.shipment=hasStatus('涉及出貨');
-    if(s==='客訴') state.factors.customerComplaint=hasStatus('客訴');
-    if(state.statuses.length===0) addStatus('未開始');
-    save();syncToDom();recalcAll();
-  }
-  function addStatus(s){if(!hasStatus(s)) state.statuses.push(s)}
-  function removeStatus(s){state.statuses=state.statuses.filter(x=>x!==s)}
-  function applyFactorRules(k){
-    if(k==='noCountermeasure'){state.factors[k]?(addStatus('沒有對策'),removeStatus('已有對策')):removeStatus('沒有對策')}
-    if(k==='isolated'){state.factors[k]?addStatus('物料隔離'):removeStatus('物料隔離'); if(state.factors[k]) state.factors.noIsolationNeeded=false}
-    if(k==='noIsolationNeeded' && state.factors[k]){state.factors.isolated=false; removeStatus('物料隔離')}
-    if(k==='possibleOutflow'){state.factors[k]?addStatus('可能流出'):removeStatus('可能流出')}
-    if(k==='shipment'){state.factors[k]?addStatus('涉及出貨'):removeStatus('涉及出貨')}
-    if(k==='customerComplaint'){state.factors[k]?addStatus('客訴'):removeStatus('客訴')}
-    normalizeExclusiveFlags();
-  }
-  const PHOTO_MAX_SIDE=900;
-  const PHOTO_JPEG_QUALITY=0.58;
-  const PHOTO_MAX_DATA_URL_CHARS=420000;
-  function dataUrlBytes(dataUrl){return Math.round((String(dataUrl||'').length*3)/4)}
-  function sizeText(bytes){if(!bytes&&bytes!==0)return ''; if(bytes<1024)return bytes+' B'; if(bytes<1024*1024)return (bytes/1024).toFixed(1)+' KB'; return (bytes/1024/1024).toFixed(1)+' MB'}
-  function normalizePhotoSrc(src){return String(src||'').length>PHOTO_MAX_DATA_URL_CHARS?'':String(src||'')}
-  function compactPhotosForStorage(photos){return (photos||[]).map(p=>Object.assign({},p,{src:normalizePhotoSrc(p.src),storedMode:p.src&&String(p.src).length>PHOTO_MAX_DATA_URL_CHARS?'metadataOnly':(p.storedMode||'compressedPreview')}))}
-  async function compressImageFile(file){
-    const dataUrl=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result||'');r.onerror=reject;r.readAsDataURL(file)});
-    const img=await new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=dataUrl});
-    const scale=Math.min(1,PHOTO_MAX_SIDE/Math.max(img.width||1,img.height||1));
-    const w=Math.max(1,Math.round((img.width||1)*scale));
-    const h=Math.max(1,Math.round((img.height||1)*scale));
-    const canvas=document.createElement('canvas');
-    canvas.width=w; canvas.height=h;
-    const ctx=canvas.getContext('2d');
-    ctx.drawImage(img,0,0,w,h);
-    let out=canvas.toDataURL('image/jpeg',PHOTO_JPEG_QUALITY);
-    if(String(out).length>PHOTO_MAX_DATA_URL_CHARS){
-      const s2=Math.sqrt(PHOTO_MAX_DATA_URL_CHARS/String(out).length)*0.9;
-      const w2=Math.max(1,Math.round(w*s2));
-      const h2=Math.max(1,Math.round(h*s2));
-      const c2=document.createElement('canvas');
-      c2.width=w2; c2.height=h2;
-      c2.getContext('2d').drawImage(img,0,0,w2,h2);
-      out=c2.toDataURL('image/jpeg',0.5);
-    }
-    if(String(out).length>PHOTO_MAX_DATA_URL_CHARS) out='';
-    return {src:out,width:w,height:h,storedBytes:dataUrlBytes(out),originalBytes:file.size||0};
-  }
-  async function addPhotoFile(file,nameOverride){
-    if(!file || !file.type || !file.type.startsWith('image/')) return;
-    const item={name:'照片',src:'',added:nowStamp(),partNo:state.fields.partNo||'',line:state.fields.line||'',caption:'',storedMode:'processing',originalSize:sizeText(file.size||0),storedSize:''};
-    state.photos.push(item);
-    renderPhotos();
-    try{
-      const compressed=await compressImageFile(file);
-      item.src=compressed.src;
-      item.storedMode=item.src?'compressedPreview':'metadataOnly';
-      item.storedSize=sizeText(compressed.storedBytes);
-      item.originalSize=sizeText(compressed.originalBytes);
-      if(!item.src) item.caption=item.caption||'圖片過大，僅保留照片紀錄，原圖請由手機相簿另行附上';
-    }catch(err){
-      item.src='';
-      item.storedMode='metadataOnly';
-      item.storedSize='未儲存';
-      item.caption=item.caption||'此圖片無法壓縮預覽，原圖請由手機相簿另行附上';
-    }
-    save(false);renderPhotos();recalcAll();
-  }
-  async function handlePhotos(e){
-    const files=[...e.target.files];
-    for(const file of files){await addPhotoFile(file)}
-    save();renderPhotos();recalcAll();e.target.value='';
-  }
-  async function handlePasteImage(e){
-    const items=[...(e.clipboardData&&e.clipboardData.items?e.clipboardData.items:[])];
-    const imageItems=items.filter(item=>item.type&&item.type.startsWith('image/'));
-    if(!imageItems.length) return;
-    e.preventDefault();
-    let idx=0;
-    for(const item of imageItems){const file=item.getAsFile(); if(file){idx++; await addPhotoFile(file)}}
-    save();renderPhotos();recalcAll();
-  }
-  function fileNameStamp(){const d=new Date();return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`}
-  function renderPhotos(){
-    $('preview').innerHTML=(state.photos||[]).map((p,i)=>{
-      const mode=p.storedMode==='processing'?'處理中':(p.src?'已存壓縮預覽':'僅保留照片紀錄');
-      const sizeInfo=[p.originalSize?`原圖 ${p.originalSize}`:'',p.storedSize?`預覽 ${p.storedSize}`:''].filter(Boolean).join(' → ');
-      return `<div class="photo">${p.src?`<img src="${p.src}" alt="照片預覽" style="width:100%;height:90px;object-fit:cover;border-radius:9px;border:1px solid #d7e6f7">`:`<div class="photo-icon">📎</div>`}<div class="name">照片 ${i+1}</div><div class="photo-meta">${escapeHtml(p.line||'未填線別/站別')}｜${escapeHtml(p.partNo||'未填料號')}</div><div class="photo-meta">${escapeHtml(mode)}${sizeInfo?'｜'+escapeHtml(sizeInfo):''}</div><input data-photo-caption="${i}" placeholder="照片備註 / 分類" value="${escapeHtml(p.caption||'')}"><button data-remove-photo="${i}">移除</button></div>`
-    }).join('');
-  }
-  function normalizeState(){
-    const oldSchema=Number(state.schemaVersion)||0;
-    state.schemaVersion=SCHEMA_VERSION;
-    if(!state.fields) state.fields={};
-    if(!Array.isArray(state.dimensions)) state.dimensions=[];
-    if(!state.dimensions.length && (state.fields.dimensionSpec||state.fields.dimensionTolerance||state.fields.dimensionActual)){
-      state.dimensions=[{item:'',spec:state.fields.dimensionSpec||'',sign:state.fields.dimensionToleranceSymbol||'±',tolerance:state.fields.dimensionTolerance||'',actual:state.fields.dimensionActual||''}];
-    }
-    state.dimensions=state.dimensions.map(d=>({item:d.item||'',spec:d.spec||'',sign:(d.sign||d.symbol||'±').replace('+-','±').replace('+/-','±').replace('－','-'),tolerance:d.tolerance||d.tol||'',actual:d.actual||''}));
-    if(!state.factors) state.factors={};
-    if(hasDimensionRecord()) state.factors.dimensionMeasured=true;
-    if(!state.statuses||!state.statuses.length) state.statuses=['未開始'];
-    if(!state.missingDone) state.missingDone={};
-    state.statuses=state.statuses.map(s=>{if(s==='尚未判定'||s==='待判定'||s==='調查中') return '現況調查'; if(s==='已判定') return '已有對策'; if(s==='恢復生產') return '邊做邊檢'; return s;});
-    if(hasStatus('已有對策') && hasStatus('沒有對策')){
-      if(state.factors.noCountermeasure) removeStatus('已有對策');
-      else removeStatus('沒有對策');
-    }
-    const allowedStatuses=new Set(statusGroups.flatMap(g=>g.items));
-    state.statuses=state.statuses.filter(s=>allowedStatuses.has(s));
-    if(!state.statuses.length) addStatus('未開始');
-    normalizeExclusiveFlags();
-    state.photos=(state.photos||[]).map(p=>({name:'照片',src:normalizePhotoSrc(p.src),added:p.added||'',partNo:p.partNo||'',line:p.line||'',caption:p.caption||'',storedMode:p.storedMode||((p.src&&String(p.src).length<=PHOTO_MAX_DATA_URL_CHARS)?'compressedPreview':'metadataOnly'),originalSize:p.originalSize||'',storedSize:p.storedSize||(p.src?sizeText(dataUrlBytes(normalizePhotoSrc(p.src))):'')}));
-    if(!['Email 摘要','待辦 / 驗證','案件紀錄'].includes(state.activeTab)) state.activeTab='Email 摘要';
-    state.activeSection=Math.max(0,Math.min(3,Number(state.activeSection)||0));
-    if(oldSchema<14){
-      state.fields.currentAction=cleanActionOnly(state.fields.currentAction||'');
-      state.fields.helpNeeded='';
-    }
-    delete state.fields.foundTime;
-  }
-  function normalizeExclusiveFlags(){
-    if(state.factors.noIsolationNeeded){state.factors.isolated=false;removeStatus('物料隔離')}
-    if(state.factors.isolated){state.factors.noIsolationNeeded=false}
-    if(hasStatus('物料隔離')){state.factors.isolated=true;state.factors.noIsolationNeeded=false}
-    if(state.factors.noCountermeasure){addStatus('沒有對策'); removeStatus('已有對策');}
-    if(hasStatus('已有對策')) state.factors.noCountermeasure=false;
-    if(hasStatus('已有對策') && hasStatus('沒有對策')) removeStatus('沒有對策');
-  }
-
-  function isExampleLine(line){return /^例如[:：]/.test(String(line||'').trim())}
-  function primaryText(text){
-    const s=String(text||'');
-    const cuts=[/\n\s*寄件者\s*[:：]/i,/\n\s*From\s*[:：]/i,/\n\s*-----Original Message-----/i];
-    let cutIndex=-1;
-    cuts.forEach(re=>{const m=s.match(re); if(m && m.index>20 && (cutIndex<0 || m.index<cutIndex)) cutIndex=m.index});
-    return cutIndex>20?s.slice(0,cutIndex):s;
-  }
-  function usefulText(text){return primaryText(text).split(/\r?\n/).filter(line=>!isExampleLine(line)).join('\n')}
-  function isMetaLine(line){return /^(寄件者|From|已傳送|Sent|收件者|To|副本|Cc|主旨|Subject|Greetings|This Message|開立單位|建立者|NPDR No|Part No|Part Name|Spec|Actual|Defect\s*\/|Problem description|Resp\.|If you want to unsubscribe)/i.test(String(line||'').trim())}
-  function isFieldLabel(line){return /^(日期|發生日期|發生地點|線別|站別|異常類型|異常型態|異常項目|異常描述|異常現象|料號|工單|批號|供應商|抽樣數|抽樣數量|不良數|不良率|異常調查|是否影響出貨|目前處置|處理對策|待協助事項|照片|Best Regards)$/i.test(String(line||'').trim())}
-  function hasPositiveSignal(re,text,negativeRe){return re.test(text)&&!(negativeRe&&negativeRe.test(text))}
-  function extractFromText(text, overwrite){
-    const one=usefulText(text);
-    const lines=one.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-    const set=(k,v)=>{if(v && (overwrite || !state.fields[k])) state.fields[k]=cleanLine(v)};
-    const dateMatch=one.match(/(?:發生日期|日期|Date)\s*[:：]?\s*(\d{1,4}[\/\-.年]\d{1,2}(?:[\/\-.月]\d{1,2}日?)?|\d{1,2}\/\d{1,2})/i);
-    const dateNext=nextLineAfter(lines,/^(發生日期|日期|Date)$/i);
-    set('date',(dateMatch?dateMatch[1]:dateNext||'').replace(/[年月.-]/g,'/').replace(/日/g,''));
-    const partMatch=one.match(/\b\d{2}\.\d{4}\.\d{3}\.\d{3}\b/) || nextLineAfter(lines,/^(Part\s*No\.?|Part\s*Number|P\/N|料號)$/i);
-    set('partNo',Array.isArray(partMatch)?partMatch[0]:partMatch);
-    const lineDirect=one.match(/\b(?:RD\s*LINE\s*\d+|NRD\s*\d+|SF\s*LINE\s*\d+|SF\s*\d+|轉把)\b/i);
-    const lineLabel=one.match(/(?:發生地點(?:\s*[（(][^）)]*[）)])?|線別|站別|Line|Station)\s*[:：]\s*([^\n\r]+)/i);
-    const lineNext=nextLineAfter(lines,/^(Production\s*Line\s*\/\s*shift|生產線別\s*\/\s*班別|發生地點|線別|站別|Line|Station)$/i);
-    set('line',lineLabel?cleanLine(lineLabel[1]):(lineDirect?lineDirect[0].replace(/\s+/g,' ').toUpperCase():lineNext));
-    const descDirect=one.match(/(?:異常描述|異常現象|問題描述|Description)\s*[:：]\s*([^\n\r]+)/i);
-    const descNext=nextLineAfter(lines,/^(異常描述|異常現象|問題描述|Description)$/i);
-    const desc=descDirect?cleanLine(descDirect[1]):(descNext||guessDescription(lines));
-    if(desc && (overwrite||!state.fields.description)) state.fields.description=desc;
-    const typeNext=nextLineAfter(lines,/^(異常類型|異常型態|異常項目|不良現象|Defect\s*Type|Failure\s*Mode)$/i);
-    const typeMatch=one.match(/(?:異常類型|異常型態|異常項目|不良現象|Defect\s*Type|Failure\s*Mode)\s*[:：]\s*([^\n，,；;]+)/i);
-    const typeKeyword=one.match(/倒角不均勻|孔邊緣倒角不均勻|外徑過大|外徑過小|內徑過大|內徑過小|孔過大|凹陷過大|尺寸異常|尺寸過大|尺寸過小|混料|錯料|刮傷|破裂|無法組裝|卡住|功能失效/i);
-    const abType=typeMatch?cleanLine(typeMatch[1]):(typeNext||(typeKeyword?typeKeyword[0]:(desc && desc.length<=30?desc:'')));
-    if(abType && (overwrite||!state.fields.abnormalType)) state.fields.abnormalType=abType;
-    const lot=one.match(/(?:工單|批號|\bLot\b|\bWO\b|Work\s*Order)\s*[:：]\s*([A-Za-z0-9\-_.\/]+)/i) || nextLineAfter(lines,/^(工單|批號|Lot|WO|Work\s*Order)$/i);
-    set('lot',Array.isArray(lot)?lot[1]||lot[0]:lot);
-    const sup=one.match(/(?:供應商|Supplier|Vendor)\s*[:：]?\s*([^\n\r]+)/i);
-    const vendorHint=one.match(/廠商\s*([^\s，,。；;有]+)\s*(?:有此情形|反應|確認|回覆)?/);
-    set('supplier',sup?(sup[1]||sup[0]):(vendorHint&&vendorHint[1]));
-    const prod=one.match(/(?:抽樣數|抽樣數量|生產數量|生產數|Sample\s*Qty|Inspection\s*Qty|Production\s*Qty|Total\s*Qty)\s*[:：]?\s*(\d+[,.]?\d*)/i) || nextLineAfter(lines,/^(抽樣數|抽樣數量|生產數量|生產數|Sample\s*Qty|Inspection\s*Qty|Production\s*Qty|Total\s*Qty)$/i);
-    set('prodQty',Array.isArray(prod)?prod[1]||prod[0]:prod);
-    const ng=one.match(/(?:不良數|NG\s*Qty|Defect\s*Qty|Fail\s*Qty)\s*[:：]?\s*(\d+[,.]?\d*)/i) || nextLineAfter(lines,/^(不良數|NG\s*Qty|Defect\s*Qty|Fail\s*Qty)$/i);
-    set('ngQty',Array.isArray(ng)?ng[1]||ng[0]:ng);
-    const pastedRate=one.match(/(?:不良率|NG\s*Rate|Defect\s*Rate)\s*[:：]?\s*(\d+(?:\.\d+)?\s*%?)/i) || nextLineAfter(lines,/^(不良率|NG\s*Rate|Defect\s*Rate)$/i);
-    if(pastedRate){state.fields.sourceNgRate=cleanLine(Array.isArray(pastedRate)?pastedRate[1]||pastedRate[0]:pastedRate)}
-    extractDimensionFromText(one,overwrite);
-    const knownLabel=/^(日期|發生日期|線別|站別|發生地點|異常類型|異常型態|異常項目|異常描述|異常現象|料號|工單|批號|供應商|抽樣數|抽樣數量|不良數|不良率|異常調查|是否影響出貨|目前處置|處理對策|待協助事項|照片|Best Regards|寄件者|From|已傳送|Sent|收件者|To|副本|Cc|主旨|Subject|Greetings|This Message|開立單位|建立者|NPDR No|Part No|Part Name|Spec|Actual|Defect\s*\/|Problem description|Resp\.|If you want to unsubscribe)/i;
-    const shippingImpact=sectionAfter(lines,/^(是否影響出貨|出貨影響|影響出貨)$/i,knownLabel);
-    const shipText=String(shippingImpact||'').trim();
-    if(shipText && (overwrite||!state.fields.shippingImpact)){state.fields.shippingImpact=/^(是|有|Y|Yes|已影響|影響)/i.test(shipText)?'是':(/^(否|無|未|不|N|No)/i.test(shipText)?'否':state.fields.shippingImpact)}
-    const investigation=sectionAfter(lines,/^(異常調查|調查內容|原因調查)$/i,knownLabel); if(investigation && (overwrite||!state.fields.investigation)) state.fields.investigation=investigation;
-    const rawAction=sectionAfter(lines,/^(目前處置|處置狀態|處理對策|已完成處置)$/i,knownLabel);
-    if(rawAction){const action=cleanActionOnly(rawAction); if(action && (overwrite||!state.fields.currentAction)) state.fields.currentAction=action}
-    // 待協助事項不自動帶入，保留給使用者自行填寫。
-    keywordFactors(one); calcRate(); save();
-  }
-  
-function nextLineAfter(lines,re){
-    for(let i=0;i<lines.length-1;i++){
-      if(!re.test(lines[i])) continue;
-      for(let j=i+1;j<Math.min(lines.length,i+4);j++){
-        const v=cleanLine(lines[j]);
-        if(v && !isFieldLabel(v) && !isMetaLine(v)) return v;
-      }
-    }
-    return ''
-  }
-  function sectionAfter(lines,re,stopRe){
-    for(let i=0;i<lines.length;i++){
-      const labelMatch=String(lines[i]||'').match(/^([^：:]+)\s*[:：]\s*(.*)$/);
-      const labelText=labelMatch?labelMatch[1].trim():lines[i];
-      if(!re.test(labelText)) continue;
-      const inlineValue=labelMatch?cleanLine(labelMatch[2]):'';
-      if(inlineValue) return inlineValue;
-      const out=[];
-      for(let j=i+1;j<lines.length;j++){
-        if(stopRe.test(lines[j])||isMetaLine(lines[j])) break;
-        if(lines[j]) out.push(lines[j]);
-      }
-      return out.join('\n').trim()
-    }
-    return ''
-  }
-  function extractDimensionFromText(text,overwrite){
-    const m=String(text||'').match(/(?:尺寸|孔徑|外徑|內徑)?\s*(\d+(?:\.\d+)?)\s*(\+\-|±|\+\/-|\+|－|-)\s*(\d+(?:\.\d+)?)\s*(?:為|實際值(?:為)?|實測(?:為)?|量測值(?:為)?)\s*([0-9]+(?:\.[0-9]+)?(?:\s*[、,，/]\s*[0-9]+(?:\.[0-9]+)?)*)/);
-    if(!m) return;
-    const normSign=(m[2]==='±'||m[2]==='+-'||m[2]==='+/-')?'±':(m[2]==='－'?'-':m[2]);
-    const setDim=(k,v)=>{if(v && (overwrite||!state.fields[k])) state.fields[k]=cleanLine(v)};
-    setDim('dimensionSpec',m[1]);
-    setDim('dimensionToleranceSymbol',normSign);
-    setDim('dimensionTolerance',m[3]);
-    setDim('dimensionActual',m[4].replace(/\s+/g,''));
-    state.factors.dimensionMeasured=true;
-  }
-  function cleanActionOnly(text){
-    const action=[];
-    String(text||'').split(/\n/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
-      const cleaned=line.replace(/^\d+[.、)）]\s*/,'').trim();
-      if(isMetaLine(cleaned)||/^(寄件者|收件者|副本|已傳送|From|To|Cc|Sent)\s*[:：]/i.test(cleaned)) return;
-      if(/請協助|需協助|待協助/.test(cleaned)) return;
-      action.push(line);
-    });
-    return action.join('\n').trim()
-  }
-  function guessDescription(lines){const labelOnly=/^(【.*】|發生日期|日期|發生地點|線別|站別|料號|工單|批號|供應商|抽樣數|抽樣數量|不良數|不良率|異常類型|異常描述|是否影響出貨|異常調查|目前處置|處理對策|待協助事項|例如)/;const hit=lines.find(l=>!labelOnly.test(l)&&!isMetaLine(l)&&/(異常|不良|NG|Fail|無法|卡住|混料|錯料|破裂|刮傷|尺寸|孔|倒角|凹陷|功能|組裝|客訴|退補料)/i.test(l));return hit||''}
-  
-function keywordFactors(t){
-    const text=usefulText(t);
-    const noOutflow=/(未流出|無流出|沒有流出|不會流出|未到客戶|尚未到客戶|未流出到客戶|未流至客戶)/;
-    const noShipment=/(未影響出貨|不影響出貨|未出貨|尚未出貨|不涉及出貨|無出貨|沒有出貨|出貨無影響)/;
-    const noCause=/(原因不明確|原因未明|原因待確認|原因未知|尚未確認原因|未確認原因|原因尚未釐清)/;
-    const map=[
-      ['safety',/(安全|危害|受傷|危險)/,/(無安全疑慮|未涉及安全|不涉及安全)/],
-      ['recall',/(召回|recall)/i,/(不需召回|無召回|未召回)/],
-      ['customerReject',/(客戶拒收|拒收)/,/(未拒收|無拒收|客戶未拒收)/],
-      ['outToCustomer',/(流出到客戶|已流出|客端|客戶端)/,noOutflow],
-      ['onsite',/(已至現場|到現場|現場確認|現場檢查)/,null],
-      ['rateConfirmed',/(不良率已確認|不良率.*%|抽樣數|不良數)/,null],
-      ['repeat8d',/(8D.*再發|PSP.*再發|改善後再發|對策後再發|結案後再發)/i,/(未再發|無再發|沒有再發)/],
-      ['customerComplaint',/(客訴|complain|complaint)/i,/(無客訴|未客訴|沒有客訴)/],
-      ['functionalFailure',/(功能失效|功能異常|無法作動|不能動作)/,/(功能正常|未影響功能|不影響功能|無功能異常)/],
-      ['mixedMaterial',/(混料|錯料|混入)/,/(無混料|未混料|沒有混料|無錯料|未錯料|沒有錯料)/],
-      ['continuous',/(持續發生|一直發生|連續發生)/,/(未持續|無持續|沒有持續|未連續)/],
-      
-      ['inventory',/(零件庫存待確認|庫存|WIP)/i,/(未影響庫存|不涉及庫存|無庫存|沒有庫存)/],
-      ['warehousePending',/(成品庫存待確認|成倉需確認|成品倉|成倉|FG)/i,/(成品庫存不需確認|成倉不需確認|不涉及成倉|無成倉)/],
-      ['orderChanged',/(已換單生產|換單生產|換工單)/,null],
-      ['shipment',/(涉及出貨|已出貨|出貨批次|shipment)/i,noShipment],
-      ['possibleOutflow',/(可能流出|流出風險|疑似流出)/,noOutflow],
-      ['causeKnown',/(原因.*明確|已知原因|初步原因)/,noCause],
-      ['tempAction',/(暫時對策|臨時對策|containment|圍堵)/i,/(無暫時對策|沒有暫時對策|尚無暫時對策)/],
-      ['dimensionIssue',/(尺寸異常|外徑|內徑|孔徑|尺寸過大|尺寸過小)/,/(尺寸無異常|尺寸正常)/],
-      ['appearanceIssue',/(外觀異常|刮傷|凹陷|倒角不均|毛邊|變色|污漬|露白)/,/(外觀無異常|外觀正常)/],
-      ['dimensionMeasured',/(尺寸量測|量測值|規格上下限|孔徑.*\d|尺寸無異常|尺寸.*無異常|實測|量測)/,/(未量測|尚未量測|無量測值|沒有量測值)/]
-    ];
-    map.forEach(([k,re,negativeRe])=>{if(hasPositiveSignal(re,text,negativeRe)) state.factors[k]=true});
-    if(/無隔離需求|不需隔離|免隔離/.test(text)){state.factors.noIsolationNeeded=true;removeStatus('物料隔離')} else if(/隔離/.test(text)){state.factors.isolated=true;addStatus('物料隔離')}
-    if(/邊做邊檢|恢復生產/.test(text)) addStatus('邊做邊檢');
-    normalizeExclusiveFlags();
-  }
-  function ensureDimension(i){
-    if(!Array.isArray(state.dimensions)) state.dimensions=[];
-    while(state.dimensions.length<=i) state.dimensions.push({item:'',spec:'',sign:'±',tolerance:'',actual:''});
-    if(!state.dimensions[i].sign) state.dimensions[i].sign='±';
-    return state.dimensions[i];
-  }
-  function addDimensionRow(renderNow){
-    if(!Array.isArray(state.dimensions)) state.dimensions=[];
-    state.dimensions.push({item:'',spec:'',sign:'±',tolerance:'',actual:''});
-    state.factors.dimensionIssue=true;
-    save(false);
-    if(renderNow){renderDimensionBox(); recalcAll();}
-  }
-  function removeDimensionRow(i){
-    if(!Array.isArray(state.dimensions)) state.dimensions=[];
-    state.dimensions.splice(i,1);
-    updateDimensionInvestigation();
-    state.factors.dimensionMeasured=hasDimensionRecord();
-    save(); renderDimensionBox(); recalcAll();
-  }
-  function dimensionHasContent(d){return !!(d && [d.item,d.spec,d.tolerance,d.actual].some(v=>String(v||'').trim()))}
-  function hasDimensionRecord(){return Array.isArray(state.dimensions) && state.dimensions.some(d=>dimensionHasContent(d) && String(d.actual||'').trim())}
-  function renderDimensionBox(){
-    const box=$('dimensionBox');
-    if(!box) return;
-    if(!Array.isArray(state.dimensions)) state.dimensions=[];
-    const shouldShow=state.dimensions.length>0 || hasFactor('dimensionMeasured') || hasFactor('dimensionIssue');
-    box.classList.toggle('hidden',!shouldShow);
-    renderDimensions();
-  }
-  function renderDimensions(){
-    const list=$('dimensionList');
-    if(!list) return;
-    if(!state.dimensions.length){list.innerHTML='<div class="tiny">尚未新增尺寸量測；按「新增一筆尺寸」開始填寫。</div>';return;}
-    list.innerHTML=state.dimensions.map((d,i)=>{
-      const sign=d.sign||'±';
-      const signBtns=['+','-','±'].map(s=>`<button type="button" class="btn ${sign===s?'active':''}" data-dimension-sign="${i}" data-sign="${s}">${s}</button>`).join('');
-      return `<div class="dimension-item"><div class="dimension-row">
-        <div class="field"><label>項目 / 位置</label><input data-dim-index="${i}" data-dim-field="item" value="${escapeHtml(d.item||'')}" placeholder="例如 外徑、孔徑"></div>
-        <div class="field"><label>規格</label><input data-dim-index="${i}" data-dim-field="spec" value="${escapeHtml(d.spec||'')}" placeholder="例如 6.8"></div>
-        <div class="field"><label>公差符號</label><div class="tol-options">${signBtns}</div></div>
-        <div class="field"><label>公差</label><input data-dim-index="${i}" data-dim-field="tolerance" value="${escapeHtml(d.tolerance||'')}" placeholder="例如 0.3"></div>
-        <div class="field"><label>實際值</label><input data-dim-index="${i}" data-dim-field="actual" value="${escapeHtml(d.actual||'')}" placeholder="例如 6.82、6.81"></div>
-        <button type="button" class="btn danger dimension-remove" data-remove-dimension="${i}">刪除</button>
-      </div></div>`;
-    }).join('');
-  }
-  function buildDimensionLines(){
-    if(!Array.isArray(state.dimensions)) return [];
-    return state.dimensions.filter(d=>dimensionHasContent(d)).map((d,i)=>{
-      const item=String(d.item||'').trim();
-      const spec=String(d.spec||'').trim();
-      const sign=String(d.sign||'±').trim();
-      const tol=String(d.tolerance||'').trim();
-      const actual=String(d.actual||'').trim();
-      const name=item || `尺寸${i+1}`;
-      const specText=spec?`規格${spec}${tol?`${sign}${tol}`:''}`:'';
-      const actualText=actual?`實際值為${actual}`:'';
-      return `${name}：${[specText,actualText].filter(Boolean).join('，')}`;
-    });
-  }
-  function removeDimensionBlock(inv){
-    let out=String(inv||'').replace(/\n?【尺寸量測紀錄】[\s\S]*?【尺寸量測紀錄結束】\n?/g,'\n').trim();
-    const oldLine=String(state.fields.dimensionInvestigationLine||'').trim();
-    if(oldLine) out=out.split(/\n/).filter(line=>line.trim()!==oldLine).join('\n').trim();
-    return out;
-  }
-  function updateDimensionInvestigation(){
-    const lines=buildDimensionLines();
-    let inv=removeDimensionBlock(state.fields.investigation);
-    if(lines.length){
-      const block=['【尺寸量測紀錄】',...lines.map((line,i)=>`${i+1}. ${line}`),'【尺寸量測紀錄結束】'].join('\n');
-      inv=[inv,block].filter(Boolean).join('\n');
-      state.fields.dimensionInvestigationLine=block;
-    }else{
-      state.fields.dimensionInvestigationLine='';
-    }
-    state.factors.dimensionMeasured=hasDimensionRecord() || (!!state.factors.dimensionMeasured && (!state.dimensions || !state.dimensions.length));
-    state.fields.investigation=inv;
-    if($('investigation')) $('investigation').value=inv;
-  }
-  function calcRate(){state.fields.ngRate=pct(num(state.fields.ngQty),num(state.fields.prodQty)); if($('ngRate')) $('ngRate').value=state.fields.ngRate||''}
-  function rateMismatch(){
-    const prod=num(state.fields.prodQty), ng=num(state.fields.ngQty), source=num(state.fields.sourceNgRate);
-    if(!(prod>0) || !(ng>=0) || !(source>0) || ng>prod) return false;
-    const calc=(ng/prod)*100;
-    return Math.abs(calc-source)>0.2;
+  function renderSections(){
+    document.querySelectorAll('main.wrap>section').forEach((s,i)=>s.classList.toggle('active-section',i===state.activeSection));
+    document.querySelectorAll('[data-section-index]').forEach(b=>b.classList.toggle('active',Number(b.dataset.sectionIndex)===state.activeSection));
   }
   function syncToDom(){
-    normalizeExclusiveFlags();
+    renderSections();
     $('quickNote').value=state.quickNote||'';
-    fields.forEach(f=>{if($(f)) $(f).value=state.fields[f]||''}); calcRate(); renderTimeline(); renderPhotos();
-    document.querySelectorAll('[data-status]').forEach(b=>b.classList.toggle('active',hasStatus(b.dataset.status)));
-    document.querySelectorAll('[data-factor]').forEach(ch=>{ch.checked=!!state.factors[ch.dataset.factor]; ch.closest('.pill').classList.toggle('on',ch.checked)});
-    document.querySelectorAll('[data-shipping-impact]').forEach(b=>b.classList.toggle('active',state.fields.shippingImpact===b.dataset.shippingImpact));
-    renderDimensionBox();
-    $('currentStatusText').innerText=state.statuses.join('、')||'未開始';
-    document.querySelectorAll('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===state.activeTab));
-    updateProcessActive(state.activeSection);
+    Object.entries(state.fields).forEach(([k,v])=>{const el=document.querySelector(`[data-field="${k}"]`);if(el)el.value=v||''});
+    document.querySelectorAll('[data-shipping-impact]').forEach(b=>b.classList.toggle('active',b.dataset.shippingImpact===state.fields.shippingImpact));
+    $('npdrRawText').value=state.npdr.rawText||'';
+    $('npdrModeBadge').classList.toggle('hidden',!state.npdr.imported);
+    renderTimeline();renderPhotos();renderDimensions();renderStatusBtns();renderFactorPills();renderNpdrPreview();
   }
-  function recalcAll(){calcRate(); const r=assessRisk(); renderRisk(r); renderCompletion(r); renderOutputs(r); save(false)}
-
-  function rawMissingItems(){
-    const m=[]; const f=state.fields;
-    if(!f.date) m.push('日期'); if(!f.line) m.push('發生地點(線別/站別)'); if(!f.abnormalType) m.push('異常類型'); if(!f.partNo) m.push('料號'); if(!f.description) m.push('異常現象');
-    if(!f.prodQty) m.push('抽樣數'); if(!f.ngQty) m.push('不良數'); if(num(f.prodQty)>0 && num(f.ngQty)>num(f.prodQty)) m.push('不良數不可大於抽樣數');
-    if(rateMismatch()) m.push('貼上不良率與抽樣數/不良數計算不一致');
-    if(!f.currentAction) m.push('目前處置'); if(!f.investigation) m.push('異常調查'); if(!f.shippingImpact) m.push('是否影響出貨'); if(!f.helpNeeded) m.push('待協助事項');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) m.push('尺寸量測');
-    if(hasStatus('未開始')) m.push('請選擇目前案件狀態');
-    if(hasAnyCaseContent() && !hasStatus('結案') && !hasStatus('已有對策') && !hasStatus('沒有對策')) m.push('對策狀態（已有對策 / 沒有對策）');
-    const needsScopeConfirm=hasStatus('結案')||hasFactor('shipment')||hasFactor('possibleOutflow')||hasFactor('outToCustomer')||hasFactor('enteredNextStation')||hasStatus('涉及出貨')||hasStatus('可能流出');
-    if(needsScopeConfirm && !hasFactor('scopeConfirmed')) m.push('影響範圍是否已確認');
-    if(!hasStatus('未開始') && !(hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離'))) m.push('疑似品是否已隔離或無隔離需求');
-    if(hasFactor('shipment')||hasStatus('涉及出貨')) m.push('出貨批次、數量與追回/通知狀態');
-    if(hasFactor('possibleOutflow')||hasFactor('outToCustomer')||hasStatus('可能流出')) m.push('流出範圍與客戶端狀態');
-    if((hasFactor('continuous')||hasFactor('repeat8d')||hasFactor('repeat8d')||hasStatus('結案')) && !hasFactor('causeKnown')) m.push('是否有初步原因');
-    if((hasStatus('沒有對策')||hasStatus('結案')) && !hasFactor('tempAction')) m.push('是否有暫時對策');
-    if(hasStatus('需開停線會議')) m.push('停線會議結論與恢復條件');
-    return [...new Set(m)];
+  function normalizeState(){
+    state=Object.assign(freshState(),state||{});
+    state.fields=Object.assign(freshState().fields,state.fields||{});
+    state.npdr=Object.assign(freshState().npdr,state.npdr||{});
+    state.statuses=Array.isArray(state.statuses)?state.statuses:['未開始'];
+    state.timeline=Array.isArray(state.timeline)?state.timeline:[];
+    state.photos=Array.isArray(state.photos)?state.photos:[];
+    state.dimensions=Array.isArray(state.dimensions)?state.dimensions:[];
+    state.factors=state.factors||{};
+    state.factorOpen=state.factorOpen||{};
+    normalizeFactors();
+    normalizeStatuses();
   }
-  function missingItems(){return rawMissingItems()}
-  function controlRequiredMissing(){
-    const f=state.fields;
-    const missing=[];
-    const contained=hasFactor('isolated')||hasStatus('物料隔離')||hasFactor('noIsolationNeeded');
-    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    if(!hasFactor('onsite')) missing.push('已至現場');
-    if(!hasFactor('rateConfirmed')) missing.push('不良率已確認');
-    if(!f.description && !f.abnormalType) missing.push('異常描述 / 異常類型');
-    if(!f.shippingImpact) missing.push('是否影響出貨');
-    if(!contained) missing.push('異常品已隔離 / 無隔離需求');
-    if(rateMismatch()) missing.push('不良率資料一致性');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((f.abnormalType||'')+' '+(f.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) missing.push('尺寸量測');
-    if(rangePending && !(hasFactor('scopeConfirmed')||hasFactor('atStationDetectable'))) missing.push('影響範圍 / 流出範圍');
-    return [...new Set(missing)];
+  function save(showErr){try{state.schemaVersion=SCHEMA_VERSION;localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){if(showErr!==false)alert('localStorage 空間不足，請匯出 JSON 或清空舊案件。')}}
+  function load(){try{let raw=localStorage.getItem(STORAGE_KEY),migrated=false;if(!raw){for(const key of LEGACY_STORAGE_KEYS){raw=localStorage.getItem(key);if(raw){migrated=true;break}}}if(raw)state=Object.assign(freshState(),JSON.parse(raw));normalizeState();if(migrated)save(false)}catch(e){state=freshState();normalizeState()}}
+
+  function renderStatusBtns(){
+    const box=$('statusBtns'); if(!box)return;
+    box.innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${esc(g.title)}</div><div class="btns">${g.items.map(item=>{const cls=item==='需開停線會議'?'red':(item==='沒有對策'?'red':(['已有對策','結案'].includes(item)?'green':''));return `<button type="button" class="btn status ${cls} ${state.statuses.includes(item)?'active':''}" data-status="${esc(item)}">${esc(item)}</button>`}).join('')}</div></div>`).join('');
+    box.querySelectorAll('[data-status]').forEach(b=>b.addEventListener('click',()=>toggleStatus(b.dataset.status)));
+    $('currentStatusText').textContent=state.statuses.join('、')||'未開始';
   }
-  function assessRisk(){
-    const reasons={red:[],yellow:[],greenBlock:[]};
-    const missing=missingItems();
-    const controlMissing=controlRequiredMissing();
-    const prod=num(state.fields.prodQty), ng=num(state.fields.ngQty), qtyInvalid=prod>0 && ng>prod;
-    const isolated=hasFactor('isolated')||hasStatus('物料隔離');
-    const contained=isolated||hasFactor('noIsolationNeeded');
-    const onsite=hasFactor('onsite');
-    const noCounter=hasFactor('noCountermeasure')||hasStatus('沒有對策');
-    const countermeasureSelected=hasStatus('已有對策')||hasStatus('沒有對策');
-    const shippingYes=state.fields.shippingImpact==='是'||hasFactor('shipment')||hasStatus('涉及出貨');
-    const possibleFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const rangeControlled=hasFactor('scopeConfirmed')||hasFactor('atStationDetectable');
+  function toggleStatus(s){
+    if(stageStatuses.includes(s)){state.statuses=state.statuses.filter(x=>!stageStatuses.includes(x));state.statuses.push(s)}
+    else if(countermeasureStatuses.includes(s)){state.statuses=state.statuses.filter(x=>!countermeasureStatuses.includes(x));state.statuses.push(s)}
+    else{state.statuses=state.statuses.includes(s)?state.statuses.filter(x=>x!==s):state.statuses.concat(s)}
+    normalizeStatuses();save();recalcAll();
+  }
+  function addStatus(s){if(!state.statuses.includes(s)){if(stageStatuses.includes(s))state.statuses=state.statuses.filter(x=>!stageStatuses.includes(x));if(countermeasureStatuses.includes(s))state.statuses=state.statuses.filter(x=>!countermeasureStatuses.includes(x));state.statuses.push(s)}normalizeStatuses()}
+  function removeStatus(s){state.statuses=state.statuses.filter(x=>x!==s)}
+  function normalizeStatuses(){
+    const valid=new Set(statusGroups.flatMap(g=>g.items));
+    state.statuses=(Array.isArray(state.statuses)?state.statuses:[]).filter(x=>valid.has(x));
+    const stage=state.statuses.find(x=>stageStatuses.includes(x))||'未開始';
+    const counter=state.statuses.find(x=>countermeasureStatuses.includes(x));
+    const others=state.statuses.filter(x=>!stageStatuses.includes(x)&&!countermeasureStatuses.includes(x));
+    state.statuses=[stage].concat(counter?[counter]:[],others);
+  }
+  function hasStatus(s){return state.statuses.includes(s)}
 
-    const activeCase=hasAnyCaseContent();
-    if(hasStatus('未開始') && !activeCase && !onsite){
-      return {light:'gray',reasons,missing,controlMissing,mainText:'未進行',suggestion:'案件尚未進入處理；先放入現場資訊或切換案件階段。',sub:subRisks()};
-    }
-    if(hasStatus('未開始') && activeCase){
-      reasons.yellow.push('已有案件資訊，但案件階段仍為未開始');
-    }
-    if(activeCase && !hasStatus('結案') && !countermeasureSelected){
-      reasons.yellow.push('尚未選擇對策狀態：已有對策 / 沒有對策');
-    }
-
-    // 紅燈：到現場後才啟動重大風險判定；異常現象本身不直接等於失控。
-    if(onsite){
-      if(hasFactor('safety')) reasons.red.push('功能 / 安全疑慮');
-      if(hasFactor('functionalFailure')) reasons.red.push('功能失效');
-      if(hasFactor('customerReject')) reasons.red.push('客戶拒收');
-      if(hasFactor('recall')) reasons.red.push('招回');
-      if(hasFactor('repeat8d')) reasons.red.push('8D / PSP 後再發');
-      if(possibleFlow) reasons.red.push('可能或已流出');
-      if(noCounter && hasFactor('continuous')) reasons.red.push('沒有對策且持續發生');
-      if(noCounter && shippingYes && !contained) reasons.red.push('影響出貨且尚未完成隔離 / 圍堵');
-      if(noCounter && hasFactor('orderChanged') && !rangeControlled) reasons.red.push('沒有對策、已換單生產且影響範圍不清楚');
-      if(hasStatus('需開停線會議') && (hasFactor('safety')||hasFactor('functionalFailure')||noCounter||possibleFlow||shippingYes)) reasons.red.push('需開停線會議且伴隨重大條件');
-    }
-
-    if(reasons.red.length){
-      return {light:'red',reasons,missing,controlMissing,mainText:'不可放行',suggestion:'先停止放行，確認隔離、流出與出貨範圍，並通知主管與相關單位介入；物料/成品庫存視需要補充盤點。',sub:subRisks()};
-    }
-
-    if(hasStatus('結案')){
-      return {light:'gray',reasons,missing,controlMissing,mainText:'已結束',suggestion:'案件已結案；若後續又發現再發，請重新開案判定。',sub:subRisks()};
-    }
-
-    if(activeCase && !hasStatus('結案') && !countermeasureSelected){
-      return {light:'yellow',reasons,missing,controlMissing,mainText:'待選擇對策狀態',suggestion:'請先在案件狀態選擇「已有對策」或「沒有對策」；未選時不判定為綠燈。',sub:subRisks()};
-    }
-
-    if(hasStatus('已有對策')){
-      if(controlMissing.length){
-        reasons.yellow.push('已有對策但掌控條件未完成：'+controlMissing.join('、'));
-        return {light:'yellow',reasons,missing,controlMissing,mainText:'資料不足 / 待確認',suggestion:'案件已標示已有對策，但仍有掌控條件未完成；請補齊後再視為綠燈。',sub:subRisks()};
+  function renderFactorPills(){
+    const box=$('factorPills'); if(!box)return;
+    snapshotFactorOpen();
+    normalizeFactors();
+    renderingFactors=true;
+    box.innerHTML=factorGroups.map(g=>`<details data-factor-group="${escAttr(g.id)}" ${isFactorOpen(g)?'open':''}><summary>${esc(g.title)}</summary><div class="factor-grid">${g.items.map(item=>{
+      const current=normalizeFactorValue(state.factors[item.key])||'未確認';
+      return `<div class="factor-item"><div class="factor-question">${esc(item.label)}</div><div class="factor-actions">${item.options.map(opt=>{
+        const cls=optionClass(opt);
+        return `<button type="button" class="factor-choice ${cls} ${current===opt?'active':''}" data-factor="${esc(item.key)}" data-factor-value="${esc(opt)}">${esc(opt)}</button>`
+      }).join('')}</div></div>`;
+    }).join('')}</div></details>`).join('');
+    box.querySelectorAll('details[data-factor-group]').forEach(d=>d.addEventListener('toggle',()=>{if(renderingFactors)return;state.factorOpen=state.factorOpen||{};state.factorOpen[d.dataset.factorGroup]=d.open;save(false)}));
+    box.querySelectorAll('[data-factor][data-factor-value]').forEach(btn=>btn.addEventListener('click',()=>{
+      const key=btn.dataset.factor, val=btn.dataset.factorValue;
+      const groupEl=btn.closest('details[data-factor-group]');
+      if(groupEl){
+        state.factorOpen=state.factorOpen||{};
+        state.factorOpen[groupEl.dataset.factorGroup]=true;
       }
-      reasons.greenBlock.push('已選擇「已有對策」');
-      return {light:'green',reasons,missing,controlMissing,mainText:'已在掌控中',suggestion:'案件已有對策；請保留判定依據，並追蹤後續改善、供應商或相關單位回覆。',sub:subRisks()};
-    }
-
-    // 黃燈：不是中風險分數，而是資料不足、範圍未收斂，或仍待追蹤。
-    if(hasStatus('現況調查')) reasons.yellow.push('案件仍在現況調查階段');
-    if(qtyInvalid) reasons.yellow.push('不良數大於抽樣數，需先確認數量');
-    if(controlMissing.length) reasons.yellow.push('掌控條件未完成：'+controlMissing.join('、'));
-    if(shippingYes && !rangeControlled) reasons.yellow.push('已標示影響出貨，需確認出貨與流出範圍');
-    if(hasFactor('mixedMaterial') && !rangeControlled) reasons.yellow.push('混料 / 錯料需確認影響範圍');
-    if(hasFactor('customerComplaint')||hasStatus('客訴')) reasons.yellow.push('客訴案件需補完整判定與處置紀錄');
-    if(hasFactor('continuous')) reasons.yellow.push('持續發生，需追蹤暫時對策與改善效果');
-    if(hasFactor('delayImpact')) reasons.yellow.push('出貨延遲 / 排程重大變更需協調追蹤');
-    if(noCounter) reasons.yellow.push('目前沒有對策，需補暫時對策或結案理由');
-    if(hasStatus('暫停生產')) reasons.yellow.push('目前暫停生產，需確認恢復條件');
-
-    if(reasons.yellow.length){
-      return {light:'yellow',reasons,missing,controlMissing,mainText:'資料不足 / 待確認',suggestion:'目前還不能判定為已掌控；請先補齊黃色提醒項目，再確認是否可轉為綠燈。',sub:subRisks()};
-    }
-
-    reasons.greenBlock.push('已至現場');
-    reasons.greenBlock.push('不良率已確認');
-    reasons.greenBlock.push(contained?(isolated?'異常品已隔離':'已確認無隔離需求'):'異常品隔離狀態未確認');
-    if(state.fields.shippingImpact) reasons.greenBlock.push('出貨影響已確認：'+state.fields.shippingImpact);
-    if(hasFactor('atStationDetectable')) reasons.greenBlock.push('當站能發現異常');
-    if(hasFactor('tempAction')) reasons.greenBlock.push('已有暫時對策');
-    if(hasFactor('dimensionMeasured')||hasDimensionRecord()) reasons.greenBlock.push('尺寸量測已完成');
-    return {light:'green',reasons,missing,controlMissing,mainText:'已在掌控中',suggestion:'目前異常已被圍堵且主要影響範圍已清楚；可整理紀錄並追蹤後續改善或供應商回覆。',sub:subRisks()};
+      state.factors[key]=val;
+      save();recalcAll();
+    }));
+    setTimeout(()=>{renderingFactors=false},0);
   }
-  function subRisks(){
-    const activeCase=hasAnyCaseContent();
-    const isolated=hasFactor('isolated')||hasStatus('物料隔離');
-    const contained=isolated||hasFactor('noIsolationNeeded');
-    const noCounter=hasFactor('noCountermeasure')||hasStatus('沒有對策');
-    const countermeasureSelected=hasStatus('已有對策')||hasStatus('沒有對策');
-    const shippingYes=state.fields.shippingImpact==='是'||hasFactor('shipment')||hasStatus('涉及出貨');
-    const possibleFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const rangePending=hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer');
-    const stockPending=hasFactor('inventory')||hasFactor('warehousePending')||hasFactor('orderChanged');
-    const rangeControlled=hasFactor('scopeConfirmed')||hasFactor('atStationDetectable');
+  function normalizeFactorValue(v){if(v===true)return '有'; if(v===false||v==null)return '未確認'; return String(v||'').trim()||'未確認'}
+  function optionClass(opt){if(['有異常','不符合','是'].includes(opt))return 'bad'; if(['無異常','符合','否','有','無'].includes(opt))return 'good'; return 'unknown'}
+  function hasFactor(k){const v=normalizeFactorValue(state.factors[k]);return !!v&&v!=='未確認'}
 
-    let functional;
-    if(hasFactor('safety')||hasFactor('functionalFailure')||hasFactor('customerReject')||hasFactor('recall')){
-      functional=['red','已勾選功能 / 安全、功能失效、客戶拒收或招回。','先暫停放行，補功能驗證、客戶風險與主管判定。'];
-    }else if(hasFactor('customerComplaint')||hasStatus('客訴')){
-      functional=['yellow','客訴案件需補判定依據，尚不能直接視為已掌控。','補客訴內容、功能確認、外觀/尺寸判定與客戶端狀態。'];
-    }else if(hasFactor('appearanceIssue')||hasFactor('dimensionIssue')||hasFactor('mixedMaterial')){
-      const dimOk=!hasFactor('dimensionIssue')||(hasFactor('dimensionMeasured')||hasDimensionRecord());
-      if(dimOk&&contained&&state.fields.shippingImpact){
-        functional=['green','外觀 / 尺寸 / 混料類異常已有基本判定與圍堵條件。','保留良品/異常品對照、試裝或量測紀錄。'];
-      }else{
-        functional=['yellow','已標示外觀、尺寸或混料類異常，需確認是否影響功能。','補良品/異常品對照、試裝或量測紀錄。'];
-      }
-    }else{
-      functional=activeCase
-        ? ['yellow','尚未確認功能 / 安全是否受影響。','確認是否有功能、安全、客訴、外觀、尺寸或混料相關疑慮。']
-        : ['gray','案件尚未開始，尚未進入功能 / 安全判定。','開始現況調查後再確認是否有功能或安全疑慮。'];
-    }
+  function recalcAll(){
+    calcRate();
+    renderCompletion();
+    renderStatusBtns();
+    renderFactorPills();
+    renderNpdrModeViews();
+    renderRisk();
+    buildOutputs();
+    renderOutputTabs();
+    save(false);
+  }
+  function calcRate(){
+    if(state.npdr.imported && state.npdr.defectRateRaw){state.fields.ngRate=state.npdr.defectRateRaw;$('ngRate').value=state.fields.ngRate;return}
+    const a=num(state.fields.prodQty),b=num(state.fields.ngQty);
+    if(a>0&&b>=0){state.fields.ngRate=(b/a*100).toFixed(1).replace(/\.0$/,'')+'%'} else if(!state.npdr.defectRateRaw){state.fields.ngRate=''}
+    const el=$('ngRate'); if(el)el.value=state.fields.ngRate||'';
+  }
+  function num(v){const n=Number(String(v||'').replace(/[,%，]/g,'').match(/-?\d+(\.\d+)?/)?.[0]||'');return Number.isFinite(n)?n:0}
 
-    let outflow;
-    if(possibleFlow){
-      outflow=['red','已標示可能或已流出。','先確認疑似品隔離、出貨與客戶端狀態；物料/成品庫存作為補充盤點。'];
-    }else if(shippingYes){
-      outflow=['yellow','已標示影響出貨，需確認出貨與客戶端狀態。','確認出貨批次、數量、追回或通知狀態。'];
-    }else if(stockPending){
-      outflow=['gray','已標示物料/成品庫存需確認，僅作為補充提醒，不拉高總燈號。','需要時再補庫存、成品倉或換單生產狀態。'];
-    }else if(rangeControlled&&contained){
-      outflow=['green','已具備隔離與範圍控制條件。','保留隔離紀錄、照片與判定依據。'];
-    }else{
-      outflow=activeCase
-        ? ['gray','未標示物料/成品庫存待確認，暫不納入風險判斷。','若案件需要追庫存或成品倉，再勾選本區項目即可。']
-        : ['gray','案件尚未開始，尚未進入物料/成品庫存確認。','開始現況調查後，必要時再勾選庫存或成品倉狀態。'];
-    }
+  function renderCompletion(){
+    const f=state.fields; const items=[['料號',f.partNo],['發生地點',f.line],['異常描述',f.description],['數量/不良率',f.prodQty||f.ngQty||f.ngRate],['異常調查',f.investigation],['目前處置',f.currentAction],['對策狀態',hasStatus('已有對策')||hasStatus('沒有對策')]];
+    const done=items.filter(x=>!!String(x[1]||'').trim()).length; const pct=Math.round(done/items.length*100);
+    $('completionPercent').textContent=pct+'%'; $('completionFill').style.width=pct+'%';
+    $('completionTags').innerHTML=items.map(([label,val])=>`<span class="tag ${String(val||'').trim()?'ok':'miss'}">${esc(label)}：${String(val||'').trim()?'完成':'待補'}</span>`).join('');
+  }
 
-    let control;
-    if(noCounter&&hasFactor('continuous')){
-      control=['red','沒有對策且持續發生，代表目前未受控。','先建立暫時對策與圍堵方式，再追蹤改善驗證。'];
-    }else if(activeCase && !countermeasureSelected){
-      control=['yellow','尚未選擇對策狀態，因此不能判定為已掌控。','請在案件狀態選擇「已有對策」或「沒有對策」。'];
-    }else if(hasStatus('已有對策')){
-      control=['green','已選擇「已有對策」，對策狀態已確認。','保留判定依據，追蹤後續改善或相關單位回覆。'];
-    }else if(noCounter||hasFactor('continuous')||hasFactor('delayImpact')||hasStatus('暫停生產')){
-      control=['yellow','仍有對策、持續發生、停產或排程影響需追蹤。','補暫時對策、責任單位、完成日與驗證方式。'];
-    }else if(hasFactor('tempAction')&&contained){
-      control=['green',hasFactor('noIsolationNeeded')?'已有暫時對策且已確認無隔離需求。':'已有暫時對策且異常品已隔離。','追蹤改善後是否再發，必要時補永久對策。'];
-    }else{
-      control=activeCase
-        ? ['yellow','尚未確認對策與追蹤狀態。','確認是否已有暫時對策、是否仍持續發生、是否需要責任單位與完成期限。']
-        : ['gray','案件尚未開始，尚未進入對策與追蹤判定。','開始現況調查後再確認暫時對策或追蹤狀態。'];
+  function extractQuickNote(){
+    const t=state.quickNote||''; if(!t.trim()){alert('請先輸入現場資訊。');return}
+    fillIfBlank('partNo',pick(t,/(?:料號|Part No)[:：\s]*([0-9]{2}\.[0-9]{4}\.[0-9]{3}\.[0-9]{3})/i)||pick(t,/([0-9]{2}\.[0-9]{4}\.[0-9]{3}\.[0-9]{3})/));
+    fillIfBlank('line',pick(t,/(?:線別|發生地點|站別|line)[:：\s]*([^\n，,。]+)/i));
+    fillIfBlank('lot',pick(t,/(?:工單|採購單|批號|WO|PO)[:：\s]*([A-Z0-9\-]+)/i));
+    fillIfBlank('supplier',pick(t,/(?:供應商|supplier)[:：\s]*([^\n，,。]+)/i));
+    const sample=pick(t,/(?:抽樣數|抽樣|生產數|數量)[:：\s]*(\d+)/i); if(sample)fillIfBlank('prodQty',sample);
+    const ng=pick(t,/(?:不良數|NG|異常數)[:：\s]*(\d+)/i); if(ng)fillIfBlank('ngQty',ng);
+    if(!state.fields.description){state.fields.description=t.split(/\n/).map(x=>x.trim()).filter(Boolean).slice(0,3).join(' / ')}
+    inferFactorsFromText(t); syncToDom();recalcAll();alert('已從快記擷取資訊');
+  }
+  function fillIfBlank(k,v){if(v&&!String(state.fields[k]||'').trim())state.fields[k]=String(v).trim()}
+  function pick(t,re){const m=String(t||'').match(re);return m?String(m[1]||'').trim():''}
+  function inferFactorsFromText(text){
+    if(/隔離/.test(text)){state.factors.materialNgIsolation='有';addStatus('物料隔離')}
+    if(/尺寸|外徑|內徑|孔徑|規格|量測|實測/.test(text))state.factors.measurePartDimension='有';
+    if(/沒有對策|無對策|尚無對策/.test(text)){addStatus('沒有對策')}
+    if(/對策|rework|sorting|處理方式|改善/i.test(text)){addStatus('已有對策')}
+    if(/出貨|流出|客戶/.test(text)){state.factors.scopeFinishedGoods='有'}
+    if(/功能|安全|無法組裝|卡住|失效/.test(text)){state.factors.scopeContinuous='是'}
+  }
+  function loadQuickTemplate(){
+    state.quickNote='發生時間：\n發生地點(線別/站別)：\n異常描述：\n料號：\n抽樣數：\n不良數：\n不良率：\n是否影響出貨：\n異常調查：\n目前處置：\n待協助事項：';
+    $('quickNote').value=state.quickNote;save(false);
+  }
+
+  function addDimensionRow(data){
+    state.dimensions.push(Object.assign({id:Date.now()+Math.random(),item:'',location:'',method:'',spec:'',actual:''},data||{}));
+    $('dimensionBox').classList.remove('hidden');renderDimensions();updateDimensionInvestigation();save();recalcAll();
+  }
+  function renderDimensions(){
+    const box=$('dimensionList'); if(!box)return;
+    box.innerHTML=state.dimensions.map((d,i)=>`<div class="dimension-item" data-dim-id="${d.id}"><div class="dimension-row"><div class="field"><label>項目</label><input data-dim-field="item" value="${escAttr(d.item)}" placeholder="孔徑/外徑/組裝狀態"></div><div class="field"><label>圖面位置</label><input data-dim-field="location" value="${escAttr(d.location)}" placeholder="C6"></div><div class="field"><label>量具</label><input data-dim-field="method" value="${escAttr(d.method)}" placeholder="游標卡尺/目視/PIN規"></div><div class="field"><label>規格</label><input data-dim-field="spec" value="${escAttr(d.spec)}" placeholder="6.972~6.992"></div><div class="field"><label>實際值</label><input data-dim-field="actual" value="${escAttr(d.actual)}" placeholder="6.993以上"></div><button class="btn danger dimension-remove" type="button">刪除</button></div></div>`).join('')||'<p class="tiny">尚未新增尺寸量測。</p>';
+    box.querySelectorAll('.dimension-item').forEach(item=>{
+      const id=item.dataset.dimId; item.querySelectorAll('[data-dim-field]').forEach(inp=>inp.addEventListener('input',()=>{const d=state.dimensions.find(x=>String(x.id)===String(id));if(d)d[inp.dataset.dimField]=inp.value;updateDimensionInvestigation();save();recalcAll()}));
+      item.querySelector('.dimension-remove')?.addEventListener('click',()=>{state.dimensions=state.dimensions.filter(x=>String(x.id)!==String(id));renderDimensions();updateDimensionInvestigation();save();recalcAll()});
+    });
+    $('dimensionBox').classList.toggle('hidden',state.dimensions.length===0&&!hasFactor('dimensionMeasured'));
+  }
+  function buildDimensionLines(){return state.dimensions.map(d=>{const head=[d.item,d.location?`圖面位置${d.location}`:'',d.method?`量具/確認方式${d.method}`:''].filter(Boolean).join('，');const body=[d.spec?`規格${d.spec}`:'',d.actual?`實際值為${d.actual}`:''].filter(Boolean).join('，');return [head,body].filter(Boolean).join('：')}).filter(Boolean)}
+  function updateDimensionInvestigation(){
+    const lines=buildDimensionLines(); if(!lines.length)return;
+    const marker='【尺寸量測紀錄】'; let inv=String(state.fields.investigation||''); inv=inv.replace(/\n?【尺寸量測紀錄】[\s\S]*?(?=\n【|$)/,'').trim();
+    state.fields.investigation=[inv,marker,lines.map((x,i)=>`${i+1}. ${x}`).join('\n')].filter(Boolean).join('\n');
+    const el=$('investigation'); if(el)el.value=state.fields.investigation;
+  }
+
+  function addTimeline(label){state.timeline.push({id:Date.now()+Math.random(),time:new Date().toLocaleString('zh-TW',{hour12:false}),text:label});save();renderTimeline();recalcAll()}
+  function addCustomTimeline(){const v=$('customTimeline').value.trim();if(!v)return;addTimeline(v);$('customTimeline').value=''}
+  function renderTimeline(){const box=$('timelineList');box.innerHTML=state.timeline.map(t=>`<li><span><b>${esc(t.time)}</b>　${esc(t.text)}</span><button class="x" data-del-timeline="${t.id}">×</button></li>`).join('')||'<li><span class="tiny">尚未建立處理紀錄。</span></li>';box.querySelectorAll('[data-del-timeline]').forEach(b=>b.addEventListener('click',()=>{state.timeline=state.timeline.filter(t=>String(t.id)!==String(b.dataset.delTimeline));save();renderTimeline();recalcAll()}))}
+  function buildTimelineText(){return state.timeline.length?state.timeline.map((t,i)=>`${i+1}. ${t.time} ${t.text}`).join('\n'):'尚無處理紀錄'}
+
+  async function handlePhotoFiles(files){for(const file of Array.from(files||[])){if(!file.type.startsWith('image/'))continue;try{const data=await compressImage(file);state.photos.push({id:Date.now()+Math.random(),data,caption:'',size:file.size})}catch(e){alert('圖片處理失敗，請改用較小的圖片。')}}$('photoInput').value='';save();renderPhotos();recalcAll()}
+  function compressImage(file){return new Promise((resolve,reject)=>{const img=new Image();const reader=new FileReader();reader.onload=()=>{img.onload=()=>{const max=900;let w=img.width,h=img.height;if(Math.max(w,h)>max){const r=max/Math.max(w,h);w=Math.round(w*r);h=Math.round(h*r)}const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);resolve(canvas.toDataURL('image/jpeg',.62))};img.onerror=reject;img.src=reader.result};reader.onerror=reject;reader.readAsDataURL(file)})}
+  function handlePasteImage(e){const items=e.clipboardData?.items;if(!items)return;const files=[];for(const item of items){if(item.type&&item.type.startsWith('image/'))files.push(item.getAsFile())}if(files.length){e.preventDefault();handlePhotoFiles(files)}}
+  function renderPhotos(){const box=$('preview');box.innerHTML=state.photos.map((p,i)=>`<div class="photo"><div class="photo-thumb">${p.data?`<img src="${p.data}" alt="圖片${i+1}">`:'📷'}</div><div class="photo-meta">圖片 ${i+1}</div><input data-photo-caption="${p.id}" value="${escAttr(p.caption||'')}" placeholder="備註"><button data-photo-del="${p.id}">刪除</button></div>`).join('')||'';box.querySelectorAll('[data-photo-caption]').forEach(inp=>inp.addEventListener('input',()=>{const p=state.photos.find(x=>String(x.id)===String(inp.dataset.photoCaption));if(p)p.caption=inp.value;save(false);buildOutputs();renderOutputTabs()}));box.querySelectorAll('[data-photo-del]').forEach(b=>b.addEventListener('click',()=>{state.photos=state.photos.filter(p=>String(p.id)!==String(b.dataset.photoDel));save();renderPhotos();recalcAll()}))}
+
+  function parseNpdrFromTextArea(){
+    const raw=$('npdrRawText').value||''; if(!raw.trim()){alert('請先貼上 NPDR 原文。');return}
+    const parsed=parseNpdrRaw(raw); state.npdr.rawText=raw; state.npdr.rawFields=parsed.rawFields; state.npdr.previewData=parsed.data; renderNpdrPreview(); save(false);
+    if(!Object.keys(parsed.rawFields).length)alert('沒有找到 NPDR 欄位。請確認貼上內容含有「(Read only)」。'); else alert('NPDR 解析完成，請確認預覽後再套用。')
+  }
+  function parseNpdrRaw(raw){
+    const rawLines=String(raw||'').split(/\r?\n/).map(x=>cleanNpdrLine(x)).filter(Boolean);
+    const lines=rawLines.filter(x=>!isJunkLine(x));
+    const rawFields={}; let current=null;
+    for(const line of lines){
+      if(/\(Read only\)/i.test(line)){current=line.replace(/\s*\(Read only\)\s*\*?/ig,'').replace(/\s+\*$/,'').trim(); if(current&&!rawFields[current])rawFields[current]=''; continue}
+      if(current){rawFields[current]=rawFields[current]?[rawFields[current],line].join('\n'):line}
     }
-    return [{title:'功能 / 安全狀態',arr:functional},{title:'物料 / 成品庫存狀態',arr:outflow},{title:'掌控 / 對策狀態',arr:control}];
+    Object.keys(rawFields).forEach(k=>rawFields[k]=cleanValue(rawFields[k]));
+    const data=mapNpdrFields(rawFields);
+    return {rawFields,data};
   }
-  function riskLabel(light){return {red:'紅燈',yellow:'黃燈',green:'綠燈',gray:'灰燈'}[light]||'灰燈'}
-  function riskEvidence(r){
-    const items=[];
-    (r.reasons.red||[]).forEach(x=>items.push('紅燈條件：'+x));
-    (r.reasons.yellow||[]).forEach(x=>items.push('黃燈原因：'+x));
-    (r.reasons.greenBlock||[]).forEach(x=>items.push('掌控依據：'+x));
-    if((r.controlMissing||[]).length) items.push('待完成掌控條件：'+r.controlMissing.join('、'));
-    if((r.missing||[]).length && r.light!=='green') items.push('案件欄位待補：'+r.missing.slice(0,8).join('、'));
-    if(!items.length) items.push(r.light==='gray'?'案件未進行或已結束，未進入掌控判定。':'目前未觸發危險或待確認條件。');
-    return [...new Set(items)];
+  function cleanNpdrLine(s){return String(s||'').replace(/[\uE000-\uF8FF]/g,'').replace(/\u00a0/g,' ').trim()}
+  function isJunkLine(s){return !s||/^[-–—]$/.test(s)||/^(Edit all|See more|Attachments|QA|Link|檔案路徑)$/i.test(s)||/^\*+$/.test(s)}
+  function cleanValue(s){return String(s||'').split(/\n/).map(x=>x.trim()).filter(x=>x&&!isJunkLine(x)).join('\n').trim()}
+  function mapNpdrFields(rawFields){
+    const get=(...labels)=>findField(rawFields,labels);
+    const defectSamplingRaw=get('Defect Qty./Sampling size','不良數/抽樣數');
+    const abnormalQtyRaw=get('Qty.數量','數量(異常)');
+    const productionQtyRaw=get('Delivery Qty. or Production Qty.','交貨 或 生產數量','生產數量');
+    const qtyInfo=interpretNpdrQty(defectSamplingRaw,abnormalQtyRaw,productionQtyRaw);
+    return {
+      creatorDept:get('Creator Dept','開立單位'),
+      partNo:get('Part No-料號','Part No','料號'),
+      partDescription:get('Part Description','品名'),
+      lot:get('Purchase/Worker Order','採購單/工單'),
+      description:get('Problem description','異常描述'),
+      qaEngineer:get('QA Engineer 對應','對應QA工程師'),
+      drawingZone:get('Drawing zone','圖面位置'),
+      spec:get('Spec 規格','Spec','規格'),
+      actual:get('Actual 實際值','Actual','實際值'),
+      qaJudgement:get('QA Engineer judgement','QA 工程師判定'),
+      judgementCriteria:get('Judgement criteria','判定依據'),
+      judgementReason:get('Reason for judgement','判定理由'),
+      cqfNo:get('CQF NO','客訴號碼'),
+      supplier:get('Supplier 供應商','Supplier','供應商'),
+      line:get('Production Line / shift','生產線別/班別'),
+      defectSamplingRaw,productionQtyRaw,abnormalQtyRaw,
+      defectCode:get('Defect code','不良代碼'),
+      gauge:get('Gauge','量具'),
+      projectName:get('Project name','開發專案名稱'),
+      partStatus:get('SRAM Part status','零件狀態'),
+      responsibleQa:get('Responsible QA engineer 知會','知會異常處理QA工程師'),
+      rejudgement:get('Responsible QA engineer Re-judgment','異常處理QA工程師覆判'),
+      rejudgementReason:get('Reason for Re-judgement','覆判不成立理由'),
+      sqaRemark:get('SQA reaction and remark','SQA反應措施'),
+      countermeasureDept:get('Countermeasure Dept','知會處理對策單位'),
+      countermeasure:get('Countermeasure 可行方法','處理對策','Countermeasure'),
+      countermeasureRemark:get('Countermeasure remark','可行方法備註'),
+      opl:get('OPL','單點教育訓練'),
+      stockHandling:get('Stock handling','庫存方式處理'),
+      inspectionRequest:get('Conformation of inspection request','檢驗狀態需求確認'),
+      countermeasureResult:get('Countermeasure result','異常批處理結果'),
+      issueType:get('New issue or reoccurred','問題首發或復發'),
+      scar8dRequired:get('SCAR/8D required','是否開立SCAR/8D'),
+      scar8dTrigger:get('What triggers the SCAR/8D','開立SCAR/8D原因'),
+      scarNo:get('SCAR No. / 8D No.'),
+      verificationDate:get('Verification date','對策單驗證','完成日期'),
+      sectionChiefReviewDate:get('Section Chief review date','QA課長結案審核完成日期'),
+      sectionChiefRemark:get('Section Chief (Remark)','課長結案'),
+      scarLevel:get('SCAR Level','SCAR層別'),
+      ngQty:qtyInfo.ngQty,
+      prodQty:qtyInfo.prodQty,
+      ngRate:qtyInfo.ngRate,
+      defectRateRaw:qtyInfo.defectRateRaw
+    }
   }
-  function riskEvidenceText(r){return riskEvidence(r).map(x=>'- '+x).join('\n')}
-  function renderRisk(r){
-    $('riskMain').className='risk-main '+r.light; $('riskLight').innerText=riskLabel(r.light); $('riskText').innerText=r.mainText; $('riskStatus').innerText=state.statuses.join('、')||'未開始'; $('riskSuggestion').innerText=r.suggestion;
-    $('subRiskCards').innerHTML=r.sub.map(s=>{const [light,reason,ask]=s.arr;return `<details ${light!=='gray'?'open':''}><summary>${s.title} <span class="dot ${light}" style="margin-left:8px">${{red:'紅',yellow:'黃',green:'綠',gray:'灰'}[light]}</span></summary><div class="mini-card" style="margin-top:8px"><div class="tiny">判斷原因</div><div>${escapeHtml(reason)}</div><div class="tiny" style="margin-top:8px">建議補確認項目</div><div>${escapeHtml(ask)}</div></div></details>`}).join('');
-    $('reasonBox').innerText='判定依據：\n'+riskEvidenceText(r)+'\n\n下一步建議：\n'+nextSteps(r).map(x=>'- '+x).join('\n');
-    $('investigationFlowBox').innerText='調查分流：\n'+investigationFlows(r).map(x=>`【${x.title}】\n- ${x.items.join('\n- ')}`).join('\n\n');
+  function normKey(s){return String(s||'').toLowerCase().replace(/[\s\-_/：:()（）.*]/g,'')}
+  function findField(obj,labels){
+    const keys=Object.keys(obj||{});
+    for(const label of labels){const nl=normKey(label);const hit=keys.find(k=>normKey(k).includes(nl));if(hit&&isUseful(obj[hit]))return obj[hit]}
+    return '';
   }
-  function renderCompletion(r){
+  function isUseful(v){const s=String(v||'').trim();return s&&s!=='-'&&s!=='N/A'&&s!=='未提供'}
+  function interpretNpdrQty(defectSamplingRaw,abnormalQtyRaw,productionQtyRaw){
+    const out={ngQty:'',prodQty:'',ngRate:'',defectRateRaw:''};
+    const ds=String(defectSamplingRaw||'').trim(), aq=String(abnormalQtyRaw||'').trim(), pq=String(productionQtyRaw||'').trim();
+    if(pq){const n=pq.match(/\d+(?:\.\d+)?/);out.prodQty=n?n[0]:pq}
+    const pair=ds.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
+    if(pair){out.ngQty=pair[1];if(!out.prodQty)out.prodQty=pair[2];out.ngRate=(Number(pair[1])/Number(pair[2])*100).toFixed(1).replace(/\.0$/,'')+'%'}
+    const percentSource=[aq,ds].find(x=>/[~～%％]|約|以上|以下/.test(x)&&!x.includes('/'))||'';
+    if(percentSource){out.defectRateRaw=percentSource;out.ngRate=percentSource}
+    if(!out.ngQty){const n=aq.match(/^\s*(\d+(?:\.\d+)?)(?:\s*pcs?)?\s*$/i);if(n)out.ngQty=n[1]}
+    if(!out.ngRate&&out.prodQty&&out.ngQty){out.ngRate=(Number(out.ngQty)/Number(out.prodQty)*100).toFixed(1).replace(/\.0$/,'')+'%'}
+    return out;
+  }
+  function renderNpdrPreview(){
+    const box=$('npdrPreview'); const data=state.npdr.previewData; if(!box||!data){box?.classList.add('hidden');return}
+    const rows=[['料號',data.partNo],['品名',data.partDescription],['工單',data.lot],['異常描述',data.description],['線別',data.line],['供應商',data.supplier],['不良代碼',data.defectCode],['生產/交貨數量',data.productionQtyRaw||data.prodQty],['不良/抽樣',data.defectSamplingRaw],['異常數量',data.abnormalQtyRaw],['不良率',data.defectRateRaw||data.ngRate],['規格',data.spec],['實際值',data.actual],['量具',data.gauge],['QA判定',data.qaJudgement],['處理對策',data.countermeasure],['對策備註',data.countermeasureRemark],['庫存處理',data.stockHandling],['SCAR/8D',data.scar8dRequired],['驗證完成日',data.verificationDate],['課長結案日',data.sectionChiefReviewDate]].filter(x=>isUseful(x[1]));
+    box.innerHTML='<div class="preview-table">'+rows.map(([k,v])=>`<div class="preview-row"><b>${esc(k)}</b><span>${esc(v)}</span></div>`).join('')+'</div>';
+    box.classList.remove('hidden');
+  }
+  function applyNpdrToCase(){
+    if(!state.npdr.previewData)parseNpdrFromTextArea();
+    const d=state.npdr.previewData; if(!d)return;
+    state.npdr=Object.assign(state.npdr,d,{imported:true,importedAt:new Date().toISOString(),rawText:$('npdrRawText').value||state.npdr.rawText,rawFields:state.npdr.rawFields||{}});
     const f=state.fields;
-    const checks=[
-      ['日期',!!f.date],['發生地點',!!f.line],['異常類型',!!f.abnormalType],['料號',!!f.partNo],['異常描述',!!f.description],['抽樣數',!!f.prodQty],['不良數',!!f.ngQty],['目前處置',!!f.currentAction],['是否影響出貨',!!f.shippingImpact],['異常調查',!!f.investigation],['待協助事項',!!f.helpNeeded],['案件階段',!hasStatus('未開始')],['對策狀態',hasStatus('已有對策')||hasStatus('沒有對策')],['隔離/無隔離需求',hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離')]
+    f.partNo=d.partNo||f.partNo; f.line=d.line||f.line; f.lot=d.lot||f.lot; f.supplier=d.supplier||f.supplier; f.description=d.description||f.description; f.abnormalType=d.defectCode||f.abnormalType;
+    f.prodQty=d.prodQty||f.prodQty; f.ngQty=d.ngQty||f.ngQty; f.ngRate=d.defectRateRaw||d.ngRate||f.ngRate; state.npdr.defectRateRaw=d.defectRateRaw||d.ngRate||'';
+    f.investigation=buildNpdrInvestigation(d)||f.investigation; f.currentAction=buildNpdrAction(d)||f.currentAction; f.helpNeeded=buildNpdrFollowup(d)||f.helpNeeded;
+    if(d.countermeasure||d.countermeasureRemark||d.countermeasureResult)addStatus('已有對策');
+    if(d.sectionChiefReviewDate||/結案/.test(`${d.qaJudgement} ${d.rejudgement}`))addStatus('結案'); else addStatus('現況調查');
+    if(f.ngRate||f.ngQty||d.defectSamplingRaw)state.factors.scopeWip='有';
+    if(d.spec||d.actual||d.gauge)state.factors.measurePartDimension='有';
+    if(d.gauge)state.factors.measureMethodDrawing='有';
+    if(d.countermeasure||d.countermeasureRemark)state.factors.methodSopDifference=state.factors.methodSopDifference||'未確認';
+    if(/再次|復發|Recurrence/i.test(d.issueType||''))state.factors.scopeContinuous='是';
+    if(/無異常庫存|不需|無庫存/.test(d.stockHandling||''))state.factors.scopePartStock='有';
+    if((d.spec||d.actual||d.gauge)&&!state.dimensions.some(x=>x.source==='NPDR')){
+      state.dimensions.push({id:Date.now()+Math.random(),source:'NPDR',item:guessDimItem(d),location:d.drawingZone||'',method:d.gauge||'',spec:d.spec||'',actual:d.actual||''});
+    }
+    $('npdrImportBox').classList.add('hidden');
+    syncToDom();recalcAll();alert('已套用 NPDR 資訊到案件基本資訊。');
+  }
+  function guessDimItem(d){const t=[d.defectCode,d.description,d.spec,d.actual].join(' '); if(/內徑|孔徑|Inner/i.test(t))return '內徑/孔徑'; if(/外徑|Outer/i.test(t))return '外徑'; if(/尺寸|量測/.test(t))return '尺寸確認'; return '規格/實際狀況'}
+  function buildNpdrInvestigation(d){
+    const p=[]; if(d.spec||d.actual||d.gauge)p.push(`確認結果：${d.spec?`規格要求 ${d.spec}`:''}${d.spec&&d.actual?'，':''}${d.actual?`實際狀況為 ${d.actual}`:''}${d.gauge?`，確認方式為 ${d.gauge}`:''}。`);
+    if(d.judgementReason&&d.judgementReason!==d.actual)p.push(`判定理由：${d.judgementReason}。`);
+    if(d.qaJudgement||d.judgementCriteria)p.push(`QA 判定：${[d.qaJudgement,d.judgementCriteria?`判定依據 ${d.judgementCriteria}`:''].filter(Boolean).join('，')}。`);
+    return cleanSentence(p.join('\n'));
+  }
+  function buildNpdrAction(d){const p=[]; if(d.countermeasure)p.push(d.countermeasure); if(d.countermeasureRemark)p.push(d.countermeasureRemark); if(d.countermeasureResult&&d.countermeasureResult!==d.countermeasureRemark)p.push(`異常批處理結果：${d.countermeasureResult}`); return p.filter(isUseful).join('；')}
+  function buildNpdrFollowup(d){const p=[]; if(d.stockHandling)p.push(`庫存處理：${d.stockHandling}`); if(d.inspectionRequest)p.push(`檢驗文件：${d.inspectionRequest}`); if(d.scar8dRequired)p.push(`SCAR/8D：${d.scar8dRequired}`); if(d.verificationDate)p.push(`對策驗證完成日：${d.verificationDate}`); if(d.sectionChiefReviewDate)p.push(`QA課長結案審核完成日：${d.sectionChiefReviewDate}`); if(d.sqaRemark)p.push(`SQA備註：${d.sqaRemark}`); return p.filter(isUseful).join('；')}
+  function clearNpdrImport(){if(!confirm('確定清空 NPDR 匯入資料？案件基本欄位不會自動還原。'))return; const keepRaw=''; state.npdr=freshState().npdr; state.npdr.rawText=keepRaw; $('npdrRawText').value=''; $('npdrPreview').classList.add('hidden'); state.selectedOutput='email'; syncToDom();recalcAll()}
+  function renderNpdrModeViews(){
+    const imported=!!state.npdr.imported;
+    $('npdrModeBadge').classList.toggle('hidden',!imported);
+    $('normalRiskArea').classList.toggle('hidden',imported);
+    $('npdrSummaryArea').classList.toggle('hidden',!imported);
+    $('riskSectionSub').textContent=imported?'NPDR 已有判定與處置時，這裡改顯示案件摘要，不再重新跑風險判定。':'未開始維持灰燈；現況調查未選對策為黃燈；已有對策為綠燈；沒有對策或需開停線會議為紅燈。';
+    $('outputSectionSub').textContent=imported?'NPDR 匯入模式只輸出摘要與 JSON，兩邊摘要內容會保持一致。':'產出可複製的正式 Email、待辦、案件紀錄。';
+    if(imported)$('npdrSummaryBox').textContent=buildNpdrSummary();
+  }
+  function buildNpdrSummary(){
+    const f=state.fields,d=state.npdr;
+    const lines=[];
+    lines.push(`料號 ${v(f.partNo)}${d.partDescription?`，品名 ${d.partDescription}`:''}，發生 ${v(f.description)}。`);
+    const qtyLine=[]; if(f.line)qtyLine.push(`生產線別為 ${f.line}`); if(f.lot)qtyLine.push(`工單 ${f.lot}`); if(f.prodQty||d.productionQtyRaw)qtyLine.push(`生產數量 ${qtyText(d.productionQtyRaw||f.prodQty)}`); const rate=d.defectRateRaw||f.ngRate||d.defectSamplingRaw||d.abnormalQtyRaw; if(rate)qtyLine.push(`NPDR 記錄不良比例約 ${rate}`); if(qtyLine.length)lines.push(qtyLine.join('，')+'。');
+    if(d.spec||d.actual||d.gauge)lines.push(`確認結果為：${d.spec?`規格要求 ${d.spec}`:''}${d.spec&&d.actual?'，':''}${d.actual?`實際狀況為 ${d.actual}`:''}${d.gauge?`，確認方式為 ${d.gauge}`:''}。`);
+    const judge=[]; if(d.qaJudgement)judge.push(`QA 判定為${d.qaJudgement}`); if(d.judgementCriteria)judge.push(`判定依據為${d.judgementCriteria}`); const action=[]; if(d.countermeasure)action.push(`處理方式為${d.countermeasure}`); if(d.countermeasureRemark)action.push(d.countermeasureRemark); if(judge.length||action.length)lines.push([judge.join('，'),action.join('，')].filter(Boolean).join('。')+'。');
+    const close=[]; if(d.issueType)close.push(`此問題為${d.issueType}`); if(d.scar8dRequired)close.push(`${/否|No/i.test(d.scar8dRequired)?'無須':'需'}開立 SCAR/8D${/否|No/i.test(d.scar8dRequired)?'':`：${d.scar8dRequired}`}`); if(d.verificationDate)close.push(`對策驗證完成日為 ${d.verificationDate}`); if(d.sectionChiefReviewDate)close.push(`QA 課長結案審核完成日為 ${d.sectionChiefReviewDate}`); if(close.length)lines.push(close.join('，')+'。');
+    return lines.filter(Boolean).join('\n\n');
+  }
+  function qtyText(s){s=String(s||'').trim(); if(!s)return ''; return /pcs|%|％|個|件/i.test(s)?s:`${s} pcs`}
+  function v(s){return String(s||'未填').trim()||'未填'}
+  function cleanSentence(s){return String(s||'').replace(/\s+。/g,'。').replace(/，。/g,'。').trim()}
+  function buildNpdrJson(){return {sourceType:'NPDR',importedAt:state.npdr.importedAt||'',partNo:state.fields.partNo||'',partDescription:state.npdr.partDescription||'',summaryText:buildNpdrSummary(),caseFields:Object.assign({},state.fields),npdrData:Object.assign({},state.npdr,{rawFields:undefined,rawText:undefined,previewData:undefined}),rawNpdrFields:state.npdr.rawFields||{}}}
+
+  function renderRisk(){
+    if(state.npdr.imported)return;
+    const r=calcRisk();
+    const main=$('riskMain'); main.className='risk-main '+r.light;
+    $('riskLight').textContent=r.label; $('riskText').textContent=r.text; $('riskStatus').textContent=state.statuses.join('、'); $('riskSuggestion').textContent=r.suggestion;
+    $('subRiskCards').innerHTML=r.cards.map(c=>`<div class="mini-card"><div class="head"><span>${esc(c.title)}</span><span class="dot ${c.light}">${esc(c.label)}</span></div><div class="tiny" style="margin-top:6px">${esc(c.text)}</div></div>`).join('');
+    $('reasonBox').textContent=nextSteps(r).map((x,i)=>`${i+1}. ${x}`).join('\n');
+    $('investigationFlowBox').textContent=investigationFlows(r).map(x=>`【${x.title}】\n${x.items.map((y,i)=>`${i+1}. ${y}`).join('\n')}`).join('\n\n');
+  }
+  function calcRisk(){
+    const f=state.fields;
+    const nonStartStatuses=(Array.isArray(state.statuses)?state.statuses:[]).filter(x=>x!=='未開始');
+    const onlyNotStarted=nonStartStatuses.length===0;
+    const hasAction=hasStatus('已有對策')||hasStatus('結案')||!!String(f.currentAction||'').trim();
+    const noAction=hasStatus('沒有對策');
+    const stopReasons=stopMeetingReasons();
+    const hasInvestigation=hasStatus('現況調查')||['物料隔離','暫停生產','邊做邊檢'].some(hasStatus)||!!String(f.investigation||f.description||'').trim();
+    const investigationSummary=getInvestigationSummary();
+
+    if(onlyNotStarted){
+      const cards=[
+        {title:'案件階段',light:'gray',label:'未開始',text:'尚未進入現況調查，先不判定案件燈號。'},
+        {title:'對策狀態',light:'gray',label:'未選',text:'尚未選擇「已有對策」或「沒有對策」。'},
+        {title:'現況調查完整度',light:'gray',label:'未開始',text:'人、機、料、法、量測、環、影響範圍尚未開始確認。'},
+        {title:'燈號',light:'gray',label:'灰燈',text:'未開始時維持灰燈。'}
+      ];
+      return {light:'gray',label:'灰燈',text:'案件尚未開始，維持灰燈。',suggestion:'先選擇「現況調查」或開始填寫案件內容；未開始前不先推定風險。',cards,reminders:[],stopReasons,notStarted:true,investigationSummary};
+    }
+
+    let light='yellow',label='黃燈',text='案件已進入現況調查，但尚未選擇對策狀態。',suggestion='請先判斷目前是「已有對策」或「沒有對策」。';
+    if(stopReasons.length){
+      light='red';label='紅燈';
+      text='此案已標示需開停線會議，需先整理會議決策資訊。';
+      suggestion='整理料號、工單、影響數量、目前處置、出貨影響與恢復條件，帶入停線會議確認。';
+    }else if(noAction){
+      light='red';label='紅燈';
+      text='目前已明確標示沒有對策，需先指定暫時管制方式或責任窗口。';
+      suggestion='請補暫時管制方式、責任窗口與下一次回覆時間；若影響生產或出貨，再評估是否需開停線會議。';
+    }else if(hasAction){
+      light='green';label='綠燈';
+      text='案件已有對策或目前處置，可進入追蹤與紀錄收斂。';
+      suggestion='持續確認改善後是否再發，並保留調查依據、處置結果與結案紀錄。';
+    }else if(hasInvestigation){
+      light='yellow';label='黃燈';
+      text='案件正在現況調查，尚未選擇對策狀態。';
+      suggestion='用人、機、料、法、量測、環、影響範圍補齊確認項目，再選擇「已有對策」或「沒有對策」。';
+    }
+
+    const cards=[
+      {title:'案件階段',light:light==='gray'?'gray':(light==='red'?'red':(hasStatus('結案')?'green':'yellow')),label:hasStatus('結案')?'結案':(hasStatus('現況調查')?'現況調查':(onlyNotStarted?'未開始':'進行中')),text:hasStatus('結案')?'案件已標示結案。':(hasStatus('現況調查')?'案件已進入現況調查。':'已有處理動作，建議同步標示現況調查。')},
+      {title:'對策狀態',light:noAction?'red':(hasAction?'green':(onlyNotStarted?'gray':'yellow')),label:noAction?'沒有對策':(hasAction?'已有對策':(onlyNotStarted?'未選':'待確認')),text:noAction?'已明確標示沒有對策，需要先決定暫時管制方式或責任窗口。':(hasAction?'已標示已有對策或目前處置。':'尚未選擇對策狀態。')},
+      {title:'現況調查完整度',light:onlyNotStarted?'gray':(investigationSummary.doneCount>=3?'green':'yellow'),label:`${investigationSummary.doneCount}/5`,text:investigationSummary.text},
+      {title:'燈號',light:light,label:label,text:stopReasons.length?stopReasons.join('；'):(light==='red'?'紅燈代表沒有對策或已標示需開停線會議。':(light==='green'?'綠燈代表已有對策或目前處置。':(light==='yellow'?'黃燈代表現況調查中且尚未選擇對策狀態。':'灰燈代表未開始。')))}
     ];
-    const all=checks;
-    const done=all.filter(x=>x[1]).length; const pctVal=all.length?Math.round(done/all.length*100):0;
-    $('completionPercent').innerText=pctVal+'%'; $('completionFill').style.width=pctVal+'%'; $('completionText').innerText=`已完成 ${done} / ${all.length} 項；請依待補標籤補齊案件內容。`;
-    $('completionTags').innerHTML=checks.map(([name,ok])=>`<span class="tag ${ok?'ok':'miss'}">${ok?'✓':'待'} ${escapeHtml(name)}</span>`).join('');
+    const reminders=caseReminders({onlyNotStarted,noAction,hasAction,stopReasons,investigationSummary,hasInvestigation});
+    return {light,label,text,suggestion,cards,reminders,stopReasons,notStarted:false,investigationSummary};
   }
-  function dataSummary(r){const f=state.fields;return `發生日期：${f.date||'未填'}\n發生地點(線別/站別)：${f.line||'未填'}\n異常類型：${f.abnormalType||'未填'}\n料號：${f.partNo||'未填'}\n工單 / 批號：${f.lot||'未填'}\n供應商：${f.supplier||'未填'}\n異常現象：${f.description||'未填'}\n抽樣數：${f.prodQty||'未填'}\n不良數：${f.ngQty||'未填'}\n不良率：${f.ngRate||'未填'}\n是否影響出貨：${f.shippingImpact||'未填'}\n異常調查：${f.investigation||'未填'}\n目前處置：${f.currentAction||'未填'}\n待協助事項：${f.helpNeeded||'未填'}\n目前案件狀態：${state.statuses.join('、')||'未開始'}\n目前燈號：${riskLabel(r.light)}`}
-  function completedActions(){const a=[];if(hasStatus('物料隔離')||hasFactor('isolated')) a.push('疑似品已有隔離紀錄');if(hasFactor('noIsolationNeeded')) a.push('已確認無隔離需求');if(hasStatus('暫停生產')) a.push('已暫停生產');if(hasStatus('邊做邊檢')) a.push('邊做邊檢');if(hasFactor('scopeConfirmed')) a.push('已確認影響範圍');if(hasFactor('tempAction')) a.push('已有暫時對策');if(state.photos.length) a.push(`已有照片 ${state.photos.length} 筆`);if(state.timeline.length) a.push('已有處理紀錄');return a.length?a.join('、'):'尚未明確記錄已完成處置'}
-  function nextSteps(r){
-    const s=[]; if(!hasStatus('已有對策') && !hasStatus('沒有對策')) s.push('先選擇對策狀態：已有對策或沒有對策，未選時維持黃燈'); if(!(hasFactor('isolated')||hasFactor('noIsolationNeeded')||hasStatus('物料隔離'))) s.push('先確認異常品與可疑品是否已隔離、標示，避免誤用或流入下一站');
-    if(!state.fields.prodQty||!state.fields.ngQty) s.push('補上抽樣數、不良數，計算不良率');
-    if((hasFactor('dimensionIssue')||/尺寸|外徑|內徑|量測/i.test((state.fields.abnormalType||'')+' '+(state.fields.description||''))) && !(hasFactor('dimensionMeasured')||hasDimensionRecord())) s.push('補尺寸量測紀錄：量測值、規格上下限、量具與良品/異常品對照');
-    if(!hasFactor('causeKnown')) s.push('確認原因是否明確：人、機、料、法、量測、環境是否有變更或異常');
-    if(!hasFactor('scopeConfirmed')) s.push('確認影響範圍：同批、同工單、同線別、下一站、出貨；若需要再補物料/成品庫存');
-    if(hasStatus('邊做邊檢')) s.push('追蹤邊做邊檢期間的不良率與是否持續發生');
-    if(hasFactor('functionalFailure')||hasFactor('mixedMaterial')||hasFactor('possibleOutflow')||hasStatus('可能流出')||r.light==='red') s.push('若涉及功能/流出風險，必要時開停線會議');
-    if(hasFactor('continuous')||hasFactor('repeat8d')) s.push('若持續發生，需追蹤對策與改善後驗證結果');
-    if(!s.length) s.push('整理NPDR/JIRA 紀錄，持續觀察改善後是否再發');
+
+  function getInvestigationSummary(){
+    const defs=[
+      ['人',investigationFactorKeys.human],
+      ['機',investigationFactorKeys.machine],
+      ['料',investigationFactorKeys.material],
+      ['法',investigationFactorKeys.method],
+      ['量測',investigationFactorKeys.measurement],
+      ['環',investigationFactorKeys.environment],
+      ['影響範圍',investigationFactorKeys.scope]
+    ];
+    const done=defs.filter(([,keys])=>keys.some(hasFactor)).map(([label])=>label);
+    const missing=defs.map(([label])=>label).filter(label=>!done.includes(label));
+    return {done,missing,doneCount:done.length,text:done.length?`已確認：${done.join('、')}；待確認：${missing.length?missing.join('、'):'無'}`:'尚未選擇人、機、料、法、量測、環、影響範圍確認結果。'};
+  }
+
+  function stopMeetingReasons(){
+    const reasons=[];
+    if(hasStatus('需開停線會議'))reasons.push('已手動標示「需開停線會議」。');
+    return reasons;
+  }
+
+  function caseReminders(ctx){
+    const s=[];
+    if(ctx.onlyNotStarted){
+      s.push('未開始時維持灰燈，不先推定風險。');
+      s.push('開始處理時，先選擇「現況調查」，再用人、機、料、法、量測、環、影響範圍補確認項目。');
+      return s;
+    }
+    if(ctx.stopReasons&&ctx.stopReasons.length){
+      s.push('已標示需開停線會議：請整理料號、工單、影響數量、目前處置、是否影響出貨、恢復條件與需決策事項。');
+    }
+    if(ctx.noAction){
+      s.push('目前標示沒有對策：請先決定暫時管制方式、責任窗口與下一次回覆時間。');
+    }
+    if(!ctx.noAction&&!ctx.hasAction){
+      s.push('現況調查中尚未選擇對策狀態：請判斷目前是已有對策或沒有對策。');
+    }
+    if(ctx.investigationSummary&&ctx.investigationSummary.missing.length){
+      s.push('現況調查小卡待確認：'+ctx.investigationSummary.missing.join('、')+'。');
+    }
+    if(ctx.hasAction&&!s.length){
+      s.push('目前已有對策：後續重點是保留驗證、追蹤與結案紀錄。');
+    }
+    if(!s.length)s.push('目前沒有明顯缺口，依案件進度維持追蹤即可。');
     return s;
   }
-  function investigationFlows(r){
-    const f=state.fields; const text=[f.abnormalType,f.description,f.investigation,state.quickNote].join(' ');
-    const hasDim=/尺寸|外徑|內徑|長度|寬度|厚度|量測|規格|公差/i.test(text);
-    const hasMix=hasFactor('mixedMaterial')||/混料|錯料|料件錯|物料錯|拿錯|組錯|裝錯/i.test(text);
-    const hasFlow=hasFactor('possibleOutflow')||hasStatus('可能流出')||hasFactor('outToCustomer')||hasFactor('shipment')||hasStatus('涉及出貨')||hasFactor('inventory')||hasFactor('enteredNextStation')||hasFactor('warehousePending')||hasFactor('orderChanged')||String(f.shippingImpact||'').trim();
-    const hasFunctional=hasFactor('safety')||hasFactor('functionalFailure')||hasFactor('customerComplaint')||hasStatus('客訴')||/功能|安全|卡住|無法|失效|客訴|拒收/i.test(text);
+
+  function nextSteps(r){
+    const s=[];
+    if(r&&r.notStarted){
+      s.push('尚未開始判定：先選擇案件階段，例如「現況調查」。');
+      s.push('未開始時維持灰燈，不先推定案件狀態。');
+      return s;
+    }
+    if(r&&Array.isArray(r.reminders)&&r.reminders.length){s.push(...r.reminders)}
+    if(r&&r.light==='yellow'){
+      s.push('黃燈代表目前仍在現況調查或資料待確認，不代表已失控。');
+      s.push('請用人、機、料、法、量測、環、影響範圍補足現況，再選擇「已有對策」或「沒有對策」。');
+    }
+    if(r&&r.light==='green'){
+      s.push('綠燈代表已有對策或目前處置，後續請追蹤對策結果與是否再發。');
+    }
+    if(r&&r.light==='red'&&hasStatus('沒有對策')){
+      s.push('紅燈原因：目前明確標示沒有對策，需要先決定暫時管制方式或責任窗口。');
+    }
+    if(r&&r.light==='red'&&hasStatus('需開停線會議')){
+      s.push('紅燈原因：已標示需開停線會議，請整理會議決策資訊。');
+    }
+    return [...new Set(s)];
+  }
+
+  function investigationFlows(){
+    const summary=getInvestigationSummary();
     const flows=[];
-    if(hasFlow) flows.push({title:'流出 / 出貨分流',items:['確認同批、同工單、同線別、下一站與出貨批次是否受影響；必要時再盤點物料/成品庫存','盤點 WIP / 已出貨數量，標示隔離狀態與責任窗口；物料/成品庫存改為補充確認','若已出貨或可能到客戶端，確認是否需通知客戶、追回、暫停出貨或開會升級']});
-    if(hasMix) flows.push({title:'混料 / 錯料分流',items:['比對應用料號、實際料號、替代料、包裝標籤、工單與投料紀錄','確認錯料來源：領料、備料、線邊、上料、換線、重工或人員拿取錯誤','用良品 / 異常品照片與料號標籤建立判別方式，必要時擴大到同批同站別']});
-    if(hasDim) flows.push({title:'尺寸 / 量測分流',items:['補量測值、規格上下限、量具編號、量測人員與量測日期','做良品 / 異常品對照，確認是單件、批量、量測方法或治具造成','若尚未完成，請在確認項目勾選「完成尺寸量測」前先補佐證']});
-    if(hasFunctional) flows.push({title:'功能 / 安全分流',items:['確認是否影響功能、安全、客戶使用或組裝相容性','補功能測試、試裝結果、失效模式與客戶風險評估','若涉及安全、功能失效、客訴或拒收，建議主管 / SQE / 工程單位介入']});
-    if(!hasFactor('causeKnown')||hasStatus('沒有對策')||hasFactor('continuous')||hasFactor('repeat8d')) flows.push({title:'原因 / 對策分流',items:['從人、機、料、法、量測、環境確認變更點與異常點','先定義暫時對策與圍堵方式，再追蹤永久對策、責任單位、完成日與驗證方式','若持續或重複發生，需確認改善後驗證結果與是否再發']});
-    if(!flows.length) flows.push({title:'一般異常調查',items:['先完成基本資訊、抽樣數 / 不良數與疑似品隔離狀態；如有照片或截圖再補佐證','再依現場結果勾選功能、尺寸、原因與對策相關項目；物料/成品庫存為補充資訊']});
+    const add=(title,items)=>flows.push({title,items});
+    if(summary.missing.includes('人'))add('人｜認證 / 作業落實度 / 多站作業',[
+      '確認人員有無認證。',
+      '確認組裝人員是否遵循 SOP。',
+      '確認是否為多站作業，是否有交接或站別差異。'
+    ]);
+    if(summary.missing.includes('機'))add('機｜設備 / 治具',[
+      '確認設備狀態、治具狀態與設備參數是否異常。',
+      '確認相同物料使用在其他線別時的生產結果。'
+    ]);
+    if(summary.missing.includes('料'))add('料｜異常品 / 物料狀態 / 影響範圍',[
+      '確認異常品是否保留、是否隔離，以及標籤 / 麥頭與現有物料批次。',
+      '確認不良是否集中在特定穴號、是否有 Golden Sample / 限樣可比對。',
+      '確認是否有另一家供應商、另一供應商物料生產結果，以及相同物料搭配不同對手件的結果。'
+    ]);
+    if(summary.missing.includes('法'))add('法｜組裝順序 / 組裝手法',[
+      '確認組裝順序是否有變更。',
+      '確認組裝手法與 SOP 定義是否有差異。'
+    ]);
+    if(summary.missing.includes('量測'))add('量測｜判定標準 / 量測方式',[
+      '確認零件相關尺寸、圖面定義是否完整。',
+      '確認量檢具 / 儀器是否磨耗，量測方式是否符合圖面要求。'
+    ]);
+    if(summary.missing.includes('環'))add('環｜現場條件改變',[
+      '確認工作環境溫度、濕度是否異常。',
+      '確認靜電防護與在製存放狀態是否異常。'
+    ]);
+    if(summary.missing.includes('影響範圍'))add('影響範圍',[
+      '確認異常是否持續發生。',
+      '確認在製、零件庫存、成品庫存的影響範圍。'
+    ]);
+    if(!flows.length)add('現況調查',[
+      '現況調查小卡皆已有確認紀錄。',
+      '接著確認對策狀態、驗證結果與結案紀錄。'
+    ]);
     return flows;
   }
-  function compactJoin(parts){return parts.map(x=>String(x||'').trim()).filter(Boolean).join(' ')}
-  function singleLine(v){return String(v||'').replace(/\s+/g,' ').trim()}
-  function trimSubjectPart(v,max=56){const s=singleLine(v);return s.length>max?s.slice(0,max)+'…':s}
-  function emailSubject(){
-    const f=state.fields;
-    return compactJoin([trimSubjectPart(f.partNo,32),trimSubjectPart(f.description||f.abnormalType,64)])||'異常通知';
+
+  function buildOutputs(){
+    if(state.npdr.imported){state.outputs={summary:buildNpdrSummary(),json:JSON.stringify(buildNpdrJson(),null,2)}; if(!['summary','json'].includes(state.selectedOutput))state.selectedOutput='summary'; return}
+    const f=state.fields; const subject=[f.partNo,f.description].filter(Boolean).join(' ');
+    const email=`主旨：${subject}\nHi all,\n發生時間：${f.date}\n發生地點(線別/站別)：${f.line}\n異常描述：${f.description}\n料號：${f.partNo}\n抽樣數：${f.prodQty}\n不良數：${f.ngQty}\n不良率：${f.ngRate}\n是否影響出貨：${f.shippingImpact}\n異常調查：${f.investigation}\n目前處置：${f.currentAction}`;
+    const record=`【案件紀錄】\n料號：${f.partNo}\n異常描述：${f.description}\n發生地點：${f.line}\n不良率：${f.ngRate}\n案件狀態：${state.statuses.join('、')}\n\n【異常調查】\n${f.investigation}\n\n【目前處置】\n${f.currentAction}\n\n【待協助事項】\n${f.helpNeeded}\n\n【時間軸】\n${buildTimelineText()}`;
+    state.outputs={email,record,json:JSON.stringify({sourceType:'FIELD_CASE',schemaVersion:SCHEMA_VERSION,caseFields:state.fields,statuses:state.statuses,factors:state.factors,timeline:state.timeline,dimensions:state.dimensions.map(({id,...d})=>d)},null,2)};
+    if(!['email','record','json'].includes(state.selectedOutput))state.selectedOutput='email';
   }
-  function photoLabel(p,i){const c=String(p&&p.caption||'').trim();return c||`照片 ${i+1}`}
-  function photoText(){return state.photos.length?state.photos.map((p,i)=>`${i+1}. ${photoLabel(p,i)}`).join('\n'):''}
-  function stripListNo(line){return String(line||'').replace(/^\s*\d+[.、)）]\s*/,'').trim()}
-  function isProcessInvestigationLine(line){
-    const clean=stripListNo(line).replace(/[。.;；\s]+$/,'').trim();
-    if(!clean) return true;
-    const dropPatterns=[
-      /^(已至現場|到現場|現場確認|已到現場|已現場確認)/,
-      /^(不良率已確認|已確認不良率|不良率確認|抽樣數|不良數|不良率)/,
-      /^(異常品已隔離|疑似品已隔離|物料已隔離|已隔離|隔離完成|異常品隔離|物料隔離)/,
-      /^(是否影響出貨|出貨影響|影響出貨)\s*[:：]?/,
-      /^(已確認影響範圍|影響範圍已確認|確認影響範圍)/,
-      /^(已拍照|異常狀況拍照|物料拍照|麥頭拍照|照片已補|已通知|通知相關單位)/,
-      /^(已暫停生產|暫停生產|恢復生產|邊做邊檢|開始全檢|全檢完成|放行確認)/,
-      /^(目前處置|處理對策|待協助事項)\s*[:：]?/,
-      /^(是|否|Y|N|Yes|No)$/i
-    ];
-    return dropPatterns.some(re=>re.test(clean));
+  function renderOutputTabs(){
+    const tabs=state.npdr.imported?[['summary','摘要'],['json','JSON 輸出']]:[['email','Email'],['record','案件紀錄'],['json','JSON 輸出']];
+    $('tabs').innerHTML=tabs.map(([k,label])=>`<button class="tab ${state.selectedOutput===k?'active':''}" data-output="${k}">${label}</button>`).join('');
+    $('tabs').querySelectorAll('[data-output]').forEach(b=>b.addEventListener('click',()=>{state.selectedOutput=b.dataset.output;save(false);renderOutputTabs()}));
+    const key=state.selectedOutput; const out=state.outputs[key]||''; const box=$('outputBox');
+    if(key==='email'&&!state.npdr.imported)box.innerHTML=renderEmailHtml(); else box.textContent=out;
   }
-  function publicInvestigationText(){
-    const raw=String(state.fields.investigation||'').trim();
-    if(!raw) return '';
-    const rawLines=raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
-    const kept=rawLines.filter(line=>!isProcessInvestigationLine(line));
-    const source=kept.length?kept:rawLines;
-    const hadNumber=source.some(line=>/^\s*\d+[.、)）]\s*/.test(line));
-    if(source.length>1){
-      return source.map((line,i)=>hadNumber?`${i+1}. ${stripListNo(line)}`:line).join('\n');
-    }
-    return hadNumber?stripListNo(source[0]):source[0];
-  }
-  function emailCleanValue(value){return String(value||'').trim()}
-  function emailRowsData(){
-    const f=state.fields;
-    const rows=[
-      ['發生時間',f.date],
-      ['發生地點',f.line],
-      ['異常描述',f.description],
-      ['料號',f.partNo],
-      ['抽樣數',f.prodQty],
-      ['不良數',f.ngQty],
-      ['不良率',f.ngRate],
-      ['供應商',f.supplier],
-      ['異常調查',publicInvestigationText()],
-      ['是否影響出貨',f.shippingImpact],
-      ['處理對策',f.currentAction]
-    ];
-    return rows.map(([label,value])=>[label,emailCleanValue(value)]).filter(([,value])=>value);
-  }
-  function plainEmail(r){
-    const rows=emailRowsData();
-    const lines=[`主旨：${emailSubject()}`,'','Hi all,',''];
-    if(rows.length){
-      rows.forEach(([label,value])=>lines.push(`${label}\t${value}`));
-    }
-    const photos=photoText();
-    if(photos){lines.push('','照片：',photos)}
-    return lines.join('\n').replace(/\n{3,}/g,'\n\n').trim();
-  }
-  function cleanRecordQuickNote(text){
-    const raw=String(text||'').replace(/[\u200B-\u200D\uFEFF]/g,'');
-    const srcLines=raw.split(/\r?\n/).map(s=>s.trim());
-    const out=[];
-    let inSignature=false;
-    const isIconLine=line=>/^[\uE000-\uF8FF\uF000-\uF8FF]+$/u.test(line);
-    const isOutlookPerson=line=>/^[A-Za-z .'-]+\s*\([^)]+\)\s*[A-Za-z .'-]+;?$/.test(line);
-    const isMailNoise=line=>/^(摘要此電子郵件|Hi\b.*|Dear\b.*|Best\s+Regards,?|寄件者|From|已傳送|Sent|收件者|To|副本|Cc|主旨|Subject)$/i.test(line);
-    for(const line of srcLines){
-      if(/^Best\s+Regards,?/i.test(line)){inSignature=true;continue;}
-      if(inSignature) continue;
-      if(!line){
-        if(out.length && out[out.length-1] !== '') out.push('');
-        continue;
-      }
-      if(isIconLine(line)||isMailNoise(line)||isOutlookPerson(line)) continue;
-      out.push(line);
-    }
-    return out.join('\n').replace(/\n{3,}/g,'\n\n').trim();
+  function getCurrentOutputPlainText(){return state.outputs?.[state.selectedOutput]||$('outputBox').textContent||''}
+  function renderEmailHtml(){
+    const f=state.fields; const rows=[['發生時間',f.date],['發生地點(線別/站別)',f.line],['異常描述',f.description],['料號',f.partNo],['抽樣數',f.prodQty],['不良數',f.ngQty],['不良率',f.ngRate],['是否影響出貨',f.shippingImpact],['異常調查',f.investigation],['目前處置',f.currentAction]].filter(r=>String(r[1]||'').trim());
+    const subject=[f.partNo,f.description].filter(Boolean).join(' ');
+    return `<div class="email-preview"><p class="mail-subject">主旨：${esc(subject)}</p><p class="mail-hi">Hi all,</p><table class="email-table"><tbody>${rows.map(([k,v])=>`<tr><td class="label">${esc(k)}</td><td class="value">${esc(v).replace(/\n/g,'<br>')}</td></tr>`).join('')}</tbody></table></div>`;
   }
 
-  function renderOutputs(r){
-    const f=state.fields; const light=riskLabel(r.light); const quickExtra=cleanRecordQuickNote(state.quickNote);
-    const todo=`【待辦 / 驗證】
-${nextSteps(r).map((x,i)=>`${i+1}. ${x}`).join('\n')}
-
-【建議追蹤欄位】
-- 暫時對策：${hasFactor('tempAction')?'已記錄':'待補'}
-- 是否再發：`;
-    const record=`【異常摘要】
-${dataSummary(r)}
-
-【判定依據】
-${riskEvidenceText(r)}
-
-【原始快記】
-${quickExtra||'無'}
-
-【處理紀錄】
-${formatTimeline()}
-
-【照片】
-${photoText()||'無'}`;
-    const outputs={'Email 摘要':plainEmail(r),'待辦 / 驗證':todo,'案件紀錄':record};
-    if(state.activeTab==='Email 摘要') $('outputBox').innerHTML=renderEmailPreview(r); else $('outputBox').innerText=outputs[state.activeTab]||plainEmail(r);
-    document.querySelectorAll('[data-tab]').forEach(t=>t.classList.toggle('active',t.dataset.tab===state.activeTab));
-  }
-  function cellHtml(v){return escapeHtml(String(v||'').trim()).replace(/\n/g,'<br>')}
-  function emailRow(label,value){return `<tr><td class="label">${escapeHtml(label)}</td><td class="value">${cellHtml(value)}</td></tr>`}
-  function emailPhotosHtml(){
-    if(!state.photos.length) return '';
-    return `<div class="email-photo-list" style="padding-left:0">${state.photos.map((p,i)=>`<div style="margin:8px 0 12px">${p.src?`<img src="${p.src}" alt="照片預覽" style="max-width:260px;max-height:180px;border:1px solid #cbd5e1;border-radius:8px;display:block;margin-bottom:4px">`:''}<div>${escapeHtml(photoLabel(p,i))}</div></div>`).join('')}</div>`;
-  }
-  function renderEmailPreview(r){
-    const rows=emailRowsData();
-    const tableHtml=rows.length?`<table class="email-table"><tbody>${rows.map(([label,value])=>emailRow(label,value)).join('')}</tbody></table>`:`<div class="tiny">目前尚無可輸出的欄位；填入案件資料後，Email 會只顯示有內容的項目。</div>`;
-    const photoHtml=emailPhotosHtml();
-    return `<div class="email-preview">
-      <div class="mail-subject">主旨：${escapeHtml(emailSubject())}</div>
-      <div class="mail-hi">Hi all,</div>
-      ${tableHtml}
-      ${photoHtml?`<div class="email-section"><div class="email-section-title">照片</div>${photoHtml}</div>`:''}
-    </div>`;
-  }
-  function pptText(r){
-    const f=state.fields; const complete=$('completionPercent')?$('completionPercent').innerText:'未計算';
-    const light=riskLabel(r.light);
-    const photoList=state.photos.length?state.photos.map((p,i)=>`${i+1}. ${photoLabel(p,i)}`).join('\n'):'無';
-    return `【PPT 文字 / 設計理念】
-
-頁面標題：異常處理輔助平台
-副標：整合現況調查、資料佐證、風險判斷與處置追蹤。
-
-一、核心問題
-現場異常初期資訊容易分散在口頭說明、訊息、照片、量測結果與退補料紀錄中；若沒有即時整理，後續常需要反覆回溯確認，拉長整體異常處理時間。
-
-二、平台定位
-本平台不是取代品質人員判定，而是把現場資訊收集、必要資訊提醒、風險條件檢查與回報草稿整合在同一個畫面，協助品質人員更快掌握案件狀態。
-
-三、功能架構
-1. 現況調查：快記區、處理紀錄、圖片。
-2. 案件整理：日期、發生地點、異常類型、料號、抽樣數、不良數、出貨影響、異常調查、目前處置、待協助事項。
-3. 風險判定與建議：依功能 / 安全、物料 / 成品庫存、掌控 / 對策狀態產生燈號與下一步建議。
-4. 輸出中心：產出正式 Email、待辦驗證、案件紀錄。
-
-四、目前案件摘要
-完成度：${complete}
-燈號：${light}
-發生地點：${f.line||'未填'}
-料號：${f.partNo||'未填'}
-異常類型：${f.abnormalType||'未填'}
-異常描述：${f.description||'未填'}
-目前狀態：${state.statuses.join('、')||'未開始'}
-
-五、判定依據
-${riskEvidenceText(r)}
-
-六、下一步建議
-${nextSteps(r).map((x,i)=>`${i+1}. ${x}`).join('\n')}
-
-七、照片
-${photoList}`;
-  }
-  function safeStorageState(){const s=JSON.parse(JSON.stringify(state));s.schemaVersion=SCHEMA_VERSION;s.photos=compactPhotosForStorage(s.photos);return s}
-  function save(showErr){
-    try{
-      state.schemaVersion=SCHEMA_VERSION;
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(safeStorageState()));
-    }catch(e){
-      try{
-        state.photos=(state.photos||[]).map(p=>Object.assign({},p,{src:'',storedMode:'metadataOnly',storedSize:'未儲存'}));
-        localStorage.setItem(STORAGE_KEY,JSON.stringify(safeStorageState()));
-        renderPhotos();
-        if(showErr!==false) alert('手機暫存空間不足，已改成只保留照片紀錄，不存圖片預覽。其他欄位仍可繼續填寫。');
-      }catch(e2){
-        if(showErr!==false) alert('手機暫存空間不足，請先匯出或清空舊案件；本版不會再存原始大圖。');
-      }
-    }
-  }
-  function load(){
-    try{
-      let raw=localStorage.getItem(STORAGE_KEY),migrated=false,fromKey='';
-      if(!raw){for(const key of LEGACY_STORAGE_KEYS){raw=localStorage.getItem(key);if(raw){migrated=true;fromKey=key;break}}}
-      if(raw) state=Object.assign(freshState(),JSON.parse(raw));
-      normalizeState();
-      if(migrated){
-        state.photos=compactPhotosForStorage(state.photos);
-        try{localStorage.removeItem(fromKey)}catch(e){}
-        save(false);
-      }
-    }catch(e){state=freshState();normalizeState()}
-  }
-  function exportJson(){normalizeState();const exportState=safeStorageState();exportState.quickNote=cleanRecordQuickNote(exportState.quickNote);const blob=new Blob([JSON.stringify(exportState,null,2)],{type:'application/json'});const a=document.createElement('a');const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-  function importJson(e){const file=e.target.files[0];if(!file) return;const reader=new FileReader();reader.onload=()=>{try{state=Object.assign(freshState(),JSON.parse(reader.result));state.quickNote=cleanRecordQuickNote(state.quickNote);normalizeState();state.photos=compactPhotosForStorage(state.photos);save();syncToDom();recalcAll();alert('匯入完成')}catch(err){alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
+  function exportJson(){normalizeState();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+  function importJson(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state=Object.assign(freshState(),JSON.parse(reader.result));normalizeState();save();syncToDom();recalcAll();alert('匯入完成')}catch(err){alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
   async function copyText(text,msg){try{await navigator.clipboard.writeText(text||'');alert(msg||'已複製')}catch(e){const ta=document.createElement('textarea');ta.value=text||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert(msg||'已複製')}}
-  function escapeHtml(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+  function escAttr(s){return esc(s).replace(/'/g,'&#039;')}
   init();
 })();
 </script>
