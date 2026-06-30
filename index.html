@@ -69,7 +69,7 @@
       <div class="process-strip" id="processStrip">
         <button class="process-step" type="button" data-section-index="0"><span class="process-no">1</span><span>現況調查</span></button>
         <button class="process-step" type="button" data-section-index="1"><span class="process-no">2</span><span>案件整理</span></button>
-        <button class="process-step" type="button" data-section-index="2"><span class="process-no">3</span><span>風險判定與建議</span></button>
+        <button class="process-step" type="button" data-section-index="2"><span class="process-no">3</span><span>案件狀態與建議</span></button>
         <button class="process-step" type="button" data-section-index="3"><span class="process-no">4</span><span>輸出</span></button>
       </div>
     </div>
@@ -105,8 +105,8 @@
         <p class="sub">上傳圖片。</p>
         <div class="upload">
           <input id="photoInput" type="file" accept="image/*" multiple>
-          <div class="tiny">建議記錄異常特徵、異常品與良品對照、治具/機台狀況、物料標籤與麥頭。圖片會自動壓縮成輕量預覽，避免手機暫存爆掉。原始照片仍請保留在手機相簿。</div>
-          <div class="paste-hint">電腦使用時可先截圖並複製，回到此頁直接按 Ctrl + V 貼上截圖，會自動加入圖片清單。手機照片只存壓縮預覽與備註。</div>
+          <div class="tiny">建議記錄異常特徵、異常品與良品對照、治具/機台狀況、物料標籤與麥頭。圖片會自動壓縮成輕量預覽並存到 IndexedDB；localStorage 只存文字、欄位與勾選狀態，避免照片塞爆暫存。原始照片仍請保留在手機相簿。</div>
+          <div class="paste-hint">電腦使用時可先截圖並複製，回到此頁直接按 Ctrl + V 貼上截圖，會自動加入圖片清單。手機照片會存壓縮預覽到 IndexedDB，備註與案件欄位存 localStorage。</div>
         </div>
         <div class="preview" id="preview"></div>
       </div>
@@ -153,7 +153,7 @@
     </section>
 
     <section>
-      <div class="col-title"><h2>風險判定與建議</h2><p id="riskSectionSub">未開始維持灰燈；現況調查未選對策為黃燈；已有對策為綠燈；沒有對策或需開停線會議為紅燈。</p></div>
+      <div class="col-title"><h2>案件狀態與建議</h2><p id="riskSectionSub">未開始維持灰燈；填入資料自動進入現況調查；現況調查未選對策為黃燈；手動選擇已有對策為綠燈；沒有對策或需開停線會議為紅燈；結案為灰燈。</p></div>
       <div id="npdrSummaryArea" class="hidden">
         <div class="card"><h3>NPDR 案件摘要</h3><div class="outbox" id="npdrSummaryBox"></div></div>
       </div>
@@ -173,9 +173,13 @@
 
 <script>
 (function(){
-  const SCHEMA_VERSION=37;
-  const STORAGE_KEY='abnormal_case_assistant_v37';
-  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_v36','abnormal_case_assistant_v35','abnormal_case_assistant_v34','abnormal_case_assistant_v33','abnormal_case_assistant_v32','abnormal_case_assistant_v31','abnormal_case_assistant_v30','abnormal_case_assistant_v29','abnormal_case_assistant_v28','abnormal_case_assistant_v27','abnormal_case_assistant_v26','abnormal_case_assistant_v25','abnormal_case_assistant_v24','abnormal_case_assistant_v22','abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
+  const SCHEMA_VERSION=44;
+  const STORAGE_KEY='abnormal_case_assistant_db_v42';
+  const PHOTO_DB_NAME='abnormal_platform_photo_db';
+  const PHOTO_DB_VERSION=1;
+  const PHOTO_STORE='photos';
+  let photoDbPromise=null;
+  const LEGACY_STORAGE_KEYS=['abnormal_case_assistant_db_v41','abnormal_case_assistant_db_v40','abnormal_case_assistant_v37','abnormal_case_assistant_v36','abnormal_case_assistant_v35','abnormal_case_assistant_v34','abnormal_case_assistant_v33','abnormal_case_assistant_v32','abnormal_case_assistant_v31','abnormal_case_assistant_v30','abnormal_case_assistant_v29','abnormal_case_assistant_v28','abnormal_case_assistant_v27','abnormal_case_assistant_v26','abnormal_case_assistant_v25','abnormal_case_assistant_v24','abnormal_case_assistant_v22','abnormal_case_assistant_v21','abnormal_case_assistant_v19','abnormal_case_assistant_v18','abnormal_case_assistant_v15','abnormal_case_assistant_v14','abnormal_case_assistant_v13','abnormal_case_assistant_v8','abnormal_case_assistant_v4'];
   const timelineEvents=['產線通知','異常接收','到現場','確認異常狀況','物料隔離','尺寸量測','異常狀況拍照','物料拍照','麥頭拍照','已暫停生產','邊做邊檢','持續發生','已確認影響範圍','初步判定完成','通知相關單位','等待回覆'];
   const statusGroups=[
     {title:'案件階段',items:['未開始','現況調查','結案']},
@@ -278,8 +282,9 @@
     fields:{date:'',line:'',abnormalType:'',partNo:'',lot:'',supplier:'',prodQty:'',ngQty:'',ngRate:'',description:'',shippingImpact:'',investigation:'',currentAction:'',helpNeeded:''},
     npdr:{imported:false,importedAt:'',rawText:'',rawFields:{},previewData:null,partDescription:'',creatorDept:'',drawingZone:'',spec:'',actual:'',gauge:'',qaEngineer:'',qaJudgement:'',judgementCriteria:'',judgementReason:'',responsibleQa:'',rejudgement:'',rejudgementReason:'',sqaRemark:'',countermeasureDept:'',countermeasure:'',countermeasureRemark:'',countermeasureResult:'',stockHandling:'',issueType:'',inspectionRequest:'',scar8dRequired:'',scar8dTrigger:'',scarNo:'',verificationDate:'',sectionChiefReviewDate:'',sectionChiefRemark:'',defectSamplingRaw:'',abnormalQtyRaw:'',defectRateRaw:'',productionQtyRaw:'',projectName:'',partStatus:'',defectCode:'',cqfNo:''}
   }}
-  function init(){
+  async function init(){
     load();
+    await migratePhotosToIndexedDB();
     bind();
     renderStatic();
     syncToDom();
@@ -303,7 +308,7 @@
     $('shippingImpactBtns').addEventListener('click',e=>{const b=e.target.closest('[data-shipping-impact]');if(!b)return;state.fields.shippingImpact=b.dataset.shippingImpact;save();syncToDom();recalcAll()});
     $('exportJson').addEventListener('click',exportJson);
     $('importJson').addEventListener('change',importJson);
-    $('clearCase').addEventListener('click',()=>{if(confirm('確定清空目前案件？')){state=freshState();save();syncToDom();recalcAll()}});
+    $('clearCase').addEventListener('click',async()=>{if(confirm('確定清空目前案件？')){await clearPhotosForState();state=freshState();save();syncToDom();recalcAll()}});
     $('copyTab').addEventListener('click',()=>copyText(getCurrentOutputPlainText(),'已複製內容'));
     $('toggleNpdrImport').addEventListener('click',()=>$('npdrImportBox').classList.toggle('hidden'));
     $('parseNpdrBtn').addEventListener('click',parseNpdrFromTextArea);
@@ -342,12 +347,76 @@
     normalizeFactors();
     normalizeStatuses();
   }
-  function save(showErr){try{state.schemaVersion=SCHEMA_VERSION;localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}catch(e){if(showErr!==false)alert('localStorage 空間不足，請匯出 JSON 或清空舊案件。')}}
+  function stateForLocalStorage(){
+    const clone=JSON.parse(JSON.stringify(state));
+    clone.schemaVersion=SCHEMA_VERSION;
+    clone.photos=(clone.photos||[]).map(p=>{const copy=Object.assign({},p);delete copy.data;delete copy.preview;return copy});
+    return clone;
+  }
+  function save(showErr){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(stateForLocalStorage()))}catch(e){if(showErr!==false)alert('localStorage 空間不足。照片已改存 IndexedDB，若仍不足請先匯出 JSON 或清空舊案件文字資料。')}}
   function load(){try{let raw=localStorage.getItem(STORAGE_KEY),migrated=false;if(!raw){for(const key of LEGACY_STORAGE_KEYS){raw=localStorage.getItem(key);if(raw){migrated=true;break}}}if(raw)state=Object.assign(freshState(),JSON.parse(raw));normalizeState();if(migrated)save(false)}catch(e){state=freshState();normalizeState()}}
+
+  function openPhotoDb(){
+    if(!('indexedDB' in window))return Promise.reject(new Error('IndexedDB unavailable'));
+    if(photoDbPromise)return photoDbPromise;
+    photoDbPromise=new Promise((resolve,reject)=>{
+      const req=indexedDB.open(PHOTO_DB_NAME,PHOTO_DB_VERSION);
+      req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(PHOTO_STORE))db.createObjectStore(PHOTO_STORE,{keyPath:'id'})};
+      req.onsuccess=()=>resolve(req.result);
+      req.onerror=()=>reject(req.error||new Error('IndexedDB open failed'));
+    });
+    return photoDbPromise;
+  }
+  async function putPhotoData(record){
+    const db=await openPhotoDb();
+    return new Promise((resolve,reject)=>{
+      const tx=db.transaction(PHOTO_STORE,'readwrite');
+      tx.objectStore(PHOTO_STORE).put(Object.assign({updatedAt:new Date().toISOString()},record,{id:String(record.id)}));
+      tx.oncomplete=()=>resolve();
+      tx.onerror=()=>reject(tx.error||new Error('IndexedDB put failed'));
+    });
+  }
+  async function getPhotoData(id){
+    try{
+      const db=await openPhotoDb();
+      return await new Promise((resolve,reject)=>{
+        const req=db.transaction(PHOTO_STORE,'readonly').objectStore(PHOTO_STORE).get(String(id));
+        req.onsuccess=()=>resolve(req.result?.data||'');
+        req.onerror=()=>reject(req.error||new Error('IndexedDB get failed'));
+      });
+    }catch(e){return ''}
+  }
+  async function deletePhotoData(id){
+    try{
+      const db=await openPhotoDb();
+      await new Promise((resolve,reject)=>{
+        const tx=db.transaction(PHOTO_STORE,'readwrite');
+        tx.objectStore(PHOTO_STORE).delete(String(id));
+        tx.oncomplete=()=>resolve();
+        tx.onerror=()=>reject(tx.error||new Error('IndexedDB delete failed'));
+      });
+    }catch(e){}
+  }
+  async function clearPhotosForState(){
+    const ids=(state.photos||[]).map(p=>p.id);
+    await Promise.all(ids.map(id=>deletePhotoData(id)));
+  }
+  async function migratePhotosToIndexedDB(){
+    if(!Array.isArray(state.photos)||!state.photos.length)return;
+    let changed=false;
+    for(const p of state.photos){
+      if(p&&p.data){
+        try{await putPhotoData({id:p.id,data:p.data,type:p.type||'image/jpeg',size:p.size||0,updatedAt:new Date().toISOString()});p.hasImage=true;delete p.data;delete p.preview;changed=true}catch(e){console.warn('照片移轉 IndexedDB 失敗',e)}
+      }else if(p&&p.id){
+        p.hasImage=p.hasImage!==false;
+      }
+    }
+    if(changed)save(false);
+  }
 
   function renderStatusBtns(){
     const box=$('statusBtns'); if(!box)return;
-    box.innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${esc(g.title)}</div><div class="btns">${g.items.map(item=>{const cls=item==='需開停線會議'?'red':(item==='沒有對策'?'red':(['已有對策','結案'].includes(item)?'green':''));return `<button type="button" class="btn status ${cls} ${state.statuses.includes(item)?'active':''}" data-status="${esc(item)}">${esc(item)}</button>`}).join('')}</div></div>`).join('');
+    box.innerHTML=statusGroups.map(g=>`<div class="status-group"><div class="status-group-title">${esc(g.title)}</div><div class="btns">${g.items.map(item=>{const cls=item==='需開停線會議'?'red':(item==='沒有對策'?'red':(item==='已有對策'?'green':''));return `<button type="button" class="btn status ${cls} ${state.statuses.includes(item)?'active':''}" data-status="${esc(item)}">${esc(item)}</button>`}).join('')}</div></div>`).join('');
     box.querySelectorAll('[data-status]').forEach(b=>b.addEventListener('click',()=>toggleStatus(b.dataset.status)));
     $('currentStatusText').textContent=state.statuses.join('、')||'未開始';
   }
@@ -400,6 +469,7 @@
 
   function recalcAll(){
     calcRate();
+    autoMoveToInvestigationIfCaseHasContent();
     renderCompletion();
     renderStatusBtns();
     renderFactorPills();
@@ -408,6 +478,28 @@
     buildOutputs();
     renderOutputTabs();
     save(false);
+  }
+
+  function autoMoveToInvestigationIfCaseHasContent(){
+    if(state.npdr.imported)return;
+    if(hasStatus('結案'))return;
+    if(!hasStatus('未開始'))return;
+    if(hasAnyCaseContent()){
+      state.statuses=state.statuses.filter(x=>!stageStatuses.includes(x));
+      state.statuses.unshift('現況調查');
+    }
+  }
+
+  function hasAnyCaseContent(){
+    const f=state.fields||{};
+    const fieldKeys=['date','line','abnormalType','partNo','lot','supplier','prodQty','ngQty','description','shippingImpact','investigation','currentAction','helpNeeded'];
+    if(fieldKeys.some(k=>String(f[k]||'').trim()))return true;
+    if(String(state.quickNote||'').trim())return true;
+    if(Array.isArray(state.timeline)&&state.timeline.length)return true;
+    if(Array.isArray(state.dimensions)&&state.dimensions.length)return true;
+    if(Array.isArray(state.photos)&&state.photos.length)return true;
+    if(Object.keys(state.factors||{}).some(k=>hasFactor(k)))return true;
+    return false;
   }
   function calcRate(){
     if(state.npdr.imported && state.npdr.defectRateRaw){state.fields.ngRate=state.npdr.defectRateRaw;$('ngRate').value=state.fields.ngRate;return}
@@ -441,7 +533,8 @@
     if(/隔離/.test(text)){state.factors.materialNgIsolation='有';addStatus('物料隔離')}
     if(/尺寸|外徑|內徑|孔徑|規格|量測|實測/.test(text))state.factors.measurePartDimension='有';
     if(/沒有對策|無對策|尚無對策/.test(text)){addStatus('沒有對策')}
-    if(/對策|rework|sorting|處理方式|改善/i.test(text)){addStatus('已有對策')}
+    // 快記文字只啟動現況調查，不再因為填了處置文字就自動判成已有對策。
+    // 若要綠燈，請在案件狀態手動選擇「已有對策」。
     if(/出貨|流出|客戶/.test(text)){state.factors.scopeFinishedGoods='有'}
     if(/功能|安全|無法組裝|卡住|失效/.test(text)){state.factors.scopeContinuous='是'}
   }
@@ -476,10 +569,36 @@
   function renderTimeline(){const box=$('timelineList');box.innerHTML=state.timeline.map(t=>`<li><span><b>${esc(t.time)}</b>　${esc(t.text)}</span><button class="x" data-del-timeline="${t.id}">×</button></li>`).join('')||'<li><span class="tiny">尚未建立處理紀錄。</span></li>';box.querySelectorAll('[data-del-timeline]').forEach(b=>b.addEventListener('click',()=>{state.timeline=state.timeline.filter(t=>String(t.id)!==String(b.dataset.delTimeline));save();renderTimeline();recalcAll()}))}
   function buildTimelineText(){return state.timeline.length?state.timeline.map((t,i)=>`${i+1}. ${t.time} ${t.text}`).join('\n'):'尚無處理紀錄'}
 
-  async function handlePhotoFiles(files){for(const file of Array.from(files||[])){if(!file.type.startsWith('image/'))continue;try{const data=await compressImage(file);state.photos.push({id:Date.now()+Math.random(),data,caption:'',size:file.size})}catch(e){alert('圖片處理失敗，請改用較小的圖片。')}}$('photoInput').value='';save();renderPhotos();recalcAll()}
+  async function handlePhotoFiles(files){
+    for(const file of Array.from(files||[])){
+      if(!file.type.startsWith('image/'))continue;
+      const id='photo_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+      try{
+        const data=await compressImage(file);
+        await putPhotoData({id,data,type:file.type||'image/jpeg',size:file.size||0,updatedAt:new Date().toISOString()});
+        state.photos.push({id,caption:'',size:file.size||0,type:file.type||'image/jpeg',createdAt:new Date().toISOString(),hasImage:true});
+      }catch(e){
+        console.warn(e);
+        alert('圖片無法存入 IndexedDB，請確認瀏覽器權限或改用較小的圖片。');
+      }
+    }
+    $('photoInput').value='';save();renderPhotos();recalcAll();
+  }
   function compressImage(file){return new Promise((resolve,reject)=>{const img=new Image();const reader=new FileReader();reader.onload=()=>{img.onload=()=>{const max=900;let w=img.width,h=img.height;if(Math.max(w,h)>max){const r=max/Math.max(w,h);w=Math.round(w*r);h=Math.round(h*r)}const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);resolve(canvas.toDataURL('image/jpeg',.62))};img.onerror=reject;img.src=reader.result};reader.onerror=reject;reader.readAsDataURL(file)})}
   function handlePasteImage(e){const items=e.clipboardData?.items;if(!items)return;const files=[];for(const item of items){if(item.type&&item.type.startsWith('image/'))files.push(item.getAsFile())}if(files.length){e.preventDefault();handlePhotoFiles(files)}}
-  function renderPhotos(){const box=$('preview');box.innerHTML=state.photos.map((p,i)=>`<div class="photo"><div class="photo-thumb">${p.data?`<img src="${p.data}" alt="圖片${i+1}">`:'📷'}</div><div class="photo-meta">圖片 ${i+1}</div><input data-photo-caption="${p.id}" value="${escAttr(p.caption||'')}" placeholder="備註"><button data-photo-del="${p.id}">刪除</button></div>`).join('')||'';box.querySelectorAll('[data-photo-caption]').forEach(inp=>inp.addEventListener('input',()=>{const p=state.photos.find(x=>String(x.id)===String(inp.dataset.photoCaption));if(p)p.caption=inp.value;save(false);buildOutputs();renderOutputTabs()}));box.querySelectorAll('[data-photo-del]').forEach(b=>b.addEventListener('click',()=>{state.photos=state.photos.filter(p=>String(p.id)!==String(b.dataset.photoDel));save();renderPhotos();recalcAll()}))}
+  function renderPhotos(){
+    const box=$('preview');
+    box.innerHTML=(state.photos||[]).map((p,i)=>`<div class="photo"><div class="photo-thumb" data-photo-index="${i}">${p.hasImage?'載入中':'📷'}</div><div class="photo-meta">圖片 ${i+1}${p.size?'｜'+Math.round(p.size/1024)+' KB':''}</div><input data-photo-caption="${escAttr(p.id)}" value="${escAttr(p.caption||'')}" placeholder="備註"><button data-photo-del="${escAttr(p.id)}">刪除</button></div>`).join('')||'';
+    (state.photos||[]).forEach(async(p,i)=>{
+      const thumb=box.querySelector(`[data-photo-index="${i}"]`);
+      const data=await getPhotoData(p.id);
+      if(!thumb)return;
+      if(data)thumb.innerHTML=`<img src="${data}" alt="圖片${i+1}">`;
+      else thumb.textContent='圖片資料未找到';
+    });
+    box.querySelectorAll('[data-photo-caption]').forEach(inp=>inp.addEventListener('input',()=>{const p=state.photos.find(x=>String(x.id)===String(inp.dataset.photoCaption));if(p)p.caption=inp.value;save(false);buildOutputs();renderOutputTabs()}));
+    box.querySelectorAll('[data-photo-del]').forEach(b=>b.addEventListener('click',async()=>{const id=b.dataset.photoDel;await deletePhotoData(id);state.photos=state.photos.filter(p=>String(p.id)!==String(id));save();renderPhotos();recalcAll()}))
+  }
 
   function parseNpdrFromTextArea(){
     const raw=$('npdrRawText').value||''; if(!raw.trim()){alert('請先貼上 NPDR 原文。');return}
@@ -533,7 +652,7 @@
       rejudgementReason:get('Reason for Re-judgement','覆判不成立理由'),
       sqaRemark:get('SQA reaction and remark','SQA反應措施'),
       countermeasureDept:get('Countermeasure Dept','知會處理對策單位'),
-      countermeasure:get('Countermeasure 可行方法','處理對策','Countermeasure'),
+      countermeasure:get('Countermeasure 可行方法(處理對策)','Countermeasure 可行方法','可行方法(處理對策)'),
       countermeasureRemark:get('Countermeasure remark','可行方法備註'),
       opl:get('OPL','單點教育訓練'),
       stockHandling:get('Stock handling','庫存方式處理'),
@@ -564,9 +683,18 @@
     const out={ngQty:'',prodQty:'',ngRate:'',defectRateRaw:''};
     const ds=String(defectSamplingRaw||'').trim(), aq=String(abnormalQtyRaw||'').trim(), pq=String(productionQtyRaw||'').trim();
     if(pq){const n=pq.match(/\d+(?:\.\d+)?/);out.prodQty=n?n[0]:pq}
+
+    // NPDR 的「Defect Qty./Sampling size 不良數/抽樣數」才是此頁不良率的計算基準。
+    // 例如 1/20 一律算 5%，即使 Delivery Qty. or Production Qty. 是 90，也不改用 1/90。
     const pair=ds.match(/(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/);
-    if(pair){out.ngQty=pair[1];if(!out.prodQty)out.prodQty=pair[2];out.ngRate=(Number(pair[1])/Number(pair[2])*100).toFixed(1).replace(/\.0$/,'')+'%'}
-    const percentSource=[aq,ds].find(x=>/[~～%％]|約|以上|以下/.test(x)&&!x.includes('/'))||'';
+    if(pair){
+      out.ngQty=pair[1];
+      const sampleSize=Number(pair[2]);
+      if(sampleSize>0)out.ngRate=(Number(pair[1])/sampleSize*100).toFixed(1).replace(/\.0$/,'')+'%';
+      return out;
+    }
+
+    const percentSource=[ds,aq].find(x=>/[~～%％]|約|以上|以下/.test(x)&&!x.includes('/'))||'';
     if(percentSource){out.defectRateRaw=percentSource;out.ngRate=percentSource}
     if(!out.ngQty){const n=aq.match(/^\s*(\d+(?:\.\d+)?)(?:\s*pcs?)?\s*$/i);if(n)out.ngQty=n[1]}
     if(!out.ngRate&&out.prodQty&&out.ngQty){out.ngRate=(Number(out.ngQty)/Number(out.prodQty)*100).toFixed(1).replace(/\.0$/,'')+'%'}
@@ -615,7 +743,7 @@
     $('npdrModeBadge').classList.toggle('hidden',!imported);
     $('normalRiskArea').classList.toggle('hidden',imported);
     $('npdrSummaryArea').classList.toggle('hidden',!imported);
-    $('riskSectionSub').textContent=imported?'NPDR 已有判定與處置時，這裡改顯示案件摘要，不再重新跑風險判定。':'未開始維持灰燈；現況調查未選對策為黃燈；已有對策為綠燈；沒有對策或需開停線會議為紅燈。';
+    $('riskSectionSub').textContent=imported?'NPDR 已有判定與處置時，這裡改顯示案件摘要，不再重新判斷案件狀態。':'未開始維持灰燈；填入資料自動進入現況調查；現況調查未選對策為黃燈；手動選擇已有對策為綠燈；沒有對策或需開停線會議為紅燈；結案為灰燈。';
     $('outputSectionSub').textContent=imported?'NPDR 匯入模式只輸出摘要與 JSON，兩邊摘要內容會保持一致。':'產出可複製的正式 Email、待辦、案件紀錄。';
     if(imported)$('npdrSummaryBox').textContent=buildNpdrSummary();
   }
@@ -647,20 +775,30 @@
     const f=state.fields;
     const nonStartStatuses=(Array.isArray(state.statuses)?state.statuses:[]).filter(x=>x!=='未開始');
     const onlyNotStarted=nonStartStatuses.length===0;
-    const hasAction=hasStatus('已有對策')||hasStatus('結案')||!!String(f.currentAction||'').trim();
+    const caseClosed=hasStatus('結案');
+    const hasAction=hasStatus('已有對策');
     const noAction=hasStatus('沒有對策');
     const stopReasons=stopMeetingReasons();
-    const hasInvestigation=hasStatus('現況調查')||['物料隔離','暫停生產','邊做邊檢'].some(hasStatus)||!!String(f.investigation||f.description||'').trim();
+    const hasInvestigation=hasStatus('現況調查')||['物料隔離','暫停生產','邊做邊檢'].some(hasStatus)||hasAnyCaseContent();
     const investigationSummary=getInvestigationSummary();
+    const totalInvestigationGroups=investigationSummary.totalCount||7;
+
+    if(caseClosed){
+      const cards=[
+        {title:'案件階段',light:'gray',label:'結案',text:'案件已標示結案，結束後不再顯示處理燈號。'},
+        {title:'對策狀態',light:'gray',label:hasAction?'已有對策':(noAction?'沒有對策':'不判定'),text:'結案狀態下不再依對策狀態判燈。'},
+        {title:'現況調查完整度',light:'gray',label:`${investigationSummary.doneCount}/${totalInvestigationGroups}`,text:investigationSummary.text}
+      ];
+      return {light:'gray',label:'灰燈',text:'案件已結案，維持灰燈。',suggestion:'案件已標示結案；若後續需要重新處理，請改回「現況調查」。',cards,reminders:['案件已結案，後續不再提醒處理狀態。'],stopReasons:[],notStarted:false,closed:true,investigationSummary};
+    }
 
     if(onlyNotStarted){
       const cards=[
         {title:'案件階段',light:'gray',label:'未開始',text:'尚未進入現況調查，先不判定案件燈號。'},
         {title:'對策狀態',light:'gray',label:'未選',text:'尚未選擇「已有對策」或「沒有對策」。'},
-        {title:'現況調查完整度',light:'gray',label:'未開始',text:'人、機、料、法、量測、環、影響範圍尚未開始確認。'},
-        {title:'燈號',light:'gray',label:'灰燈',text:'未開始時維持灰燈。'}
+        {title:'現況調查完整度',light:'gray',label:`0/${totalInvestigationGroups}`,text:'人、機、料、法、量測、環、影響範圍尚未開始確認。'}
       ];
-      return {light:'gray',label:'灰燈',text:'案件尚未開始，維持灰燈。',suggestion:'先選擇「現況調查」或開始填寫案件內容；未開始前不先推定風險。',cards,reminders:[],stopReasons,notStarted:true,investigationSummary};
+      return {light:'gray',label:'灰燈',text:'案件尚未開始，維持灰燈。',suggestion:'先選擇「現況調查」或開始填寫案件內容；未開始前不先推定案件狀態。',cards,reminders:[],stopReasons,notStarted:true,investigationSummary};
     }
 
     let light='yellow',label='黃燈',text='案件已進入現況調查，但尚未選擇對策狀態。',suggestion='請先判斷目前是「已有對策」或「沒有對策」。';
@@ -674,7 +812,7 @@
       suggestion='請補暫時管制方式、責任窗口與下一次回覆時間；若影響生產或出貨，再評估是否需開停線會議。';
     }else if(hasAction){
       light='green';label='綠燈';
-      text='案件已有對策或目前處置，可進入追蹤與紀錄收斂。';
+      text='案件已標示已有對策，可進入追蹤與紀錄收斂。';
       suggestion='持續確認改善後是否再發，並保留調查依據、處置結果與結案紀錄。';
     }else if(hasInvestigation){
       light='yellow';label='黃燈';
@@ -682,13 +820,13 @@
       suggestion='用人、機、料、法、量測、環、影響範圍補齊確認項目，再選擇「已有對策」或「沒有對策」。';
     }
 
+    const investigationComplete=investigationSummary.doneCount>=totalInvestigationGroups;
     const cards=[
-      {title:'案件階段',light:light==='gray'?'gray':(light==='red'?'red':(hasStatus('結案')?'green':'yellow')),label:hasStatus('結案')?'結案':(hasStatus('現況調查')?'現況調查':(onlyNotStarted?'未開始':'進行中')),text:hasStatus('結案')?'案件已標示結案。':(hasStatus('現況調查')?'案件已進入現況調查。':'已有處理動作，建議同步標示現況調查。')},
-      {title:'對策狀態',light:noAction?'red':(hasAction?'green':(onlyNotStarted?'gray':'yellow')),label:noAction?'沒有對策':(hasAction?'已有對策':(onlyNotStarted?'未選':'待確認')),text:noAction?'已明確標示沒有對策，需要先決定暫時管制方式或責任窗口。':(hasAction?'已標示已有對策或目前處置。':'尚未選擇對策狀態。')},
-      {title:'現況調查完整度',light:onlyNotStarted?'gray':(investigationSummary.doneCount>=3?'green':'yellow'),label:`${investigationSummary.doneCount}/5`,text:investigationSummary.text},
-      {title:'燈號',light:light,label:label,text:stopReasons.length?stopReasons.join('；'):(light==='red'?'紅燈代表沒有對策或已標示需開停線會議。':(light==='green'?'綠燈代表已有對策或目前處置。':(light==='yellow'?'黃燈代表現況調查中且尚未選擇對策狀態。':'灰燈代表未開始。')))}
+      {title:'案件階段',light:light==='red'?'red':(hasStatus('現況調查')?'yellow':'gray'),label:hasStatus('現況調查')?'現況調查':'進行中',text:hasStatus('現況調查')?'案件已進入現況調查。':'已有處理動作，系統已帶入現況調查狀態。'},
+      {title:'對策狀態',light:noAction?'red':(hasAction?'green':'yellow'),label:noAction?'沒有對策':(hasAction?'已有對策':'待確認'),text:noAction?'已明確標示沒有對策，需要先決定暫時管制方式或責任窗口。':(hasAction?'已手動標示已有對策。':'尚未選擇對策狀態。')},
+      {title:'現況調查完整度',light:investigationComplete?'green':'yellow',label:`${investigationSummary.doneCount}/${totalInvestigationGroups}`,text:investigationSummary.text}
     ];
-    const reminders=caseReminders({onlyNotStarted,noAction,hasAction,stopReasons,investigationSummary,hasInvestigation});
+    const reminders=caseReminders({onlyNotStarted,noAction,hasAction,stopReasons,investigationSummary,hasInvestigation,closed:false});
     return {light,label,text,suggestion,cards,reminders,stopReasons,notStarted:false,investigationSummary};
   }
 
@@ -704,7 +842,7 @@
     ];
     const done=defs.filter(([,keys])=>keys.some(hasFactor)).map(([label])=>label);
     const missing=defs.map(([label])=>label).filter(label=>!done.includes(label));
-    return {done,missing,doneCount:done.length,text:done.length?`已確認：${done.join('、')}；待確認：${missing.length?missing.join('、'):'無'}`:'尚未選擇人、機、料、法、量測、環、影響範圍確認結果。'};
+    return {done,missing,doneCount:done.length,totalCount:defs.length,text:done.length?`已確認：${done.join('、')}；待確認：${missing.length?missing.join('、'):'無'}`:'尚未選擇人、機、料、法、量測、環、影響範圍確認結果。'};
   }
 
   function stopMeetingReasons(){
@@ -716,7 +854,7 @@
   function caseReminders(ctx){
     const s=[];
     if(ctx.onlyNotStarted){
-      s.push('未開始時維持灰燈，不先推定風險。');
+      s.push('未開始時維持灰燈，不先推定案件狀態。');
       s.push('開始處理時，先選擇「現況調查」，再用人、機、料、法、量測、環、影響範圍補確認項目。');
       return s;
     }
@@ -733,7 +871,7 @@
       s.push('現況調查小卡待確認：'+ctx.investigationSummary.missing.join('、')+'。');
     }
     if(ctx.hasAction&&!s.length){
-      s.push('目前已有對策：後續重點是保留驗證、追蹤與結案紀錄。');
+      s.push('目前已手動標示已有對策：後續重點是保留驗證、追蹤與結案紀錄。');
     }
     if(!s.length)s.push('目前沒有明顯缺口，依案件進度維持追蹤即可。');
     return s;
@@ -741,6 +879,10 @@
 
   function nextSteps(r){
     const s=[];
+    if(r&&r.closed){
+      s.push('案件已結案，維持灰燈；如需重新處理，請改回「現況調查」。');
+      return s;
+    }
     if(r&&r.notStarted){
       s.push('尚未開始判定：先選擇案件階段，例如「現況調查」。');
       s.push('未開始時維持灰燈，不先推定案件狀態。');
@@ -752,7 +894,7 @@
       s.push('請用人、機、料、法、量測、環、影響範圍補足現況，再選擇「已有對策」或「沒有對策」。');
     }
     if(r&&r.light==='green'){
-      s.push('綠燈代表已有對策或目前處置，後續請追蹤對策結果與是否再發。');
+      s.push('綠燈代表已手動標示已有對策，後續請追蹤對策結果與是否再發。');
     }
     if(r&&r.light==='red'&&hasStatus('沒有對策')){
       s.push('紅燈原因：目前明確標示沒有對策，需要先決定暫時管制方式或責任窗口。');
@@ -809,7 +951,7 @@
     const f=state.fields; const subject=[f.partNo,f.description].filter(Boolean).join(' ');
     const email=`主旨：${subject}\nHi all,\n發生時間：${f.date}\n發生地點(線別/站別)：${f.line}\n異常描述：${f.description}\n料號：${f.partNo}\n抽樣數：${f.prodQty}\n不良數：${f.ngQty}\n不良率：${f.ngRate}\n是否影響出貨：${f.shippingImpact}\n異常調查：${f.investigation}\n目前處置：${f.currentAction}`;
     const record=`【案件紀錄】\n料號：${f.partNo}\n異常描述：${f.description}\n發生地點：${f.line}\n不良率：${f.ngRate}\n案件狀態：${state.statuses.join('、')}\n\n【異常調查】\n${f.investigation}\n\n【目前處置】\n${f.currentAction}\n\n【待協助事項】\n${f.helpNeeded}\n\n【時間軸】\n${buildTimelineText()}`;
-    state.outputs={email,record,json:JSON.stringify({sourceType:'FIELD_CASE',schemaVersion:SCHEMA_VERSION,caseFields:state.fields,statuses:state.statuses,factors:state.factors,timeline:state.timeline,dimensions:state.dimensions.map(({id,...d})=>d)},null,2)};
+    state.outputs={email,record,json:JSON.stringify({sourceType:'FIELD_CASE',schemaVersion:SCHEMA_VERSION,caseFields:state.fields,statuses:state.statuses,factors:state.factors,timeline:state.timeline,dimensions:state.dimensions.map(({id,...d})=>d),photos:(state.photos||[]).map(p=>({id:p.id,caption:p.caption||'',size:p.size||0,type:p.type||'',createdAt:p.createdAt||'',storedIn:'IndexedDB'}))},null,2)};
     if(!['email','record','json'].includes(state.selectedOutput))state.selectedOutput='email';
   }
   function renderOutputTabs(){
@@ -826,8 +968,21 @@
     return `<div class="email-preview"><p class="mail-subject">主旨：${esc(subject)}</p><p class="mail-hi">Hi all,</p><table class="email-table"><tbody>${rows.map(([k,v])=>`<tr><td class="label">${esc(k)}</td><td class="value">${esc(v).replace(/\n/g,'<br>')}</td></tr>`).join('')}</tbody></table></div>`;
   }
 
-  function exportJson(){normalizeState();const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-  function importJson(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{state=Object.assign(freshState(),JSON.parse(reader.result));normalizeState();save();syncToDom();recalcAll();alert('匯入完成')}catch(err){alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
+  async function buildExportState(){
+    normalizeState();
+    const payload=stateForLocalStorage();
+    payload.exportedAt=new Date().toISOString();
+    payload.photos=await Promise.all((state.photos||[]).map(async p=>Object.assign({},p,{data:await getPhotoData(p.id)})));
+    return payload;
+  }
+  async function exportJson(){
+    const payload=await buildExportState();
+    const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+    const a=document.createElement('a');
+    const name=`異常案件_v${SCHEMA_VERSION}_${(state.fields.partNo||'未填料號').replace(/[^\w.\-]+/g,'_')}_${new Date().toISOString().slice(0,10)}.json`;
+    a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href);
+  }
+  function importJson(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=async()=>{try{const imported=JSON.parse(reader.result);await clearPhotosForState();state=Object.assign(freshState(),imported);normalizeState();await migratePhotosToIndexedDB();save();syncToDom();recalcAll();alert('匯入完成')}catch(err){console.warn(err);alert('JSON 格式錯誤，無法匯入。')}};reader.readAsText(file);e.target.value=''}
   async function copyText(text,msg){try{await navigator.clipboard.writeText(text||'');alert(msg||'已複製')}catch(e){const ta=document.createElement('textarea');ta.value=text||'';document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();alert(msg||'已複製')}}
   function esc(s){return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
   function escAttr(s){return esc(s).replace(/'/g,'&#039;')}
